@@ -1,5 +1,8 @@
 # ofdsdk
 
+[![crates.io](https://img.shields.io/crates/v/ofdsdk.svg)](https://crates.io/crates/ofdsdk)
+[![docs](https://docs.rs/ofdsdk/badge.svg)](https://docs.rs/ofdsdk)
+
 `ofdsdk` 是一个面向 Rust 的 OFD SDK。
 
 项目目标：
