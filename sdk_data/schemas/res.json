@@ -1,0 +1,919 @@
+{
+  "TargetNamespace": "http://www.ofdspec.org/2016",
+  "Types": [
+    {
+      "Name": "ColorSpace",
+      "Ident": "ColorSpace",
+      "XmlName": "ColorSpace",
+      "Attributes": [
+        {
+          "Name": "Type",
+          "Ident": "type",
+          "Type": "CtColorSpaceType",
+          "IsOption": false
+        },
+        {
+          "Name": "BitsPerComponent",
+          "Ident": "bits_per_component",
+          "Type": "i32",
+          "IsOption": true
+        },
+        {
+          "Name": "Profile",
+          "Ident": "profile",
+          "Type": "crate::schemas::definitions::StLoc",
+          "IsOption": true
+        },
+        {
+          "Name": "ID",
+          "Ident": "id",
+          "Type": "crate::schemas::definitions::StId",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "Palette",
+          "XmlName": "Palette",
+          "Ident": "palette",
+          "Type": "Palette",
+          "SourceModuleName": "res",
+          "IsOption": true,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "ColorSpaces",
+      "Ident": "ColorSpaces",
+      "XmlName": "ColorSpaces",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "ColorSpace",
+          "XmlName": "ColorSpace",
+          "Ident": "color_space",
+          "Type": "ColorSpace",
+          "SourceModuleName": "res",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "DrawParam",
+      "Ident": "DrawParam",
+      "XmlName": "DrawParam",
+      "Attributes": [
+        {
+          "Name": "Relative",
+          "Ident": "relative",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": true
+        },
+        {
+          "Name": "LineWidth",
+          "Ident": "line_width",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "Join",
+          "Ident": "join",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "Cap",
+          "Ident": "cap",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "DashOffset",
+          "Ident": "dash_offset",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "DashPattern",
+          "Ident": "dash_pattern",
+          "Type": "crate::schemas::definitions::StArray",
+          "IsOption": true
+        },
+        {
+          "Name": "MiterLimit",
+          "Ident": "miter_limit",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "ID",
+          "Ident": "id",
+          "Type": "crate::schemas::definitions::StId",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "FillColor",
+          "XmlName": "FillColor",
+          "Ident": "fill_color",
+          "Type": "crate::schemas::page::CtColor",
+          "SourceModuleName": "res",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "StrokeColor",
+          "XmlName": "StrokeColor",
+          "Ident": "stroke_color",
+          "Type": "crate::schemas::page::CtColor",
+          "SourceModuleName": "res",
+          "IsOption": true,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "DrawParams",
+      "Ident": "DrawParams",
+      "XmlName": "DrawParams",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "DrawParam",
+          "XmlName": "DrawParam",
+          "Ident": "draw_param",
+          "Type": "DrawParam",
+          "SourceModuleName": "res",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "Font",
+      "Ident": "Font",
+      "XmlName": "Font",
+      "Attributes": [
+        {
+          "Name": "FontName",
+          "Ident": "font_name",
+          "Type": "String",
+          "IsOption": false
+        },
+        {
+          "Name": "FamilyName",
+          "Ident": "family_name",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "Charset",
+          "Ident": "charset",
+          "Type": "CtFontCharset",
+          "IsOption": true
+        },
+        {
+          "Name": "Italic",
+          "Ident": "italic",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "Bold",
+          "Ident": "bold",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "Serif",
+          "Ident": "serif",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "FixedWidth",
+          "Ident": "fixed_width",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "ID",
+          "Ident": "id",
+          "Type": "crate::schemas::definitions::StId",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "FontFile",
+          "XmlName": "FontFile",
+          "Ident": "font_file",
+          "Type": "crate::schemas::definitions::StLoc",
+          "SourceModuleName": "res",
+          "IsOption": true,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "Fonts",
+      "Ident": "Fonts",
+      "XmlName": "Fonts",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "Font",
+          "XmlName": "Font",
+          "Ident": "font",
+          "Type": "Font",
+          "SourceModuleName": "res",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "MultiMedia",
+      "Ident": "MultiMedia",
+      "XmlName": "MultiMedia",
+      "Attributes": [
+        {
+          "Name": "Type",
+          "Ident": "type",
+          "Type": "CtMultiMediaType",
+          "IsOption": false
+        },
+        {
+          "Name": "Format",
+          "Ident": "format",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "ID",
+          "Ident": "id",
+          "Type": "crate::schemas::definitions::StId",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "MediaFile",
+          "XmlName": "MediaFile",
+          "Ident": "media_file",
+          "Type": "crate::schemas::definitions::StLoc",
+          "SourceModuleName": "res",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "MultiMedias",
+      "Ident": "MultiMedias",
+      "XmlName": "MultiMedias",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "MultiMedia",
+          "XmlName": "MultiMedia",
+          "Ident": "multi_media",
+          "Type": "MultiMedia",
+          "SourceModuleName": "res",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CompositeGraphicUnit",
+      "Ident": "CompositeGraphicUnit",
+      "XmlName": "CompositeGraphicUnit",
+      "Attributes": [
+        {
+          "Name": "Width",
+          "Ident": "width",
+          "Type": "f64",
+          "IsOption": false
+        },
+        {
+          "Name": "Height",
+          "Ident": "height",
+          "Type": "f64",
+          "IsOption": false
+        },
+        {
+          "Name": "ID",
+          "Ident": "id",
+          "Type": "crate::schemas::definitions::StId",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "Thumbnail",
+          "XmlName": "Thumbnail",
+          "Ident": "thumbnail",
+          "Type": "crate::schemas::definitions::StRefId",
+          "SourceModuleName": "res",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Substitution",
+          "XmlName": "Substitution",
+          "Ident": "substitution",
+          "Type": "crate::schemas::definitions::StRefId",
+          "SourceModuleName": "res",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Content",
+          "XmlName": "Content",
+          "Ident": "content",
+          "Type": "crate::schemas::page::CtPageBlock",
+          "SourceModuleName": "res",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CompositeGraphicUnits",
+      "Ident": "CompositeGraphicUnits",
+      "XmlName": "CompositeGraphicUnits",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "CompositeGraphicUnit",
+          "XmlName": "CompositeGraphicUnit",
+          "Ident": "composite_graphic_unit",
+          "Type": "CompositeGraphicUnit",
+          "SourceModuleName": "res",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "Res",
+      "Ident": "Res",
+      "XmlName": "Res",
+      "Attributes": [
+        {
+          "Name": "BaseLoc",
+          "Ident": "base_loc",
+          "Type": "crate::schemas::definitions::StLoc",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [],
+      "Children": [
+        {
+          "Name": "ColorSpaces",
+          "XmlName": "ColorSpaces",
+          "Ident": "ColorSpaces",
+          "Type": "ColorSpaces",
+          "SourceModuleName": "res",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "DrawParams",
+          "XmlName": "DrawParams",
+          "Ident": "DrawParams",
+          "Type": "DrawParams",
+          "SourceModuleName": "res",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "Fonts",
+          "XmlName": "Fonts",
+          "Ident": "Fonts",
+          "Type": "Fonts",
+          "SourceModuleName": "res",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "MultiMedias",
+          "XmlName": "MultiMedias",
+          "Ident": "MultiMedias",
+          "Type": "MultiMedias",
+          "SourceModuleName": "res",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "CompositeGraphicUnits",
+          "XmlName": "CompositeGraphicUnits",
+          "Ident": "CompositeGraphicUnits",
+          "Type": "CompositeGraphicUnits",
+          "SourceModuleName": "res",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ]
+    },
+    {
+      "Name": "Palette",
+      "Ident": "Palette",
+      "XmlName": "Palette",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "CV",
+          "XmlName": "CV",
+          "Ident": "cv",
+          "Type": "crate::schemas::definitions::StArray",
+          "SourceModuleName": "res",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CT_ColorSpace",
+      "Ident": "CtColorSpace",
+      "XmlName": null,
+      "Attributes": [
+        {
+          "Name": "Type",
+          "Ident": "type",
+          "Type": "CtColorSpaceType",
+          "IsOption": false
+        },
+        {
+          "Name": "BitsPerComponent",
+          "Ident": "bits_per_component",
+          "Type": "i32",
+          "IsOption": true
+        },
+        {
+          "Name": "Profile",
+          "Ident": "profile",
+          "Type": "crate::schemas::definitions::StLoc",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "Palette",
+          "XmlName": "Palette",
+          "Ident": "palette",
+          "Type": "Palette",
+          "SourceModuleName": "res",
+          "IsOption": true,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CT_DrawParam",
+      "Ident": "CtDrawParam",
+      "XmlName": null,
+      "Attributes": [
+        {
+          "Name": "Relative",
+          "Ident": "relative",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": true
+        },
+        {
+          "Name": "LineWidth",
+          "Ident": "line_width",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "Join",
+          "Ident": "join",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "Cap",
+          "Ident": "cap",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "DashOffset",
+          "Ident": "dash_offset",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "DashPattern",
+          "Ident": "dash_pattern",
+          "Type": "crate::schemas::definitions::StArray",
+          "IsOption": true
+        },
+        {
+          "Name": "MiterLimit",
+          "Ident": "miter_limit",
+          "Type": "f64",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "FillColor",
+          "XmlName": "FillColor",
+          "Ident": "fill_color",
+          "Type": "crate::schemas::page::CtColor",
+          "SourceModuleName": "res",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "StrokeColor",
+          "XmlName": "StrokeColor",
+          "Ident": "stroke_color",
+          "Type": "crate::schemas::page::CtColor",
+          "SourceModuleName": "res",
+          "IsOption": true,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CT_Font",
+      "Ident": "CtFont",
+      "XmlName": null,
+      "Attributes": [
+        {
+          "Name": "FontName",
+          "Ident": "font_name",
+          "Type": "String",
+          "IsOption": false
+        },
+        {
+          "Name": "FamilyName",
+          "Ident": "family_name",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "Charset",
+          "Ident": "charset",
+          "Type": "CtFontCharset",
+          "IsOption": true
+        },
+        {
+          "Name": "Italic",
+          "Ident": "italic",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "Bold",
+          "Ident": "bold",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "Serif",
+          "Ident": "serif",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "FixedWidth",
+          "Ident": "fixed_width",
+          "Type": "bool",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "FontFile",
+          "XmlName": "FontFile",
+          "Ident": "font_file",
+          "Type": "crate::schemas::definitions::StLoc",
+          "SourceModuleName": "res",
+          "IsOption": true,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CT_MultiMedia",
+      "Ident": "CtMultiMedia",
+      "XmlName": null,
+      "Attributes": [
+        {
+          "Name": "Type",
+          "Ident": "type",
+          "Type": "CtMultiMediaType",
+          "IsOption": false
+        },
+        {
+          "Name": "Format",
+          "Ident": "format",
+          "Type": "String",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "MediaFile",
+          "XmlName": "MediaFile",
+          "Ident": "media_file",
+          "Type": "crate::schemas::definitions::StLoc",
+          "SourceModuleName": "res",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CT_VectorG",
+      "Ident": "CtVectorG",
+      "XmlName": null,
+      "Attributes": [
+        {
+          "Name": "Width",
+          "Ident": "width",
+          "Type": "f64",
+          "IsOption": false
+        },
+        {
+          "Name": "Height",
+          "Ident": "height",
+          "Type": "f64",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "Thumbnail",
+          "XmlName": "Thumbnail",
+          "Ident": "thumbnail",
+          "Type": "crate::schemas::definitions::StRefId",
+          "SourceModuleName": "res",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Substitution",
+          "XmlName": "Substitution",
+          "Ident": "substitution",
+          "Type": "crate::schemas::definitions::StRefId",
+          "SourceModuleName": "res",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Content",
+          "XmlName": "Content",
+          "Ident": "content",
+          "Type": "crate::schemas::page::CtPageBlock",
+          "SourceModuleName": "res",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    }
+  ],
+  "Elements": [
+    {
+      "Name": "ColorSpace",
+      "Ident": "ColorSpace",
+      "XmlName": "ColorSpace",
+      "Type": "ColorSpace",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "ColorSpaces",
+      "Ident": "ColorSpaces",
+      "XmlName": "ColorSpaces",
+      "Type": "ColorSpaces",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "DrawParam",
+      "Ident": "DrawParam",
+      "XmlName": "DrawParam",
+      "Type": "DrawParam",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "DrawParams",
+      "Ident": "DrawParams",
+      "XmlName": "DrawParams",
+      "Type": "DrawParams",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Font",
+      "Ident": "Font",
+      "XmlName": "Font",
+      "Type": "Font",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Fonts",
+      "Ident": "Fonts",
+      "XmlName": "Fonts",
+      "Type": "Fonts",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "MultiMedia",
+      "Ident": "MultiMedia",
+      "XmlName": "MultiMedia",
+      "Type": "MultiMedia",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "MultiMedias",
+      "Ident": "MultiMedias",
+      "XmlName": "MultiMedias",
+      "Type": "MultiMedias",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "CompositeGraphicUnit",
+      "Ident": "CompositeGraphicUnit",
+      "XmlName": "CompositeGraphicUnit",
+      "Type": "CompositeGraphicUnit",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "CompositeGraphicUnits",
+      "Ident": "CompositeGraphicUnits",
+      "XmlName": "CompositeGraphicUnits",
+      "Type": "CompositeGraphicUnits",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Res",
+      "Ident": "Res",
+      "XmlName": "Res",
+      "Type": "Res",
+      "IsTopLevel": true
+    },
+    {
+      "Name": "CV",
+      "Ident": "Cv",
+      "XmlName": "CV",
+      "Type": "crate::schemas::definitions::StArray",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Palette",
+      "Ident": "Palette",
+      "XmlName": "Palette",
+      "Type": "Palette",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "FillColor",
+      "Ident": "FillColor",
+      "XmlName": "FillColor",
+      "Type": "crate::schemas::page::CtColor",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "StrokeColor",
+      "Ident": "StrokeColor",
+      "XmlName": "StrokeColor",
+      "Type": "crate::schemas::page::CtColor",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "FontFile",
+      "Ident": "FontFile",
+      "XmlName": "FontFile",
+      "Type": "crate::schemas::definitions::StLoc",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "MediaFile",
+      "Ident": "MediaFile",
+      "XmlName": "MediaFile",
+      "Type": "crate::schemas::definitions::StLoc",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Thumbnail",
+      "Ident": "Thumbnail",
+      "XmlName": "Thumbnail",
+      "Type": "crate::schemas::definitions::StRefId",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Substitution",
+      "Ident": "Substitution",
+      "XmlName": "Substitution",
+      "Type": "crate::schemas::definitions::StRefId",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Content",
+      "Ident": "Content",
+      "XmlName": "Content",
+      "Type": "crate::schemas::page::CtPageBlock",
+      "IsTopLevel": false
+    }
+  ],
+  "Enums": [
+    {
+      "Name": "CtColorSpaceType",
+      "Ident": "CtColorSpaceType",
+      "Variants": [
+        {
+          "Ident": "Gray",
+          "Value": "GRAY"
+        },
+        {
+          "Ident": "Rgb",
+          "Value": "RGB"
+        },
+        {
+          "Ident": "Cmyk",
+          "Value": "CMYK"
+        }
+      ],
+      "DefaultIndex": 0
+    },
+    {
+      "Name": "CtFontCharset",
+      "Ident": "CtFontCharset",
+      "Variants": [
+        {
+          "Ident": "Symbol",
+          "Value": "symbol"
+        },
+        {
+          "Ident": "Prc",
+          "Value": "prc"
+        },
+        {
+          "Ident": "Big5",
+          "Value": "big5"
+        },
+        {
+          "Ident": "_ShiftJis",
+          "Value": "shift-jis"
+        },
+        {
+          "Ident": "Wansung",
+          "Value": "wansung"
+        },
+        {
+          "Ident": "Johab",
+          "Value": "johab"
+        },
+        {
+          "Ident": "Unicode",
+          "Value": "unicode"
+        }
+      ],
+      "DefaultIndex": 0
+    },
+    {
+      "Name": "CtMultiMediaType",
+      "Ident": "CtMultiMediaType",
+      "Variants": [
+        {
+          "Ident": "Image",
+          "Value": "Image"
+        },
+        {
+          "Ident": "Audio",
+          "Value": "Audio"
+        },
+        {
+          "Ident": "Video",
+          "Value": "Video"
+        }
+      ],
+      "DefaultIndex": 0
+    }
+  ],
+  "Aliases": [],
+  "ModuleName": "res"
+}

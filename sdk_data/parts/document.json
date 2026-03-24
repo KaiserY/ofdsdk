@@ -1,0 +1,142 @@
+{
+  "Name": "Document",
+  "Base": "OfdPart",
+  "SchemaModule": "document",
+  "RootElement": "Document",
+  "ContextFrom": {
+    "Parent": "OfdPackage",
+    "FieldPath": [
+      "DocBody"
+    ],
+    "IsVec": true
+  },
+  "Path": "ReferenceField",
+  "Children": [
+    {
+      "ApiName": "Pages",
+      "Name": "Page",
+      "From": {
+        "Parent": "Document",
+        "FieldPath": [
+          "Pages",
+          "Page",
+          "BaseLoc"
+        ],
+        "IsVec": true
+      },
+      "MinOccursIsNonZero": true,
+      "MaxOccursGreatThanOne": true
+    },
+    {
+      "ApiName": "TemplatePages",
+      "Name": "TemplatePage",
+      "From": {
+        "Parent": "Document",
+        "FieldPath": [
+          "CommonData",
+          "TemplatePage",
+          "BaseLoc"
+        ],
+        "IsVec": true
+      },
+      "MaxOccursGreatThanOne": true
+    },
+    {
+      "ApiName": "Annotations",
+      "Name": "Annotations",
+      "From": {
+        "Parent": "Document",
+        "FieldPath": [
+          "Annotations"
+        ],
+        "IsVec": false
+      }
+    },
+    {
+      "ApiName": "Attachments",
+      "Name": "Attachments",
+      "From": {
+        "Parent": "Document",
+        "FieldPath": [
+          "Attachments"
+        ],
+        "IsVec": false
+      }
+    },
+    {
+      "ApiName": "CustomTags",
+      "Name": "CustomTags",
+      "From": {
+        "Parent": "Document",
+        "FieldPath": [
+          "CustomTags"
+        ],
+        "IsVec": false
+      }
+    },
+    {
+      "ApiName": "Extensions",
+      "Name": "Extensions",
+      "From": {
+        "Parent": "Document",
+        "FieldPath": [
+          "Extensions"
+        ],
+        "IsVec": false
+      }
+    },
+    {
+      "ApiName": "PublicRes",
+      "Name": "PublicRes",
+      "From": {
+        "Parent": "Document",
+        "FieldPath": [
+          "CommonData",
+          "PublicRes"
+        ],
+        "IsVec": true
+      },
+      "MaxOccursGreatThanOne": true
+    },
+    {
+      "ApiName": "DocumentRes",
+      "Name": "DocumentRes",
+      "From": {
+        "Parent": "Document",
+        "FieldPath": [
+          "CommonData",
+          "DocumentRes"
+        ],
+        "IsVec": true
+      },
+      "MaxOccursGreatThanOne": true
+    },
+    {
+      "ApiName": "Signatures",
+      "Name": "Signatures",
+      "From": {
+        "Parent": "Document",
+        "FieldPath": [
+          "Signatures"
+        ],
+        "IsVec": false,
+        "SourceRoot": "ContextElement"
+      }
+    },
+    {
+      "ApiName": "Versions",
+      "Name": "Version",
+      "From": {
+        "Parent": "Document",
+        "FieldPath": [
+          "Versions",
+          "Version",
+          "BaseLoc"
+        ],
+        "IsVec": true,
+        "SourceRoot": "ContextElement"
+      },
+      "MaxOccursGreatThanOne": true
+    }
+  ]
+}

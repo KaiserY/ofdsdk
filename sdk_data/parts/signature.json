@@ -1,0 +1,34 @@
+{
+  "Name": "Signature",
+  "Base": "OfdPart",
+  "SchemaModule": "signature",
+  "RootElement": "Signature",
+  "Path": "ReferenceField",
+  "Children": [
+    {
+      "ApiName": "SignatureValue",
+      "Name": "SignatureValue",
+      "From": {
+        "Parent": "Signature",
+        "FieldPath": [
+          "SignedValue"
+        ],
+        "IsVec": false
+      },
+      "MinOccursIsNonZero": true
+    },
+    {
+      "ApiName": "SealFile",
+      "Name": "SealFile",
+      "From": {
+        "Parent": "Signature",
+        "FieldPath": [
+          "SignedInfo",
+          "Seal",
+          "BaseLoc"
+        ],
+        "IsVec": false
+      }
+    }
+  ]
+}

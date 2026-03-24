@@ -1,0 +1,90 @@
+{
+  "TargetNamespace": "http://www.ofdspec.org/2016",
+  "Types": [
+    {
+      "Name": "CustomTag",
+      "Ident": "CustomTag",
+      "XmlName": "CustomTag",
+      "Attributes": [
+        {
+          "Name": "NameSpace",
+          "Ident": "name_space",
+          "Type": "String",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "SchemaLoc",
+          "XmlName": "SchemaLoc",
+          "Ident": "schema_loc",
+          "Type": "crate::schemas::definitions::StLoc",
+          "SourceModuleName": "custom_tags",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "FileLoc",
+          "XmlName": "FileLoc",
+          "Ident": "file_loc",
+          "Type": "crate::schemas::definitions::StLoc",
+          "SourceModuleName": "custom_tags",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CustomTags",
+      "Ident": "CustomTags",
+      "XmlName": "CustomTags",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "CustomTag",
+          "XmlName": "CustomTag",
+          "Ident": "custom_tag",
+          "Type": "CustomTag",
+          "SourceModuleName": "custom_tags",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    }
+  ],
+  "Elements": [
+    {
+      "Name": "SchemaLoc",
+      "Ident": "SchemaLoc",
+      "XmlName": "SchemaLoc",
+      "Type": "crate::schemas::definitions::StLoc",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "FileLoc",
+      "Ident": "FileLoc",
+      "XmlName": "FileLoc",
+      "Type": "crate::schemas::definitions::StLoc",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "CustomTag",
+      "Ident": "CustomTag",
+      "XmlName": "CustomTag",
+      "Type": "CustomTag",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "CustomTags",
+      "Ident": "CustomTags",
+      "XmlName": "CustomTags",
+      "Type": "CustomTags",
+      "IsTopLevel": true
+    }
+  ],
+  "Enums": [],
+  "Aliases": [],
+  "ModuleName": "custom_tags"
+}

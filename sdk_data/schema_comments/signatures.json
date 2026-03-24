@@ -1,0 +1,89 @@
+{
+  "Entries": [
+    {
+      "Schema": "signatures",
+      "Type": "Signatures",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "签名列表根节点属性。"
+        }
+      ]
+    },
+    {
+      "Schema": "signatures",
+      "Type": "Signatures",
+      "Field": "MaxSignId",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "安全标识的最大值，作用与文档入口文件 Document.xml 中的 MaxID 相同，为了避免在签名时影响文档入口文件，采用了与 ST_ID 不一样的 ID 编码方式。推荐使用“sNNN”的编码方式，NNN 从 1 开始。"
+        }
+      ]
+    },
+    {
+      "Schema": "signatures",
+      "Type": "Signatures",
+      "Field": "Signature",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "数字签名或安全签章在列表中的注册信息，一次签名或签章对应一个节点。"
+        }
+      ]
+    },
+    {
+      "Schema": "signatures",
+      "Type": "Signature",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "签名属性。"
+        }
+      ]
+    },
+    {
+      "Schema": "signatures",
+      "Type": "Signature",
+      "Field": "ID",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "签名或签章的标识。"
+        }
+      ]
+    },
+    {
+      "Schema": "signatures",
+      "Type": "Signature",
+      "Field": "Type",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "签名节点的类型，目前规定了两个可选值，Seal 表示是安全签章，Sign 表示是纯数字签名。"
+        }
+      ]
+    },
+    {
+      "Schema": "signatures",
+      "Type": "Signature",
+      "Field": "BaseLoc",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "指向包内的签名描述文件。"
+        }
+      ]
+    },
+    {
+      "Schema": "signatures",
+      "Type": "SignatureType",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "签名节点的类型。Seal 表示安全签章，Sign 表示纯数字签名。"
+        }
+      ]
+    }
+  ]
+}

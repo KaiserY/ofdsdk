@@ -1,0 +1,12 @@
+{
+  "Name": "DocumentResFontFile",
+  "Base": "OfdPart",
+  "Path": {
+    "ReferenceFieldWithBase": {
+      "BaseFieldPath": [
+        "BaseLoc"
+      ]
+    }
+  },
+  "Children": []
+}

@@ -1,0 +1,22 @@
+{
+  "Name": "Attachments",
+  "Base": "OfdPart",
+  "SchemaModule": "attachments",
+  "RootElement": "Attachments",
+  "Path": "ReferenceField",
+  "Children": [
+    {
+      "ApiName": "AttachmentFiles",
+      "Name": "AttachmentFile",
+      "From": {
+        "Parent": "Attachments",
+        "FieldPath": [
+          "Attachment",
+          "FileLoc"
+        ],
+        "IsVec": true
+      },
+      "MaxOccursGreatThanOne": true
+    }
+  ]
+}

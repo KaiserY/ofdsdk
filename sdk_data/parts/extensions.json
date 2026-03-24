@@ -1,0 +1,22 @@
+{
+  "Name": "Extensions",
+  "Base": "OfdPart",
+  "SchemaModule": "extensions",
+  "RootElement": "Extensions",
+  "Path": "ReferenceField",
+  "Children": [
+    {
+      "ApiName": "ExtensionDataFiles",
+      "Name": "ExtensionDataFile",
+      "From": {
+        "Parent": "Extensions",
+        "FieldPath": [
+          "Extension",
+          "ExtendData"
+        ],
+        "IsVec": true
+      },
+      "MaxOccursGreatThanOne": true
+    }
+  ]
+}

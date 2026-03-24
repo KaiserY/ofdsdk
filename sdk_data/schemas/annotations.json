@@ -1,0 +1,74 @@
+{
+  "TargetNamespace": "http://www.ofdspec.org/2016",
+  "Types": [
+    {
+      "Name": "Page",
+      "Ident": "Page",
+      "XmlName": "Page",
+      "Attributes": [
+        {
+          "Name": "PageID",
+          "Ident": "page_id",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "FileLoc",
+          "XmlName": "FileLoc",
+          "Ident": "file_loc",
+          "Type": "crate::schemas::definitions::StLoc",
+          "SourceModuleName": "annotations",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "Annotations",
+      "Ident": "Annotations",
+      "XmlName": "Annotations",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "Page",
+          "XmlName": "Page",
+          "Ident": "page",
+          "Type": "Page",
+          "SourceModuleName": "annotations",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    }
+  ],
+  "Elements": [
+    {
+      "Name": "FileLoc",
+      "Ident": "FileLoc",
+      "XmlName": "FileLoc",
+      "Type": "crate::schemas::definitions::StLoc",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Page",
+      "Ident": "Page",
+      "XmlName": "Page",
+      "Type": "Page",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Annotations",
+      "Ident": "Annotations",
+      "XmlName": "Annotations",
+      "Type": "Annotations",
+      "IsTopLevel": true
+    }
+  ],
+  "Enums": [],
+  "Aliases": [],
+  "ModuleName": "annotations"
+}

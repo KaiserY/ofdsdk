@@ -1,0 +1,34 @@
+{
+  "Name": "OfdPackage",
+  "Base": "OfdPackage",
+  "SchemaModule": "ofd",
+  "RootElement": "OFD",
+  "Path": {
+    "Fixed": {
+      "Path": "OFD.xml"
+    }
+  },
+  "Children": [
+    {
+      "ApiName": "Documents",
+      "Name": "Document",
+      "From": {
+        "Parent": "OfdPackage",
+        "FieldPath": [
+          "DocBody",
+          "DocRoot"
+        ],
+        "IsVec": true
+      },
+      "ContextFrom": {
+        "Parent": "OfdPackage",
+        "FieldPath": [
+          "DocBody"
+        ],
+        "IsVec": true
+      },
+      "MinOccursIsNonZero": true,
+      "MaxOccursGreatThanOne": true
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "Name": "PageRes",
+  "Base": "OfdPart",
+  "SchemaModule": "res",
+  "RootElement": "Res",
+  "Path": "ReferenceField",
+  "Children": [
+    {
+      "ApiName": "PageResFontFiles",
+      "Name": "PageResFontFile",
+      "From": {
+        "Parent": "PageRes",
+        "FieldPath": [
+          "Fonts",
+          "Font",
+          "FontFile"
+        ],
+        "IsVec": true
+      },
+      "MaxOccursGreatThanOne": true
+    },
+    {
+      "ApiName": "PageResMediaFiles",
+      "Name": "PageResMediaFile",
+      "From": {
+        "Parent": "PageRes",
+        "FieldPath": [
+          "MultiMedias",
+          "MultiMedia",
+          "MediaFile"
+        ],
+        "IsVec": true
+      },
+      "MaxOccursGreatThanOne": true
+    }
+  ]
+}

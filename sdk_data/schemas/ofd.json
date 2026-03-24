@@ -1,0 +1,490 @@
+{
+  "TargetNamespace": "http://www.ofdspec.org/2016",
+  "Types": [
+    {
+      "Name": "Version",
+      "Ident": "Version",
+      "XmlName": "Version",
+      "Attributes": [
+        {
+          "Name": "ID",
+          "Ident": "id",
+          "Type": "String",
+          "IsOption": false
+        },
+        {
+          "Name": "Index",
+          "Ident": "index",
+          "Type": "i32",
+          "IsOption": false
+        },
+        {
+          "Name": "Current",
+          "Ident": "current",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "BaseLoc",
+          "Ident": "base_loc",
+          "Type": "crate::schemas::definitions::StLoc",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [],
+      "Children": []
+    },
+    {
+      "Name": "Versions",
+      "Ident": "Versions",
+      "XmlName": "Versions",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "Version",
+          "XmlName": "Version",
+          "Ident": "version",
+          "Type": "Version",
+          "SourceModuleName": "ofd",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "DocBody",
+      "Ident": "DocBody",
+      "XmlName": "DocBody",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "DocInfo",
+          "XmlName": "DocInfo",
+          "Ident": "doc_info",
+          "Type": "CtDocInfo",
+          "SourceModuleName": "ofd",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "DocRoot",
+          "XmlName": "DocRoot",
+          "Ident": "doc_root",
+          "Type": "crate::schemas::definitions::StLoc",
+          "SourceModuleName": "ofd",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "Versions",
+          "XmlName": "Versions",
+          "Ident": "versions",
+          "Type": "Versions",
+          "SourceModuleName": "ofd",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Signatures",
+          "XmlName": "Signatures",
+          "Ident": "signatures",
+          "Type": "crate::schemas::definitions::StLoc",
+          "SourceModuleName": "ofd",
+          "IsOption": true,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "OFD",
+      "Ident": "Ofd",
+      "XmlName": "OFD",
+      "Attributes": [
+        {
+          "Name": "Version",
+          "Ident": "version",
+          "Type": "String",
+          "IsOption": false
+        },
+        {
+          "Name": "DocType",
+          "Ident": "doc_type",
+          "Type": "OfdDocType",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "DocBody",
+          "XmlName": "DocBody",
+          "Ident": "doc_body",
+          "Type": "DocBody",
+          "SourceModuleName": "ofd",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "Keywords",
+      "Ident": "Keywords",
+      "XmlName": "Keywords",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "Keyword",
+          "XmlName": "Keyword",
+          "Ident": "keyword",
+          "Type": "String",
+          "SourceModuleName": "ofd",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CustomData",
+      "Ident": "CustomData",
+      "XmlName": "CustomData",
+      "Attributes": [
+        {
+          "Name": "Name",
+          "Ident": "name",
+          "Type": "String",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "xml_value",
+          "XmlName": null,
+          "Ident": "xml_value",
+          "Type": "String",
+          "SourceModuleName": "ofd",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CustomDatas",
+      "Ident": "CustomDatas",
+      "XmlName": "CustomDatas",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "CustomData",
+          "XmlName": "CustomData",
+          "Ident": "custom_data",
+          "Type": "CustomData",
+          "SourceModuleName": "ofd",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CT_DocInfo",
+      "Ident": "CtDocInfo",
+      "XmlName": null,
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "DocID",
+          "XmlName": "DocID",
+          "Ident": "doc_id",
+          "Type": "String",
+          "SourceModuleName": "ofd",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "Title",
+          "XmlName": "Title",
+          "Ident": "title",
+          "Type": "String",
+          "SourceModuleName": "ofd",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Author",
+          "XmlName": "Author",
+          "Ident": "author",
+          "Type": "String",
+          "SourceModuleName": "ofd",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Subject",
+          "XmlName": "Subject",
+          "Ident": "subject",
+          "Type": "String",
+          "SourceModuleName": "ofd",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Abstract",
+          "XmlName": "Abstract",
+          "Ident": "abstract",
+          "Type": "String",
+          "SourceModuleName": "ofd",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "CreationDate",
+          "XmlName": "CreationDate",
+          "Ident": "creation_date",
+          "Type": "String",
+          "SourceModuleName": "ofd",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "ModDate",
+          "XmlName": "ModDate",
+          "Ident": "mod_date",
+          "Type": "String",
+          "SourceModuleName": "ofd",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "DocUsage",
+          "XmlName": "DocUsage",
+          "Ident": "doc_usage",
+          "Type": "String",
+          "SourceModuleName": "ofd",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Cover",
+          "XmlName": "Cover",
+          "Ident": "cover",
+          "Type": "crate::schemas::definitions::StLoc",
+          "SourceModuleName": "ofd",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Keywords",
+          "XmlName": "Keywords",
+          "Ident": "keywords",
+          "Type": "Keywords",
+          "SourceModuleName": "ofd",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Creator",
+          "XmlName": "Creator",
+          "Ident": "creator",
+          "Type": "String",
+          "SourceModuleName": "ofd",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "CreatorVersion",
+          "XmlName": "CreatorVersion",
+          "Ident": "creator_version",
+          "Type": "String",
+          "SourceModuleName": "ofd",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "CustomDatas",
+          "XmlName": "CustomDatas",
+          "Ident": "custom_datas",
+          "Type": "CustomDatas",
+          "SourceModuleName": "ofd",
+          "IsOption": true,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    }
+  ],
+  "Elements": [
+    {
+      "Name": "DocInfo",
+      "Ident": "DocInfo",
+      "XmlName": "DocInfo",
+      "Type": "CtDocInfo",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "DocRoot",
+      "Ident": "DocRoot",
+      "XmlName": "DocRoot",
+      "Type": "crate::schemas::definitions::StLoc",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Version",
+      "Ident": "Version",
+      "XmlName": "Version",
+      "Type": "Version",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Versions",
+      "Ident": "Versions",
+      "XmlName": "Versions",
+      "Type": "Versions",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Signatures",
+      "Ident": "Signatures",
+      "XmlName": "Signatures",
+      "Type": "crate::schemas::definitions::StLoc",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "DocBody",
+      "Ident": "DocBody",
+      "XmlName": "DocBody",
+      "Type": "DocBody",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "OFD",
+      "Ident": "Ofd",
+      "XmlName": "OFD",
+      "Type": "Ofd",
+      "IsTopLevel": true
+    },
+    {
+      "Name": "DocID",
+      "Ident": "DocId",
+      "XmlName": "DocID",
+      "Type": "String",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Title",
+      "Ident": "Title",
+      "XmlName": "Title",
+      "Type": "String",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Author",
+      "Ident": "Author",
+      "XmlName": "Author",
+      "Type": "String",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Subject",
+      "Ident": "Subject",
+      "XmlName": "Subject",
+      "Type": "String",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Abstract",
+      "Ident": "Abstract",
+      "XmlName": "Abstract",
+      "Type": "String",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "CreationDate",
+      "Ident": "CreationDate",
+      "XmlName": "CreationDate",
+      "Type": "String",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "ModDate",
+      "Ident": "ModDate",
+      "XmlName": "ModDate",
+      "Type": "String",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "DocUsage",
+      "Ident": "DocUsage",
+      "XmlName": "DocUsage",
+      "Type": "String",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Cover",
+      "Ident": "Cover",
+      "XmlName": "Cover",
+      "Type": "crate::schemas::definitions::StLoc",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Keyword",
+      "Ident": "Keyword",
+      "XmlName": "Keyword",
+      "Type": "String",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Keywords",
+      "Ident": "Keywords",
+      "XmlName": "Keywords",
+      "Type": "Keywords",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Creator",
+      "Ident": "Creator",
+      "XmlName": "Creator",
+      "Type": "String",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "CreatorVersion",
+      "Ident": "CreatorVersion",
+      "XmlName": "CreatorVersion",
+      "Type": "String",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "CustomData",
+      "Ident": "CustomData",
+      "XmlName": "CustomData",
+      "Type": "CustomData",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "CustomDatas",
+      "Ident": "CustomDatas",
+      "XmlName": "CustomDatas",
+      "Type": "CustomDatas",
+      "IsTopLevel": false
+    }
+  ],
+  "Enums": [
+    {
+      "Name": "OfdDocType",
+      "Ident": "OfdDocType",
+      "Variants": [
+        {
+          "Ident": "Ofd",
+          "Value": "OFD"
+        }
+      ],
+      "DefaultIndex": 0
+    }
+  ],
+  "Aliases": [],
+  "ModuleName": "ofd"
+}

@@ -1,0 +1,392 @@
+{
+  "Entries": [
+    {
+      "Schema": "ofd",
+      "Type": "Ofd",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "OFD 主入口。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "Ofd",
+      "Field": "Version",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文件格式的版本号，取值为“1.0”。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "Ofd",
+      "Field": "DocType",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文件格式子集类型，取值为“OFD”，表明此文件符合本标准。取值为“OFD-A”，表明此文件符合 OFD 存档规范。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "Ofd",
+      "Field": "DocBody",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文件对象入口，可以存在多个，以便在一个文档中包含多个版式文档。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "DocBody",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文件对象入口。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "Versions",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "版本序列。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "Versions",
+      "Field": "Version",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "版本描述入口。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "Version",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "版本属性。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "Version",
+      "Field": "ID",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "版本标识。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "Version",
+      "Field": "Index",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "版本号。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "Version",
+      "Field": "Current",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "是否是默认版本。默认为 false。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "Version",
+      "Field": "BaseLoc",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "指向包内的版本描述文件。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "DocBody",
+      "Field": "DocInfo",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档元数据信息描述，文档元数据信息具体结构见图 4。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "DocBody",
+      "Field": "DocRoot",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "指向文档根节点文档，有关文档根节点描述见 7.5 文档根节点。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "DocBody",
+      "Field": "Versions",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "包含多个版本描述节点，用于定义文件因注释和其他改动产生的版本信息，见第 19 章。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "DocBody",
+      "Field": "Signatures",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "指向该文档中签名和签章结构，见第 18 章。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "CtDocInfo",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档元数据信息描述。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "CtDocInfo",
+      "Field": "DocID",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "采用 UUID 算法生成的由 32 个字符组成的文件标识。每个 DocID 在文档创建或生成的时候进行分配。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "CtDocInfo",
+      "Field": "Title",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档标题。标题可以与文件名不同。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "CtDocInfo",
+      "Field": "Author",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档作者。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "CtDocInfo",
+      "Field": "Subject",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档主题。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "CtDocInfo",
+      "Field": "Abstract",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档摘要与注释。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "CtDocInfo",
+      "Field": "CreationDate",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档创建日期。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "CtDocInfo",
+      "Field": "ModDate",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档最近修改日期。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "CtDocInfo",
+      "Field": "DocUsage",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档分类，可取值如下：\nNormal——普通文档\nEBook——电子书\nENewsPaper——电子报纸\nEMagzine——电子期刊杂志\n默认值为 Normal。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "CtDocInfo",
+      "Field": "Cover",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档封面，此路径指向一个图片文件。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "CtDocInfo",
+      "Field": "Keywords",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "关键词集合，每一个关键词用一个“Keyword”子节点来表达。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "CtDocInfo",
+      "Field": "Creator",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "创建文档的应用程序。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "CtDocInfo",
+      "Field": "CreatorVersion",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "创建文档的应用程序的版本信息。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "CtDocInfo",
+      "Field": "CustomDatas",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "用户自定义元数据集合。其子节点为 CustomData。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "Keywords",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "关键词集合。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "Keywords",
+      "Field": "Keyword",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "关键词。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "CustomDatas",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "用户自定义元数据集合。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "CustomDatas",
+      "Field": "CustomData",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "用户自定义元数据，可以指定一个名称及其对应的值。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "CustomData",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "用户自定义元数据。"
+        }
+      ]
+    },
+    {
+      "Schema": "ofd",
+      "Type": "CustomData",
+      "Field": "Name",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "用户自定义元数据名称。"
+        }
+      ]
+    }
+  ]
+}

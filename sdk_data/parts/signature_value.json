@@ -1,0 +1,6 @@
+{
+  "Name": "SignatureValue",
+  "Base": "OfdPart",
+  "Path": "ReferenceField",
+  "Children": []
+}

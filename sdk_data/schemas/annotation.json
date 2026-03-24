@@ -1,0 +1,299 @@
+{
+  "TargetNamespace": "http://www.ofdspec.org/2016",
+  "Types": [
+    {
+      "Name": "Parameter",
+      "Ident": "Parameter",
+      "XmlName": "Parameter",
+      "Attributes": [
+        {
+          "Name": "Name",
+          "Ident": "name",
+          "Type": "String",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "xml_value",
+          "XmlName": null,
+          "Ident": "xml_value",
+          "Type": "String",
+          "SourceModuleName": "annotation",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "Parameters",
+      "Ident": "Parameters",
+      "XmlName": "Parameters",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "Parameter",
+          "XmlName": "Parameter",
+          "Ident": "parameter",
+          "Type": "Parameter",
+          "SourceModuleName": "annotation",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "Appearance",
+      "Ident": "Appearance",
+      "XmlName": "Appearance",
+      "Attributes": [
+        {
+          "Name": "Boundary",
+          "Ident": "boundary",
+          "Type": "crate::schemas::definitions::StBox",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [],
+      "Children": [
+        {
+          "Name": "TextObject",
+          "XmlName": "TextObject",
+          "Ident": "TextObject",
+          "Type": "crate::schemas::page::TextObject",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "PathObject",
+          "XmlName": "PathObject",
+          "Ident": "PathObject",
+          "Type": "crate::schemas::page::PathObject",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "ImageObject",
+          "XmlName": "ImageObject",
+          "Ident": "ImageObject",
+          "Type": "crate::schemas::page::ImageObject",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "CompositeObject",
+          "XmlName": "CompositeObject",
+          "Ident": "CompositeObject",
+          "Type": "crate::schemas::page::CompositeObject",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "PageBlock",
+          "XmlName": "PageBlock",
+          "Ident": "PageBlock",
+          "Type": "crate::schemas::page::PageBlock",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ]
+    },
+    {
+      "Name": "Annot",
+      "Ident": "Annot",
+      "XmlName": "Annot",
+      "Attributes": [
+        {
+          "Name": "ID",
+          "Ident": "id",
+          "Type": "crate::schemas::definitions::StId",
+          "IsOption": false
+        },
+        {
+          "Name": "Type",
+          "Ident": "type",
+          "Type": "AnnotType",
+          "IsOption": false
+        },
+        {
+          "Name": "Creator",
+          "Ident": "creator",
+          "Type": "String",
+          "IsOption": false
+        },
+        {
+          "Name": "LastModDate",
+          "Ident": "last_mod_date",
+          "Type": "String",
+          "IsOption": false
+        },
+        {
+          "Name": "Visible",
+          "Ident": "visible",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "Subtype",
+          "Ident": "subtype",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "Print",
+          "Ident": "print",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "NoZoom",
+          "Ident": "no_zoom",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "NoRotate",
+          "Ident": "no_rotate",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "ReadOnly",
+          "Ident": "read_only",
+          "Type": "bool",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "Remark",
+          "XmlName": "Remark",
+          "Ident": "remark",
+          "Type": "String",
+          "SourceModuleName": "annotation",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Parameters",
+          "XmlName": "Parameters",
+          "Ident": "parameters",
+          "Type": "Parameters",
+          "SourceModuleName": "annotation",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Appearance",
+          "XmlName": "Appearance",
+          "Ident": "appearance",
+          "Type": "Appearance",
+          "SourceModuleName": "annotation",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "PageAnnot",
+      "Ident": "PageAnnot",
+      "XmlName": "PageAnnot",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "Annot",
+          "XmlName": "Annot",
+          "Ident": "annot",
+          "Type": "Annot",
+          "SourceModuleName": "annotation",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    }
+  ],
+  "Elements": [
+    {
+      "Name": "Remark",
+      "Ident": "Remark",
+      "XmlName": "Remark",
+      "Type": "String",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Parameter",
+      "Ident": "Parameter",
+      "XmlName": "Parameter",
+      "Type": "Parameter",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Parameters",
+      "Ident": "Parameters",
+      "XmlName": "Parameters",
+      "Type": "Parameters",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Appearance",
+      "Ident": "Appearance",
+      "XmlName": "Appearance",
+      "Type": "Appearance",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Annot",
+      "Ident": "Annot",
+      "XmlName": "Annot",
+      "Type": "Annot",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "PageAnnot",
+      "Ident": "PageAnnot",
+      "XmlName": "PageAnnot",
+      "Type": "PageAnnot",
+      "IsTopLevel": true
+    }
+  ],
+  "Enums": [
+    {
+      "Name": "AnnotType",
+      "Ident": "AnnotType",
+      "Variants": [
+        {
+          "Ident": "Link",
+          "Value": "Link"
+        },
+        {
+          "Ident": "Path",
+          "Value": "Path"
+        },
+        {
+          "Ident": "Highlight",
+          "Value": "Highlight"
+        },
+        {
+          "Ident": "Stamp",
+          "Value": "Stamp"
+        },
+        {
+          "Ident": "Watermark",
+          "Value": "Watermark"
+        }
+      ],
+      "DefaultIndex": 0
+    }
+  ],
+  "Aliases": [],
+  "ModuleName": "annotation"
+}

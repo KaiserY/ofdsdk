@@ -1,0 +1,1376 @@
+{
+  "Entries": [
+    {
+      "Schema": "page",
+      "Type": "Template",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "该页所使用的模板页。模板页的内容结构和普通页相同，定义在 CommonData 指定的 XML 文件中。一个页可以使用多个模板页。该节点使用时通过 TemplateID 来引用具体的模板，并通过 ZOrder 属性来控制模板在页面中的呈现顺序。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Template",
+      "Field": "TemplateID",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "引用在文档公用数据 (CommonData) 中定义的模板页标识。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Template",
+      "Field": "ZOrder",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "控制模板在页面中的呈现顺序，其类型描述和呈现顺序与 Layer 中 Type 的描述和处理一致。如果多个图层的此属性相同，则应根据其出现的顺序来显示，先出现者先绘制。默认值为 Background。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Page",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "页对象。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Page",
+      "Field": "Template",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "该页所使用的模板页。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Page",
+      "Field": "PageRes",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "页资源，指向该页使用的资源文件。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Page",
+      "Field": "Area",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "定义该页页面区域的大小和位置，仅对该页有效。该节点不出现时则使用模板页中的定义，如果模板页不存在或模板页中没有定义页面区域，则使用文件 CommonData 中的定义。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Page",
+      "Field": "Content",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "页面内容描述，该节点不存在时，表示空白页。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Page",
+      "Field": "Actions",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "与页面关联的动作序列。当存在多个 Action 对象时，所有动作依次执行。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Content",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "页面内容描述。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Content",
+      "Field": "Layer",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "层节点，一页可包含一个或多个层。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Layer",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "层节点，一页可包含一个或多个层。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Layer",
+      "Field": "Type",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "层类型描述，预定义的值见表 15。默认为 Body。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Layer",
+      "Field": "DrawParam",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "图层的绘制参数，引用资源文件中定义的绘制参数标识。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtLayer",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "层节点。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtPageBlock",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "页面块，可以嵌套。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "PageBlock",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "页面块，可以嵌套。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "TextObject",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文字对象属性，见 11.2。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "TextObject",
+      "Field": "Font",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "引用资源文件中定义的字型的标识。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "TextObject",
+      "Field": "Size",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "字号，单位为毫米。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "TextObject",
+      "Field": "Stroke",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "是否勾边。默认值为 false。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "TextObject",
+      "Field": "Fill",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "是否填充。默认值为 true。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "TextObject",
+      "Field": "HScale",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "字型在水平方向的放缩比。默认值为 1.0。例如，当 HScale 值为 0.5 时表示实际显示的字宽为原来字宽的一半。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "TextObject",
+      "Field": "ReadDirection",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "阅读方向，指定了文字排列的方向，描述见 11.3 文字定位。默认值为 0。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "TextObject",
+      "Field": "CharDirection",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "字符方向，指定了文字放置的方式，具体内容见 11.3 文字定位。默认值为 0。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "TextObject",
+      "Field": "Weight",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文字对象的粗细值；可选取值为 100、200、300、400、500、600、700、800、900。默认值为 400。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "TextObject",
+      "Field": "Italic",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "是否是斜体样式。默认值为 false。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "TextObject",
+      "Field": "FillColor",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "填充颜色。默认为黑色。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "TextObject",
+      "Field": "StrokeColor",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "勾边颜色。默认为透明色。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "TextObject",
+      "Field": "CGTransform",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "指定字符编码到字符索引之间的变换关系，描述见 11.4 字符变换。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "TextObject",
+      "Field": "TextCode",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文字内容，也就是一段字符编码串。如果字符编码不在 XML 编码方式的字符范围之内，应采用“\\”加四位十六进制数的格式转义；文字内容中出现的空格也需要转义。若 TextCode 作为占位符使用时，一律采用“¤”(u00A4) 占位。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtCgTransform",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "指定字符编码到字符索引之间的变换关系，描述见 11.4 字符变换。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtCgTransform",
+      "Field": "CodePosition",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "TextCode 中字符编码的起始位置，从 0 开始。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtCgTransform",
+      "Field": "CodeCount",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "变换关系中字符的数量，该数值应大于或等于 1，否则属于错误描述，默认为 1。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtCgTransform",
+      "Field": "GlyphCount",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "变换关系中字形索引的个数，该数值应大于或等于 1，否则属于错误描述，默认为 1。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtCgTransform",
+      "Field": "Glyphs",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "变换后的字形索引列表。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "PathObject",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "图形对象属性，见 9.1。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "PathObject",
+      "Field": "Stroke",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "图形是否被勾边。默认值为 true。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "PathObject",
+      "Field": "Fill",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "图形是否被填充。默认值为 false。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "PathObject",
+      "Field": "Rule",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "图形的填充规则，当 Fill 属性存在时出现。可选值为 NonZero 和 Even-Odd。默认值为 NonZero。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "PathObject",
+      "Field": "FillColor",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "填充颜色。默认为透明色。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "PathObject",
+      "Field": "StrokeColor",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "勾边颜色。默认为黑色。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "PathObject",
+      "Field": "AbbreviatedData",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "图形轮廓数据，由一系列紧缩的操作符和操作数构成。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "ImageObject",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "图像对象，见第 10 章。带有播放视频动作时，见第 12 章。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "ImageObject",
+      "Field": "ResourceID",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "引用资源文件中定义的多媒体的标识。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "ImageObject",
+      "Field": "Substitution",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "可替换图像，引用资源文件中定义的多媒体的标识，用于某些情况如高分辨率输出时进行图像替换。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "ImageObject",
+      "Field": "ImageMask",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "图像蒙版，引用资源文件中定义的多媒体的标识，用作蒙版的图像应是与 ResourceID 指向的图像相同大小的二值图。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "ImageObject",
+      "Field": "Border",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "图像边框设置。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Border",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "图像边框设置。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Border",
+      "Field": "LineWidth",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "边框线宽，如果为 0 则表示边框不进行绘制。默认值为 0.353 mm。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Border",
+      "Field": "HorizontalCornerRadius",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "边框水平角半径。默认值为 0。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Border",
+      "Field": "VerticalCornerRadius",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "边框垂直角半径。默认值为 0。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Border",
+      "Field": "DashOffset",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "边框虚线重复样式开始的位置，边框的起始点位置为左上角，绕行方向为顺时针。默认值为 0。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Border",
+      "Field": "DashPattern",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "边框虚线重复样式，边框的起始点位置为左上角，绕行方向为顺时针。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Border",
+      "Field": "BorderColor",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "边框颜色，有关边框颜色描述见 8.3.2 基本颜色。默认为黑色。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CompositeObject",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "复合对象，见第 13 章。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CompositeObject",
+      "Field": "ResourceID",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "引用资源文件中定义的矢量图像的标识。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "TemplateZOrder",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "模板页的默认图层类型，见表 15。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtLayerType",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "层类型描述，预定义的值见表 15。默认为 Body。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtColor",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "颜色属性。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtColor",
+      "Field": "Value",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "颜色值，指定了当前颜色空间下各通道的取值。Value 的取值应符合“通道 1 通道 2 通道 3 …”格式。此属性不出现时，应采用 Index 属性从颜色空间的调色板中的取值。当二者都不出现时，该颜色各通道的值全部为 0。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtColor",
+      "Field": "Index",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "调色板中颜色的编号，非负整数，将从当前颜色空间的调色板中取出相应索引的预定义颜色用来绘制。索引从 0 开始。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtColor",
+      "Field": "ColorSpace",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "引用资源文件中颜色空间的标识。默认值为文档设定的颜色空间。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtColor",
+      "Field": "Alpha",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "颜色透明度，在 0~255 之间取值。默认为 255，表示完全不透明。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtColorContentChoice",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "复杂颜色类型。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtPattern",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "底纹属性。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtPattern",
+      "Field": "Width",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "底纹单元的宽度。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtPattern",
+      "Field": "Height",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "底纹单元的高度。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtPattern",
+      "Field": "XStep",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "X 方向底纹单元间距，默认值为底纹单元的宽度。若设定值小于底纹单元的宽度时，应按默认值处理。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtPattern",
+      "Field": "YStep",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "Y 方向底纹单元间距，默认值为底纹单元的高度。若设定值小于底纹单元的高度时，应按默认值处理。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtPattern",
+      "Field": "ReflectMethod",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "描述底纹单元的映像翻转方式，枚举值，默认值为 Normal。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtPattern",
+      "Field": "RelativeTo",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "底纹单元起始绘制位置，可取值为 Page 或 Object，默认值为 Object。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtPattern",
+      "Field": "CTM",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "底纹单元的变换矩阵，用于某些需要对底纹单元进行平移旋转变换的场合，默认为单位矩阵。底纹呈现时先做 XStep、YStep 排列，然后一起做 CTM 处理。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CellContent",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "底纹单元。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CellContent",
+      "Field": "Thumbnail",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "引用资源文件中缩略图图像的标识。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Segment",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "颜色段。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Segment",
+      "Field": "Position",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "用于确定 StartPoint 和 EndPoint 中的各颜色的位置值，取值范围是 [0, 1.0]，各段颜色的 Position 值应根据颜色出现的顺序递增。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Segment",
+      "Field": "Color",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "该段的颜色，应是基本颜色。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtAxialShd",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "轴向渐变属性。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtAxialShd",
+      "Field": "MapType",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "渐变绘制的方式，可选值为 Direct、Repeat、Reflect。默认值为 Direct。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtAxialShd",
+      "Field": "MapUnit",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "轴线一个渐变区间的长度，当 MapType 的值不等于 Direct 时出现。默认值为轴线长度。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtAxialShd",
+      "Field": "Extend",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "轴线延长线方向是否继续绘制渐变。可选值为 0、1、2、3。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtAxialShd",
+      "Field": "StartPoint",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "轴线的起始点。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtAxialShd",
+      "Field": "EndPoint",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "轴线的结束点。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtAxialShd",
+      "Field": "Segment",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "颜色段，至少出现两个。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtRadialShd",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "径向渐变属性。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtRadialShd",
+      "Field": "MapType",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "渐变绘制的方式，可选值为 Direct、Repeat、Reflect。默认值为 Direct。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtRadialShd",
+      "Field": "MapUnit",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "渐变区间的长度，当 MapType 的值不等于 Direct 时出现。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtRadialShd",
+      "Field": "Eccentricity",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "渐变椭圆的偏心率。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtRadialShd",
+      "Field": "Angle",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "渐变椭圆的旋转角度。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtRadialShd",
+      "Field": "StartPoint",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "渐变起始点。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtRadialShd",
+      "Field": "StartRadius",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "渐变起始半径。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtRadialShd",
+      "Field": "EndPoint",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "渐变结束点。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtRadialShd",
+      "Field": "EndRadius",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "渐变结束半径。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtRadialShd",
+      "Field": "Extend",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "是否向外延长绘制渐变。可选值为 0、1、2、3。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtRadialShd",
+      "Field": "Segment",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "颜色段，至少出现两个。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtGouraudShd",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "高洛德渐变属性。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtGouraudShd",
+      "Field": "Extend",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "是否向外延长绘制渐变。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtGouraudShd",
+      "Field": "Point",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "渐变控制点。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtGouraudShd",
+      "Field": "BackColor",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "背景颜色。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Point",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "高洛德渐变控制点。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Point",
+      "Field": "X",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "控制点 X 坐标。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Point",
+      "Field": "Y",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "控制点 Y 坐标。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Point",
+      "Field": "EdgeFlag",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "控制点边界标记。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "Point",
+      "Field": "Color",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "控制点颜色。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtLaGouraudShd",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "格构高洛德渐变属性。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtLaGouraudShd",
+      "Field": "VerticesPerRow",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "每行顶点数。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtLaGouraudShd",
+      "Field": "Extend",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "是否向外延长绘制渐变。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtLaGouraudShd",
+      "Field": "Point",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "控制点集合。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtLaGouraudShd",
+      "Field": "BackColor",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "背景颜色。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtLaGouraudShdPoint",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "格构高洛德渐变控制点。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtLaGouraudShdPoint",
+      "Field": "X",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "控制点 X 坐标。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtLaGouraudShdPoint",
+      "Field": "Y",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "控制点 Y 坐标。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtLaGouraudShdPoint",
+      "Field": "Color",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "控制点颜色。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtColorSpaceType",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "颜色空间的类型，可取值如下：GRAY、RGB、CMYK。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtPatternReflectMethod",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "描述底纹单元的映像翻转方式，枚举值，默认值为 Normal。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtPatternRelativeTo",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "底纹单元起始绘制位置，可取值为 Page 或 Object，默认值为 Object。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtAxialShdMapType",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "渐变绘制的方式，可选值为 Direct、Repeat、Reflect。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtAxialShdExtend",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "轴线延长线方向是否继续绘制渐变。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtRadialShdMapType",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "渐变绘制的方式，可选值为 Direct、Repeat、Reflect。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtPathRule",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "图形的填充规则，当 Fill 属性存在时出现。可选值为 NonZero 和 Even-Odd。默认值为 NonZero。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "TextCode",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文字内容，也就是一段字符编码串。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "TextCode",
+      "Field": "X",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "第一个文字的字型原点在对象坐标系下的 X 坐标。当 X 不出现，则采用上一个 TextCode 的 X 值，文字对象中的第一个 TextCode 的 X 属性必选。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "TextCode",
+      "Field": "Y",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "第一个文字的字型原点在对象坐标系下的 Y 坐标。当 Y 不出现，则采用上一个 TextCode 的 Y 值，文字对象中的第一个 TextCode 的 Y 属性必选。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "TextCode",
+      "Field": "DeltaX",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "double 型数值队列，队列中的每个值代表后一个文字与前一个文字之间在 X 方向的偏移值。DeltaX 不出现时，表示文字的绘制点在 X 方向不做偏移。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "TextCode",
+      "Field": "DeltaY",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "double 型数值队列，队列中的每个值代表后一个文字与前一个文字之间在 Y 方向的偏移值。DeltaY 不出现时，表示文字的绘制点在 Y 方向不做偏移。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "CtTextWeight",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文字对象的粗细值。"
+        }
+      ]
+    },
+    {
+      "Schema": "page",
+      "Type": "PointEdgeFlag",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "控制点边界标记。"
+        }
+      ]
+    }
+  ]
+}

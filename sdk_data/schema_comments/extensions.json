@@ -1,0 +1,166 @@
+{
+  "Entries": [
+    {
+      "Schema": "extensions",
+      "Type": "Extensions",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "扩展信息列表属性。"
+        }
+      ]
+    },
+    {
+      "Schema": "extensions",
+      "Type": "Extensions",
+      "Field": "Extension",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "扩展信息节点。"
+        }
+      ]
+    },
+    {
+      "Schema": "extensions",
+      "Type": "CtExtension",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "扩展信息属性。"
+        }
+      ]
+    },
+    {
+      "Schema": "extensions",
+      "Type": "CtExtension",
+      "Field": "AppName",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "用于生成或解释该自定义对象数据的扩展应用程序名称。"
+        }
+      ]
+    },
+    {
+      "Schema": "extensions",
+      "Type": "CtExtension",
+      "Field": "Company",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "形成此扩展信息的软件厂商标识。"
+        }
+      ]
+    },
+    {
+      "Schema": "extensions",
+      "Type": "CtExtension",
+      "Field": "AppVersion",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "形成此扩展信息的软件版本。"
+        }
+      ]
+    },
+    {
+      "Schema": "extensions",
+      "Type": "CtExtension",
+      "Field": "Date",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "形成此扩展信息的日期时间。"
+        }
+      ]
+    },
+    {
+      "Schema": "extensions",
+      "Type": "CtExtension",
+      "Field": "RefId",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "引用扩展项针对的文档项目的标识。"
+        }
+      ]
+    },
+    {
+      "Schema": "extensions",
+      "Type": "CtExtension",
+      "Field": "Property",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "扩展属性, \"Name Type Value\" 的数值组, 用于简单的扩展。"
+        }
+      ]
+    },
+    {
+      "Schema": "extensions",
+      "Type": "Property",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "扩展属性。"
+        }
+      ]
+    },
+    {
+      "Schema": "extensions",
+      "Type": "Property",
+      "Field": "Name",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "扩展属性名称。"
+        }
+      ]
+    },
+    {
+      "Schema": "extensions",
+      "Type": "Property",
+      "Field": "Type",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "扩展属性值类型。"
+        }
+      ]
+    },
+    {
+      "Schema": "extensions",
+      "Type": "Property",
+      "Field": "xml_value",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "扩展属性值。"
+        }
+      ]
+    },
+    {
+      "Schema": "extensions",
+      "Type": "CtExtension",
+      "Field": "Data",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "扩展复杂属性，使用 xs:anyType，用于较复杂的扩展。"
+        }
+      ]
+    },
+    {
+      "Schema": "extensions",
+      "Type": "CtExtension",
+      "Field": "ExtendData",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "扩展数据文件所在位置，用于扩展大量信息。"
+        }
+      ]
+    }
+  ]
+}

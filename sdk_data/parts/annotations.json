@@ -1,0 +1,22 @@
+{
+  "Name": "Annotations",
+  "Base": "OfdPart",
+  "SchemaModule": "annotations",
+  "RootElement": "Annotations",
+  "Path": "ReferenceField",
+  "Children": [
+    {
+      "ApiName": "Annotations",
+      "Name": "Annotation",
+      "From": {
+        "Parent": "Annotations",
+        "FieldPath": [
+          "Page",
+          "FileLoc"
+        ],
+        "IsVec": true
+      },
+      "MaxOccursGreatThanOne": true
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "Entries": [
+    {
+      "Schema": "version",
+      "Type": "File",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文件列表文件描述。"
+        }
+      ]
+    },
+    {
+      "Schema": "version",
+      "Type": "File",
+      "Field": "ID",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文件列表文件标识。"
+        }
+      ]
+    },
+    {
+      "Schema": "version",
+      "Type": "FileList",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "版本包含的文件列表。"
+        }
+      ]
+    },
+    {
+      "Schema": "version",
+      "Type": "FileList",
+      "Field": "File",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "版本包含的文件。"
+        }
+      ]
+    },
+    {
+      "Schema": "version",
+      "Type": "DocVersion",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "版本属性。"
+        }
+      ]
+    },
+    {
+      "Schema": "version",
+      "Type": "DocVersion",
+      "Field": "ID",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "版本标识。"
+        }
+      ]
+    },
+    {
+      "Schema": "version",
+      "Type": "DocVersion",
+      "Field": "Version",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "该文件适用的格式版本。"
+        }
+      ]
+    },
+    {
+      "Schema": "version",
+      "Type": "DocVersion",
+      "Field": "Name",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "版本名称。"
+        }
+      ]
+    },
+    {
+      "Schema": "version",
+      "Type": "DocVersion",
+      "Field": "CreationDate",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "创建时间。"
+        }
+      ]
+    },
+    {
+      "Schema": "version",
+      "Type": "DocVersion",
+      "Field": "FileList",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "版本包含的文件列表。"
+        }
+      ]
+    },
+    {
+      "Schema": "version",
+      "Type": "DocVersion",
+      "Field": "DocRoot",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "该版本的入口文件。"
+        }
+      ]
+    }
+  ]
+}

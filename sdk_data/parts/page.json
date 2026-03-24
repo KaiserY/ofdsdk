@@ -1,0 +1,21 @@
+{
+  "Name": "Page",
+  "Base": "OfdPart",
+  "SchemaModule": "page",
+  "RootElement": "Page",
+  "Path": "ReferenceField",
+  "Children": [
+    {
+      "ApiName": "PageRes",
+      "Name": "PageRes",
+      "From": {
+        "Parent": "Page",
+        "FieldPath": [
+          "PageRes"
+        ],
+        "IsVec": true
+      },
+      "MaxOccursGreatThanOne": true
+    }
+  ]
+}

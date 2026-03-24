@@ -1,0 +1,133 @@
+{
+  "TargetNamespace": "http://www.ofdspec.org/2016",
+  "Types": [
+    {
+      "Name": "File",
+      "Ident": "File",
+      "XmlName": "File",
+      "Attributes": [
+        {
+          "Name": "ID",
+          "Ident": "id",
+          "Type": "String",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "xml_value",
+          "XmlName": null,
+          "Ident": "xml_value",
+          "Type": "crate::schemas::definitions::StLoc",
+          "SourceModuleName": "version",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "FileList",
+      "Ident": "FileList",
+      "XmlName": "FileList",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "File",
+          "XmlName": "File",
+          "Ident": "file",
+          "Type": "File",
+          "SourceModuleName": "version",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "DocVersion",
+      "Ident": "DocVersion",
+      "XmlName": "DocVersion",
+      "Attributes": [
+        {
+          "Name": "ID",
+          "Ident": "id",
+          "Type": "String",
+          "IsOption": false
+        },
+        {
+          "Name": "Version",
+          "Ident": "version",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "Name",
+          "Ident": "name",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "CreationDate",
+          "Ident": "creation_date",
+          "Type": "String",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "FileList",
+          "XmlName": "FileList",
+          "Ident": "file_list",
+          "Type": "FileList",
+          "SourceModuleName": "version",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "DocRoot",
+          "XmlName": "DocRoot",
+          "Ident": "doc_root",
+          "Type": "crate::schemas::definitions::StLoc",
+          "SourceModuleName": "version",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    }
+  ],
+  "Elements": [
+    {
+      "Name": "File",
+      "Ident": "File",
+      "XmlName": "File",
+      "Type": "File",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "FileList",
+      "Ident": "FileList",
+      "XmlName": "FileList",
+      "Type": "FileList",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "DocRoot",
+      "Ident": "DocRoot",
+      "XmlName": "DocRoot",
+      "Type": "crate::schemas::definitions::StLoc",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "DocVersion",
+      "Ident": "DocVersion",
+      "XmlName": "DocVersion",
+      "Type": "DocVersion",
+      "IsTopLevel": true
+    }
+  ],
+  "Enums": [],
+  "Aliases": [],
+  "ModuleName": "version"
+}

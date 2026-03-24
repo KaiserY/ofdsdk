@@ -1,0 +1,8 @@
+{
+  "Name": "Version",
+  "Base": "OfdPart",
+  "SchemaModule": "version",
+  "RootElement": "DocVersion",
+  "Path": "ReferenceField",
+  "Children": []
+}

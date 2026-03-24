@@ -1,0 +1,101 @@
+{
+  "TargetNamespace": "http://www.ofdspec.org/2016",
+  "Types": [
+    {
+      "Name": "Signature",
+      "Ident": "Signature",
+      "XmlName": "Signature",
+      "Attributes": [
+        {
+          "Name": "ID",
+          "Ident": "id",
+          "Type": "String",
+          "IsOption": false
+        },
+        {
+          "Name": "Type",
+          "Ident": "type",
+          "Type": "SignatureType",
+          "IsOption": true
+        },
+        {
+          "Name": "BaseLoc",
+          "Ident": "base_loc",
+          "Type": "crate::schemas::definitions::StLoc",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [],
+      "Children": []
+    },
+    {
+      "Name": "Signatures",
+      "Ident": "Signatures",
+      "XmlName": "Signatures",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "MaxSignId",
+          "XmlName": "MaxSignId",
+          "Ident": "max_sign_id",
+          "Type": "String",
+          "SourceModuleName": "signatures",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Signature",
+          "XmlName": "Signature",
+          "Ident": "signature",
+          "Type": "Signature",
+          "SourceModuleName": "signatures",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    }
+  ],
+  "Elements": [
+    {
+      "Name": "MaxSignId",
+      "Ident": "MaxSignId",
+      "XmlName": "MaxSignId",
+      "Type": "String",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Signature",
+      "Ident": "Signature",
+      "XmlName": "Signature",
+      "Type": "Signature",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Signatures",
+      "Ident": "Signatures",
+      "XmlName": "Signatures",
+      "Type": "Signatures",
+      "IsTopLevel": true
+    }
+  ],
+  "Enums": [
+    {
+      "Name": "SignatureType",
+      "Ident": "SignatureType",
+      "Variants": [
+        {
+          "Ident": "Seal",
+          "Value": "Seal"
+        },
+        {
+          "Ident": "Sign",
+          "Value": "Sign"
+        }
+      ],
+      "DefaultIndex": 0
+    }
+  ],
+  "Aliases": [],
+  "ModuleName": "signatures"
+}

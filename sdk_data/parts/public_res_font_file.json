@@ -1,0 +1,12 @@
+{
+  "Name": "PublicResFontFile",
+  "Base": "OfdPart",
+  "Path": {
+    "ReferenceFieldWithBase": {
+      "BaseFieldPath": [
+        "BaseLoc"
+      ]
+    }
+  },
+  "Children": []
+}

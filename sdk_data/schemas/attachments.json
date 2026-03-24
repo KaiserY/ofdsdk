@@ -1,0 +1,116 @@
+{
+  "TargetNamespace": "http://www.ofdspec.org/2016",
+  "Types": [
+    {
+      "Name": "Attachments",
+      "Ident": "Attachments",
+      "XmlName": "Attachments",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "Attachment",
+          "XmlName": "Attachment",
+          "Ident": "attachment",
+          "Type": "CtAttachment",
+          "SourceModuleName": "attachments",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CT_Attachment",
+      "Ident": "CtAttachment",
+      "XmlName": null,
+      "Attributes": [
+        {
+          "Name": "ID",
+          "Ident": "id",
+          "Type": "String",
+          "IsOption": false
+        },
+        {
+          "Name": "Name",
+          "Ident": "name",
+          "Type": "String",
+          "IsOption": false
+        },
+        {
+          "Name": "Format",
+          "Ident": "format",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "CreationDate",
+          "Ident": "creation_date",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "ModDate",
+          "Ident": "mod_date",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "Size",
+          "Ident": "size",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "Visible",
+          "Ident": "visible",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "Usage",
+          "Ident": "usage",
+          "Type": "String",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "FileLoc",
+          "XmlName": "FileLoc",
+          "Ident": "file_loc",
+          "Type": "crate::schemas::definitions::StLoc",
+          "SourceModuleName": "attachments",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    }
+  ],
+  "Elements": [
+    {
+      "Name": "Attachment",
+      "Ident": "Attachment",
+      "XmlName": "Attachment",
+      "Type": "CtAttachment",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Attachments",
+      "Ident": "Attachments",
+      "XmlName": "Attachments",
+      "Type": "Attachments",
+      "IsTopLevel": true
+    },
+    {
+      "Name": "FileLoc",
+      "Ident": "FileLoc",
+      "XmlName": "FileLoc",
+      "Type": "crate::schemas::definitions::StLoc",
+      "IsTopLevel": false
+    }
+  ],
+  "Enums": [],
+  "Aliases": [],
+  "ModuleName": "attachments"
+}

@@ -1,0 +1,8 @@
+{
+  "Name": "TemplatePage",
+  "Base": "OfdPart",
+  "SchemaModule": "page",
+  "RootElement": "Page",
+  "Path": "ReferenceField",
+  "Children": []
+}

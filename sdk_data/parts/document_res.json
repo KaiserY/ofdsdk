@@ -1,0 +1,37 @@
+{
+  "Name": "DocumentRes",
+  "Base": "OfdPart",
+  "SchemaModule": "res",
+  "RootElement": "Res",
+  "Path": "ReferenceField",
+  "Children": [
+    {
+      "ApiName": "DocumentResFontFiles",
+      "Name": "DocumentResFontFile",
+      "From": {
+        "Parent": "DocumentRes",
+        "FieldPath": [
+          "Fonts",
+          "Font",
+          "FontFile"
+        ],
+        "IsVec": true
+      },
+      "MaxOccursGreatThanOne": true
+    },
+    {
+      "ApiName": "DocumentResMediaFiles",
+      "Name": "DocumentResMediaFile",
+      "From": {
+        "Parent": "DocumentRes",
+        "FieldPath": [
+          "MultiMedias",
+          "MultiMedia",
+          "MediaFile"
+        ],
+        "IsVec": true
+      },
+      "MaxOccursGreatThanOne": true
+    }
+  ]
+}

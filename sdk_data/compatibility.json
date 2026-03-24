@@ -1,0 +1,44 @@
+{
+  "Rules": [
+    {
+      "Schema": "annotation",
+      "Type": "Annot",
+      "Field": "Creator",
+      "Action": {
+        "AllowMissingAttribute": {
+          "DefaultValue": ""
+        }
+      }
+    },
+    {
+      "Schema": "annotation",
+      "Type": "Annot",
+      "Field": "LastModDate",
+      "Action": {
+        "AllowMissingAttribute": {
+          "DefaultValue": ""
+        }
+      }
+    },
+    {
+      "Schema": "custom_tags",
+      "Type": "CustomTag",
+      "Field": "NameSpace",
+      "Action": {
+        "AllowMissingAttribute": {
+          "DefaultValue": ""
+        }
+      }
+    },
+    {
+      "Schema": "signature",
+      "Type": "References",
+      "Field": "CheckMethod",
+      "Action": {
+        "TreatAsString": {
+          "DefaultValue": "MD5"
+        }
+      }
+    }
+  ]
+}

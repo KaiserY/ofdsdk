@@ -1,0 +1,304 @@
+{
+  "Entries": [
+    {
+      "Schema": "signature",
+      "Type": "Provider",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "创建签名时所用的签章组件提供者信息。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "Provider",
+      "Field": "ProviderName",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "创建签名时所用的签章组件的提供者名称。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "Provider",
+      "Field": "Company",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "创建签名时所用的签章组件的制造商。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "Provider",
+      "Field": "Version",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "创建签名时所用的签章组件的版本。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "Reference",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "针对一个文件的摘要节点。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "Reference",
+      "Field": "FileRef",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "指向包内的文件，使用绝对路径。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "Reference",
+      "Field": "CheckValue",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "对包内文件进行摘要计算，对所得的二进制摘要值进行 base64 编码所得结果。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "References",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "包内文件计算所得的摘要记录列表。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "References",
+      "Field": "CheckMethod",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "摘要方法，视应用场景的不同使用不同的摘要方法。用于各行业应用时，应使用符合该行业安全标准的算法。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "References",
+      "Field": "Reference",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "针对一个文件的摘要节点。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "StampAnnot",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "签名外观节点属性。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "StampAnnot",
+      "Field": "PageRef",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "引用外观注释所在的页面的标识。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "StampAnnot",
+      "Field": "ID",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "签章注释的标识。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "StampAnnot",
+      "Field": "Boundary",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "签章注释的外观外边框位置，可用于签章注释在页面内的定位。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "StampAnnot",
+      "Field": "Clip",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "签章注释的外观裁剪设置。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "Seal",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "电子印章信息。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "Seal",
+      "Field": "BaseLoc",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "指向包内的安全电子印章文件，遵循密码领域的相关规范。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "SignedInfo",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "签名要保护的原文及本次签名相关的信息。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "SignedInfo",
+      "Field": "Provider",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "创建签名时所用的签章组件提供者信息。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "SignedInfo",
+      "Field": "SignatureMethod",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "签名方法，记录安全模块返回的签名算法代码，以便验证时使用。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "SignedInfo",
+      "Field": "SignatureDateTime",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "签名时间，记录安全模块返回的签名时间，以便验证时使用。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "SignedInfo",
+      "Field": "References",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "包内文件计算所得的摘要记录列表。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "SignedInfo",
+      "Field": "StampAnnot",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "本签名关联的外观（用 OFD 中的注释来表示），该节点可出现多次。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "SignedInfo",
+      "Field": "Seal",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "电子印章信息。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "Signature",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "签名描述文件的根节点。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "Signature",
+      "Field": "SignedInfo",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "签名要保护的原文及本次签名相关的信息。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "Signature",
+      "Field": "SignedValue",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "指向安全签名提供者所返回的针对签名描述文件计算所得的签名值文件。"
+        }
+      ]
+    },
+    {
+      "Schema": "signature",
+      "Type": "ReferencesCheckMethod",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "摘要方法，视应用场景的不同使用不同的摘要方法。"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "Entries": [
+    {
+      "Schema": "custom_tags",
+      "Type": "CustomTag",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "自定义标引入口。"
+        }
+      ]
+    },
+    {
+      "Schema": "custom_tags",
+      "Type": "CustomTag",
+      "Field": "TypeID",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "自定义标引内容节点适用的类型标识。"
+        }
+      ]
+    },
+    {
+      "Schema": "custom_tags",
+      "Type": "CustomTag",
+      "Field": "SchemaLoc",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "指向自定义标引内容节点适用的 Schema 文件。"
+        }
+      ]
+    },
+    {
+      "Schema": "custom_tags",
+      "Type": "CustomTag",
+      "Field": "FileLoc",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "指向自定义标引文件。该类文件中通过“非接触方式”引用版式内容流中的图元和相关信息。"
+        }
+      ]
+    },
+    {
+      "Schema": "custom_tags",
+      "Type": "CustomTags",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "自定义标引列表属性。"
+        }
+      ]
+    },
+    {
+      "Schema": "custom_tags",
+      "Type": "CustomTags",
+      "Field": "CustomTag",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "自定义标引入口。"
+        }
+      ]
+    }
+  ]
+}

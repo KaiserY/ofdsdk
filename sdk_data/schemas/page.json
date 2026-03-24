@@ -1,0 +1,2858 @@
+{
+  "TargetNamespace": "http://www.ofdspec.org/2016",
+  "Types": [
+    {
+      "Name": "Template",
+      "Ident": "Template",
+      "XmlName": "Template",
+      "Attributes": [
+        {
+          "Name": "TemplateID",
+          "Ident": "template_id",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": false
+        },
+        {
+          "Name": "ZOrder",
+          "Ident": "z_order",
+          "Type": "TemplateZOrder",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [],
+      "Children": []
+    },
+    {
+      "Name": "Layer",
+      "Ident": "Layer",
+      "XmlName": "Layer",
+      "Attributes": [
+        {
+          "Name": "Type",
+          "Ident": "type",
+          "Type": "CtLayerType",
+          "IsOption": true
+        },
+        {
+          "Name": "DrawParam",
+          "Ident": "draw_param",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": true
+        },
+        {
+          "Name": "ID",
+          "Ident": "id",
+          "Type": "crate::schemas::definitions::StId",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [],
+      "Children": [
+        {
+          "Name": "TextObject",
+          "XmlName": "TextObject",
+          "Ident": "TextObject",
+          "Type": "TextObject",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "PathObject",
+          "XmlName": "PathObject",
+          "Ident": "PathObject",
+          "Type": "PathObject",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "ImageObject",
+          "XmlName": "ImageObject",
+          "Ident": "ImageObject",
+          "Type": "ImageObject",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "CompositeObject",
+          "XmlName": "CompositeObject",
+          "Ident": "CompositeObject",
+          "Type": "CompositeObject",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "PageBlock",
+          "XmlName": "PageBlock",
+          "Ident": "PageBlock",
+          "Type": "PageBlock",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ]
+    },
+    {
+      "Name": "Content",
+      "Ident": "Content",
+      "XmlName": "Content",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "Layer",
+          "XmlName": "Layer",
+          "Ident": "layer",
+          "Type": "Layer",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "Actions",
+      "Ident": "Actions",
+      "XmlName": "Actions",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "Action",
+          "XmlName": "Action",
+          "Ident": "action",
+          "Type": "crate::schemas::definitions::CtAction",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "Page",
+      "Ident": "Page",
+      "XmlName": "Page",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "Template",
+          "XmlName": "Template",
+          "Ident": "template",
+          "Type": "Template",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": true
+        },
+        {
+          "Name": "PageRes",
+          "XmlName": "PageRes",
+          "Ident": "page_res",
+          "Type": "crate::schemas::definitions::StLoc",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": true
+        },
+        {
+          "Name": "Area",
+          "XmlName": "Area",
+          "Ident": "area",
+          "Type": "crate::schemas::definitions::CtPageArea",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Content",
+          "XmlName": "Content",
+          "Ident": "content",
+          "Type": "Content",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Actions",
+          "XmlName": "Actions",
+          "Ident": "actions",
+          "Type": "Actions",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "Area",
+      "Ident": "Area",
+      "XmlName": "Area",
+      "Attributes": [
+        {
+          "Name": "DrawParam",
+          "Ident": "draw_param",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": true
+        },
+        {
+          "Name": "CTM",
+          "Ident": "ctm",
+          "Type": "crate::schemas::definitions::StArray",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [],
+      "Children": [
+        {
+          "Name": "Path",
+          "XmlName": "Path",
+          "Ident": "Path",
+          "Type": "CtPath",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "Text",
+          "XmlName": "Text",
+          "Ident": "Text",
+          "Type": "CtText",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ]
+    },
+    {
+      "Name": "CT_Clip",
+      "Ident": "CtClip",
+      "XmlName": null,
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "Area",
+          "XmlName": "Area",
+          "Ident": "area",
+          "Type": "Area",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "TextObject",
+      "Ident": "TextObject",
+      "XmlName": "TextObject",
+      "Attributes": [
+        {
+          "Name": "Boundary",
+          "Ident": "boundary",
+          "Type": "crate::schemas::definitions::StBox",
+          "IsOption": false
+        },
+        {
+          "Name": "Name",
+          "Ident": "name",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "Visible",
+          "Ident": "visible",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "CTM",
+          "Ident": "ctm",
+          "Type": "crate::schemas::definitions::StArray",
+          "IsOption": true
+        },
+        {
+          "Name": "DrawParam",
+          "Ident": "draw_param",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": true
+        },
+        {
+          "Name": "LineWidth",
+          "Ident": "line_width",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "Cap",
+          "Ident": "cap",
+          "Type": "CtGraphicUnitCap",
+          "IsOption": true
+        },
+        {
+          "Name": "Join",
+          "Ident": "join",
+          "Type": "CtGraphicUnitJoin",
+          "IsOption": true
+        },
+        {
+          "Name": "MiterLimit",
+          "Ident": "miter_limit",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "DashOffset",
+          "Ident": "dash_offset",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "DashPattern",
+          "Ident": "dash_pattern",
+          "Type": "crate::schemas::definitions::StArray",
+          "IsOption": true
+        },
+        {
+          "Name": "Alpha",
+          "Ident": "alpha",
+          "Type": "i32",
+          "IsOption": true
+        },
+        {
+          "Name": "Font",
+          "Ident": "font",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": false
+        },
+        {
+          "Name": "Size",
+          "Ident": "size",
+          "Type": "f64",
+          "IsOption": false
+        },
+        {
+          "Name": "Stroke",
+          "Ident": "stroke",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "Fill",
+          "Ident": "fill",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "HScale",
+          "Ident": "h_scale",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "ReadDirection",
+          "Ident": "read_direction",
+          "Type": "i32",
+          "IsOption": true
+        },
+        {
+          "Name": "CharDirection",
+          "Ident": "char_direction",
+          "Type": "i32",
+          "IsOption": true
+        },
+        {
+          "Name": "Weight",
+          "Ident": "weight",
+          "Type": "CtTextWeight",
+          "IsOption": true
+        },
+        {
+          "Name": "Italic",
+          "Ident": "italic",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "ID",
+          "Ident": "id",
+          "Type": "crate::schemas::definitions::StId",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "Actions",
+          "XmlName": "Actions",
+          "Ident": "actions",
+          "Type": "Actions",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Clips",
+          "XmlName": "Clips",
+          "Ident": "clips",
+          "Type": "Clips",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "FillColor",
+          "XmlName": "FillColor",
+          "Ident": "fill_color",
+          "Type": "CtColor",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "StrokeColor",
+          "XmlName": "StrokeColor",
+          "Ident": "stroke_color",
+          "Type": "CtColor",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "CGTransform",
+          "XmlName": "CGTransform",
+          "Ident": "cg_transform",
+          "Type": "CtCgTransform",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": true
+        },
+        {
+          "Name": "TextCode",
+          "XmlName": "TextCode",
+          "Ident": "text_code",
+          "Type": "TextCode",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "PathObject",
+      "Ident": "PathObject",
+      "XmlName": "PathObject",
+      "Attributes": [
+        {
+          "Name": "Boundary",
+          "Ident": "boundary",
+          "Type": "crate::schemas::definitions::StBox",
+          "IsOption": false
+        },
+        {
+          "Name": "Name",
+          "Ident": "name",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "Visible",
+          "Ident": "visible",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "CTM",
+          "Ident": "ctm",
+          "Type": "crate::schemas::definitions::StArray",
+          "IsOption": true
+        },
+        {
+          "Name": "DrawParam",
+          "Ident": "draw_param",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": true
+        },
+        {
+          "Name": "LineWidth",
+          "Ident": "line_width",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "Cap",
+          "Ident": "cap",
+          "Type": "CtGraphicUnitCap",
+          "IsOption": true
+        },
+        {
+          "Name": "Join",
+          "Ident": "join",
+          "Type": "CtGraphicUnitJoin",
+          "IsOption": true
+        },
+        {
+          "Name": "MiterLimit",
+          "Ident": "miter_limit",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "DashOffset",
+          "Ident": "dash_offset",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "DashPattern",
+          "Ident": "dash_pattern",
+          "Type": "crate::schemas::definitions::StArray",
+          "IsOption": true
+        },
+        {
+          "Name": "Alpha",
+          "Ident": "alpha",
+          "Type": "i32",
+          "IsOption": true
+        },
+        {
+          "Name": "Stroke",
+          "Ident": "stroke",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "Fill",
+          "Ident": "fill",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "Rule",
+          "Ident": "rule",
+          "Type": "CtPathRule",
+          "IsOption": true
+        },
+        {
+          "Name": "ID",
+          "Ident": "id",
+          "Type": "crate::schemas::definitions::StId",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "Actions",
+          "XmlName": "Actions",
+          "Ident": "actions",
+          "Type": "Actions",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Clips",
+          "XmlName": "Clips",
+          "Ident": "clips",
+          "Type": "Clips",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "StrokeColor",
+          "XmlName": "StrokeColor",
+          "Ident": "stroke_color",
+          "Type": "CtColor",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "FillColor",
+          "XmlName": "FillColor",
+          "Ident": "fill_color",
+          "Type": "CtColor",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "AbbreviatedData",
+          "XmlName": "AbbreviatedData",
+          "Ident": "abbreviated_data",
+          "Type": "String",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "ImageObject",
+      "Ident": "ImageObject",
+      "XmlName": "ImageObject",
+      "Attributes": [
+        {
+          "Name": "Boundary",
+          "Ident": "boundary",
+          "Type": "crate::schemas::definitions::StBox",
+          "IsOption": false
+        },
+        {
+          "Name": "Name",
+          "Ident": "name",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "Visible",
+          "Ident": "visible",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "CTM",
+          "Ident": "ctm",
+          "Type": "crate::schemas::definitions::StArray",
+          "IsOption": true
+        },
+        {
+          "Name": "DrawParam",
+          "Ident": "draw_param",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": true
+        },
+        {
+          "Name": "LineWidth",
+          "Ident": "line_width",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "Cap",
+          "Ident": "cap",
+          "Type": "CtGraphicUnitCap",
+          "IsOption": true
+        },
+        {
+          "Name": "Join",
+          "Ident": "join",
+          "Type": "CtGraphicUnitJoin",
+          "IsOption": true
+        },
+        {
+          "Name": "MiterLimit",
+          "Ident": "miter_limit",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "DashOffset",
+          "Ident": "dash_offset",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "DashPattern",
+          "Ident": "dash_pattern",
+          "Type": "crate::schemas::definitions::StArray",
+          "IsOption": true
+        },
+        {
+          "Name": "Alpha",
+          "Ident": "alpha",
+          "Type": "i32",
+          "IsOption": true
+        },
+        {
+          "Name": "ResourceID",
+          "Ident": "resource_id",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": false
+        },
+        {
+          "Name": "Substitution",
+          "Ident": "substitution",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": true
+        },
+        {
+          "Name": "ImageMask",
+          "Ident": "image_mask",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": true
+        },
+        {
+          "Name": "ID",
+          "Ident": "id",
+          "Type": "crate::schemas::definitions::StId",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "Actions",
+          "XmlName": "Actions",
+          "Ident": "actions",
+          "Type": "Actions",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Clips",
+          "XmlName": "Clips",
+          "Ident": "clips",
+          "Type": "Clips",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Border",
+          "XmlName": "Border",
+          "Ident": "border",
+          "Type": "Border",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CompositeObject",
+      "Ident": "CompositeObject",
+      "XmlName": "CompositeObject",
+      "Attributes": [
+        {
+          "Name": "Boundary",
+          "Ident": "boundary",
+          "Type": "crate::schemas::definitions::StBox",
+          "IsOption": false
+        },
+        {
+          "Name": "Name",
+          "Ident": "name",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "Visible",
+          "Ident": "visible",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "CTM",
+          "Ident": "ctm",
+          "Type": "crate::schemas::definitions::StArray",
+          "IsOption": true
+        },
+        {
+          "Name": "DrawParam",
+          "Ident": "draw_param",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": true
+        },
+        {
+          "Name": "LineWidth",
+          "Ident": "line_width",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "Cap",
+          "Ident": "cap",
+          "Type": "CtGraphicUnitCap",
+          "IsOption": true
+        },
+        {
+          "Name": "Join",
+          "Ident": "join",
+          "Type": "CtGraphicUnitJoin",
+          "IsOption": true
+        },
+        {
+          "Name": "MiterLimit",
+          "Ident": "miter_limit",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "DashOffset",
+          "Ident": "dash_offset",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "DashPattern",
+          "Ident": "dash_pattern",
+          "Type": "crate::schemas::definitions::StArray",
+          "IsOption": true
+        },
+        {
+          "Name": "Alpha",
+          "Ident": "alpha",
+          "Type": "i32",
+          "IsOption": true
+        },
+        {
+          "Name": "ResourceID",
+          "Ident": "resource_id",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": false
+        },
+        {
+          "Name": "ID",
+          "Ident": "id",
+          "Type": "crate::schemas::definitions::StId",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "Actions",
+          "XmlName": "Actions",
+          "Ident": "actions",
+          "Type": "Actions",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Clips",
+          "XmlName": "Clips",
+          "Ident": "clips",
+          "Type": "Clips",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CT_PageBlock",
+      "Ident": "CtPageBlock",
+      "XmlName": null,
+      "Attributes": [],
+      "Sequences": [],
+      "Children": [
+        {
+          "Name": "TextObject",
+          "XmlName": "TextObject",
+          "Ident": "TextObject",
+          "Type": "TextObject",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "PathObject",
+          "XmlName": "PathObject",
+          "Ident": "PathObject",
+          "Type": "PathObject",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "ImageObject",
+          "XmlName": "ImageObject",
+          "Ident": "ImageObject",
+          "Type": "ImageObject",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "CompositeObject",
+          "XmlName": "CompositeObject",
+          "Ident": "CompositeObject",
+          "Type": "CompositeObject",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "PageBlock",
+          "XmlName": "PageBlock",
+          "Ident": "PageBlock",
+          "Type": "PageBlock",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ]
+    },
+    {
+      "Name": "PageBlock",
+      "Ident": "PageBlock",
+      "XmlName": "PageBlock",
+      "Attributes": [
+        {
+          "Name": "ID",
+          "Ident": "id",
+          "Type": "crate::schemas::definitions::StId",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [],
+      "Children": [
+        {
+          "Name": "TextObject",
+          "XmlName": "TextObject",
+          "Ident": "TextObject",
+          "Type": "TextObject",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "PathObject",
+          "XmlName": "PathObject",
+          "Ident": "PathObject",
+          "Type": "PathObject",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "ImageObject",
+          "XmlName": "ImageObject",
+          "Ident": "ImageObject",
+          "Type": "ImageObject",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "CompositeObject",
+          "XmlName": "CompositeObject",
+          "Ident": "CompositeObject",
+          "Type": "CompositeObject",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "PageBlock",
+          "XmlName": "PageBlock",
+          "Ident": "PageBlock",
+          "Type": "PageBlock",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ]
+    },
+    {
+      "Name": "CT_Layer",
+      "Ident": "CtLayer",
+      "XmlName": null,
+      "Attributes": [
+        {
+          "Name": "Type",
+          "Ident": "type",
+          "Type": "CtLayerType",
+          "IsOption": true
+        },
+        {
+          "Name": "DrawParam",
+          "Ident": "draw_param",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [],
+      "Children": [
+        {
+          "Name": "TextObject",
+          "XmlName": "TextObject",
+          "Ident": "TextObject",
+          "Type": "TextObject",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "PathObject",
+          "XmlName": "PathObject",
+          "Ident": "PathObject",
+          "Type": "PathObject",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "ImageObject",
+          "XmlName": "ImageObject",
+          "Ident": "ImageObject",
+          "Type": "ImageObject",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "CompositeObject",
+          "XmlName": "CompositeObject",
+          "Ident": "CompositeObject",
+          "Type": "CompositeObject",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "PageBlock",
+          "XmlName": "PageBlock",
+          "Ident": "PageBlock",
+          "Type": "PageBlock",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ]
+    },
+    {
+      "Name": "Clips",
+      "Ident": "Clips",
+      "XmlName": "Clips",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "Clip",
+          "XmlName": "Clip",
+          "Ident": "clip",
+          "Type": "CtClip",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CT_GraphicUnit",
+      "Ident": "CtGraphicUnit",
+      "XmlName": null,
+      "Attributes": [
+        {
+          "Name": "Boundary",
+          "Ident": "boundary",
+          "Type": "crate::schemas::definitions::StBox",
+          "IsOption": false
+        },
+        {
+          "Name": "Name",
+          "Ident": "name",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "Visible",
+          "Ident": "visible",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "CTM",
+          "Ident": "ctm",
+          "Type": "crate::schemas::definitions::StArray",
+          "IsOption": true
+        },
+        {
+          "Name": "DrawParam",
+          "Ident": "draw_param",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": true
+        },
+        {
+          "Name": "LineWidth",
+          "Ident": "line_width",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "Cap",
+          "Ident": "cap",
+          "Type": "CtGraphicUnitCap",
+          "IsOption": true
+        },
+        {
+          "Name": "Join",
+          "Ident": "join",
+          "Type": "CtGraphicUnitJoin",
+          "IsOption": true
+        },
+        {
+          "Name": "MiterLimit",
+          "Ident": "miter_limit",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "DashOffset",
+          "Ident": "dash_offset",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "DashPattern",
+          "Ident": "dash_pattern",
+          "Type": "crate::schemas::definitions::StArray",
+          "IsOption": true
+        },
+        {
+          "Name": "Alpha",
+          "Ident": "alpha",
+          "Type": "i32",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "Actions",
+          "XmlName": "Actions",
+          "Ident": "actions",
+          "Type": "Actions",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Clips",
+          "XmlName": "Clips",
+          "Ident": "clips",
+          "Type": "Clips",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "TextCode",
+      "Ident": "TextCode",
+      "XmlName": "TextCode",
+      "Attributes": [
+        {
+          "Name": "X",
+          "Ident": "x",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "Y",
+          "Ident": "y",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "DeltaX",
+          "Ident": "delta_x",
+          "Type": "crate::schemas::definitions::StArray",
+          "IsOption": true
+        },
+        {
+          "Name": "DeltaY",
+          "Ident": "delta_y",
+          "Type": "crate::schemas::definitions::StArray",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "xml_value",
+          "XmlName": null,
+          "Ident": "xml_value",
+          "Type": "String",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CT_Text",
+      "Ident": "CtText",
+      "XmlName": null,
+      "Attributes": [
+        {
+          "Name": "Boundary",
+          "Ident": "boundary",
+          "Type": "crate::schemas::definitions::StBox",
+          "IsOption": false
+        },
+        {
+          "Name": "Name",
+          "Ident": "name",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "Visible",
+          "Ident": "visible",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "CTM",
+          "Ident": "ctm",
+          "Type": "crate::schemas::definitions::StArray",
+          "IsOption": true
+        },
+        {
+          "Name": "DrawParam",
+          "Ident": "draw_param",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": true
+        },
+        {
+          "Name": "LineWidth",
+          "Ident": "line_width",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "Cap",
+          "Ident": "cap",
+          "Type": "CtGraphicUnitCap",
+          "IsOption": true
+        },
+        {
+          "Name": "Join",
+          "Ident": "join",
+          "Type": "CtGraphicUnitJoin",
+          "IsOption": true
+        },
+        {
+          "Name": "MiterLimit",
+          "Ident": "miter_limit",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "DashOffset",
+          "Ident": "dash_offset",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "DashPattern",
+          "Ident": "dash_pattern",
+          "Type": "crate::schemas::definitions::StArray",
+          "IsOption": true
+        },
+        {
+          "Name": "Alpha",
+          "Ident": "alpha",
+          "Type": "i32",
+          "IsOption": true
+        },
+        {
+          "Name": "Font",
+          "Ident": "font",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": false
+        },
+        {
+          "Name": "Size",
+          "Ident": "size",
+          "Type": "f64",
+          "IsOption": false
+        },
+        {
+          "Name": "Stroke",
+          "Ident": "stroke",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "Fill",
+          "Ident": "fill",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "HScale",
+          "Ident": "h_scale",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "ReadDirection",
+          "Ident": "read_direction",
+          "Type": "i32",
+          "IsOption": true
+        },
+        {
+          "Name": "CharDirection",
+          "Ident": "char_direction",
+          "Type": "i32",
+          "IsOption": true
+        },
+        {
+          "Name": "Weight",
+          "Ident": "weight",
+          "Type": "CtTextWeight",
+          "IsOption": true
+        },
+        {
+          "Name": "Italic",
+          "Ident": "italic",
+          "Type": "bool",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "Actions",
+          "XmlName": "Actions",
+          "Ident": "actions",
+          "Type": "Actions",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Clips",
+          "XmlName": "Clips",
+          "Ident": "clips",
+          "Type": "Clips",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "FillColor",
+          "XmlName": "FillColor",
+          "Ident": "fill_color",
+          "Type": "CtColor",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "StrokeColor",
+          "XmlName": "StrokeColor",
+          "Ident": "stroke_color",
+          "Type": "CtColor",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "CGTransform",
+          "XmlName": "CGTransform",
+          "Ident": "cg_transform",
+          "Type": "CtCgTransform",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": true
+        },
+        {
+          "Name": "TextCode",
+          "XmlName": "TextCode",
+          "Ident": "text_code",
+          "Type": "TextCode",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CT_CGTransform",
+      "Ident": "CtCgTransform",
+      "XmlName": null,
+      "Attributes": [
+        {
+          "Name": "CodePosition",
+          "Ident": "code_position",
+          "Type": "i32",
+          "IsOption": false
+        },
+        {
+          "Name": "CodeCount",
+          "Ident": "code_count",
+          "Type": "i32",
+          "IsOption": true
+        },
+        {
+          "Name": "GlyphCount",
+          "Ident": "glyph_count",
+          "Type": "i32",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "Glyphs",
+          "XmlName": "Glyphs",
+          "Ident": "glyphs",
+          "Type": "crate::schemas::definitions::StArray",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "Border",
+      "Ident": "Border",
+      "XmlName": "Border",
+      "Attributes": [
+        {
+          "Name": "LineWidth",
+          "Ident": "line_width",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "HorizonalCornerRadius",
+          "Ident": "horizonal_corner_radius",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "VerticalCornerRadius",
+          "Ident": "vertical_corner_radius",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "DashOffset",
+          "Ident": "dash_offset",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "DashPattern",
+          "Ident": "dash_pattern",
+          "Type": "crate::schemas::definitions::StArray",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "BorderColor",
+          "XmlName": "BorderColor",
+          "Ident": "border_color",
+          "Type": "CtColor",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CT_Image",
+      "Ident": "CtImage",
+      "XmlName": null,
+      "Attributes": [
+        {
+          "Name": "Boundary",
+          "Ident": "boundary",
+          "Type": "crate::schemas::definitions::StBox",
+          "IsOption": false
+        },
+        {
+          "Name": "Name",
+          "Ident": "name",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "Visible",
+          "Ident": "visible",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "CTM",
+          "Ident": "ctm",
+          "Type": "crate::schemas::definitions::StArray",
+          "IsOption": true
+        },
+        {
+          "Name": "DrawParam",
+          "Ident": "draw_param",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": true
+        },
+        {
+          "Name": "LineWidth",
+          "Ident": "line_width",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "Cap",
+          "Ident": "cap",
+          "Type": "CtGraphicUnitCap",
+          "IsOption": true
+        },
+        {
+          "Name": "Join",
+          "Ident": "join",
+          "Type": "CtGraphicUnitJoin",
+          "IsOption": true
+        },
+        {
+          "Name": "MiterLimit",
+          "Ident": "miter_limit",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "DashOffset",
+          "Ident": "dash_offset",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "DashPattern",
+          "Ident": "dash_pattern",
+          "Type": "crate::schemas::definitions::StArray",
+          "IsOption": true
+        },
+        {
+          "Name": "Alpha",
+          "Ident": "alpha",
+          "Type": "i32",
+          "IsOption": true
+        },
+        {
+          "Name": "ResourceID",
+          "Ident": "resource_id",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": false
+        },
+        {
+          "Name": "Substitution",
+          "Ident": "substitution",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": true
+        },
+        {
+          "Name": "ImageMask",
+          "Ident": "image_mask",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "Actions",
+          "XmlName": "Actions",
+          "Ident": "actions",
+          "Type": "Actions",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Clips",
+          "XmlName": "Clips",
+          "Ident": "clips",
+          "Type": "Clips",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Border",
+          "XmlName": "Border",
+          "Ident": "border",
+          "Type": "Border",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CT_Composite",
+      "Ident": "CtComposite",
+      "XmlName": null,
+      "Attributes": [
+        {
+          "Name": "Boundary",
+          "Ident": "boundary",
+          "Type": "crate::schemas::definitions::StBox",
+          "IsOption": false
+        },
+        {
+          "Name": "Name",
+          "Ident": "name",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "Visible",
+          "Ident": "visible",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "CTM",
+          "Ident": "ctm",
+          "Type": "crate::schemas::definitions::StArray",
+          "IsOption": true
+        },
+        {
+          "Name": "DrawParam",
+          "Ident": "draw_param",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": true
+        },
+        {
+          "Name": "LineWidth",
+          "Ident": "line_width",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "Cap",
+          "Ident": "cap",
+          "Type": "CtGraphicUnitCap",
+          "IsOption": true
+        },
+        {
+          "Name": "Join",
+          "Ident": "join",
+          "Type": "CtGraphicUnitJoin",
+          "IsOption": true
+        },
+        {
+          "Name": "MiterLimit",
+          "Ident": "miter_limit",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "DashOffset",
+          "Ident": "dash_offset",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "DashPattern",
+          "Ident": "dash_pattern",
+          "Type": "crate::schemas::definitions::StArray",
+          "IsOption": true
+        },
+        {
+          "Name": "Alpha",
+          "Ident": "alpha",
+          "Type": "i32",
+          "IsOption": true
+        },
+        {
+          "Name": "ResourceID",
+          "Ident": "resource_id",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "Actions",
+          "XmlName": "Actions",
+          "Ident": "actions",
+          "Type": "Actions",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Clips",
+          "XmlName": "Clips",
+          "Ident": "clips",
+          "Type": "Clips",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CT_Path",
+      "Ident": "CtPath",
+      "XmlName": null,
+      "Attributes": [
+        {
+          "Name": "Boundary",
+          "Ident": "boundary",
+          "Type": "crate::schemas::definitions::StBox",
+          "IsOption": false
+        },
+        {
+          "Name": "Name",
+          "Ident": "name",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "Visible",
+          "Ident": "visible",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "CTM",
+          "Ident": "ctm",
+          "Type": "crate::schemas::definitions::StArray",
+          "IsOption": true
+        },
+        {
+          "Name": "DrawParam",
+          "Ident": "draw_param",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": true
+        },
+        {
+          "Name": "LineWidth",
+          "Ident": "line_width",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "Cap",
+          "Ident": "cap",
+          "Type": "CtGraphicUnitCap",
+          "IsOption": true
+        },
+        {
+          "Name": "Join",
+          "Ident": "join",
+          "Type": "CtGraphicUnitJoin",
+          "IsOption": true
+        },
+        {
+          "Name": "MiterLimit",
+          "Ident": "miter_limit",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "DashOffset",
+          "Ident": "dash_offset",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "DashPattern",
+          "Ident": "dash_pattern",
+          "Type": "crate::schemas::definitions::StArray",
+          "IsOption": true
+        },
+        {
+          "Name": "Alpha",
+          "Ident": "alpha",
+          "Type": "i32",
+          "IsOption": true
+        },
+        {
+          "Name": "Stroke",
+          "Ident": "stroke",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "Fill",
+          "Ident": "fill",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "Rule",
+          "Ident": "rule",
+          "Type": "CtPathRule",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "Actions",
+          "XmlName": "Actions",
+          "Ident": "actions",
+          "Type": "Actions",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Clips",
+          "XmlName": "Clips",
+          "Ident": "clips",
+          "Type": "Clips",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "StrokeColor",
+          "XmlName": "StrokeColor",
+          "Ident": "stroke_color",
+          "Type": "CtColor",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "FillColor",
+          "XmlName": "FillColor",
+          "Ident": "fill_color",
+          "Type": "CtColor",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "AbbreviatedData",
+          "XmlName": "AbbreviatedData",
+          "Ident": "abbreviated_data",
+          "Type": "String",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CellContent",
+      "Ident": "CellContent",
+      "XmlName": "CellContent",
+      "Attributes": [
+        {
+          "Name": "Thumbnail",
+          "Ident": "thumbnail",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [],
+      "Children": [
+        {
+          "Name": "TextObject",
+          "XmlName": "TextObject",
+          "Ident": "TextObject",
+          "Type": "TextObject",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "PathObject",
+          "XmlName": "PathObject",
+          "Ident": "PathObject",
+          "Type": "PathObject",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "ImageObject",
+          "XmlName": "ImageObject",
+          "Ident": "ImageObject",
+          "Type": "ImageObject",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "CompositeObject",
+          "XmlName": "CompositeObject",
+          "Ident": "CompositeObject",
+          "Type": "CompositeObject",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "PageBlock",
+          "XmlName": "PageBlock",
+          "Ident": "PageBlock",
+          "Type": "PageBlock",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ]
+    },
+    {
+      "Name": "CT_Pattern",
+      "Ident": "CtPattern",
+      "XmlName": null,
+      "Attributes": [
+        {
+          "Name": "Width",
+          "Ident": "width",
+          "Type": "f64",
+          "IsOption": false
+        },
+        {
+          "Name": "Height",
+          "Ident": "height",
+          "Type": "f64",
+          "IsOption": false
+        },
+        {
+          "Name": "XStep",
+          "Ident": "x_step",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "YStep",
+          "Ident": "y_step",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "ReflectMethod",
+          "Ident": "reflect_method",
+          "Type": "CtPatternReflectMethod",
+          "IsOption": true
+        },
+        {
+          "Name": "RelativeTo",
+          "Ident": "relative_to",
+          "Type": "CtPatternRelativeTo",
+          "IsOption": true
+        },
+        {
+          "Name": "CTM",
+          "Ident": "ctm",
+          "Type": "crate::schemas::definitions::StArray",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "CellContent",
+          "XmlName": "CellContent",
+          "Ident": "cell_content",
+          "Type": "CellContent",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "Segment",
+      "Ident": "Segment",
+      "XmlName": "Segment",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Ident": "position",
+          "Type": "f64",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "Color",
+          "XmlName": "Color",
+          "Ident": "color",
+          "Type": "CtColor",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CT_AxialShd",
+      "Ident": "CtAxialShd",
+      "XmlName": null,
+      "Attributes": [
+        {
+          "Name": "MapType",
+          "Ident": "map_type",
+          "Type": "CtAxialShdMapType",
+          "IsOption": true
+        },
+        {
+          "Name": "MapUnit",
+          "Ident": "map_unit",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "Extend",
+          "Ident": "extend",
+          "Type": "CtAxialShdExtend",
+          "IsOption": true
+        },
+        {
+          "Name": "StartPoint",
+          "Ident": "start_point",
+          "Type": "crate::schemas::definitions::StPos",
+          "IsOption": false
+        },
+        {
+          "Name": "EndPoint",
+          "Ident": "end_point",
+          "Type": "crate::schemas::definitions::StPos",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "Segment",
+          "XmlName": "Segment",
+          "Ident": "segment",
+          "Type": "Segment",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CT_RadialShd",
+      "Ident": "CtRadialShd",
+      "XmlName": null,
+      "Attributes": [
+        {
+          "Name": "MapType",
+          "Ident": "map_type",
+          "Type": "CtRadialShdMapType",
+          "IsOption": true
+        },
+        {
+          "Name": "MapUnit",
+          "Ident": "map_unit",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "Eccentricity",
+          "Ident": "eccentricity",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "Angle",
+          "Ident": "angle",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "StartPoint",
+          "Ident": "start_point",
+          "Type": "crate::schemas::definitions::StPos",
+          "IsOption": false
+        },
+        {
+          "Name": "StartRadius",
+          "Ident": "start_radius",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "EndPoint",
+          "Ident": "end_point",
+          "Type": "crate::schemas::definitions::StPos",
+          "IsOption": false
+        },
+        {
+          "Name": "EndRadius",
+          "Ident": "end_radius",
+          "Type": "f64",
+          "IsOption": false
+        },
+        {
+          "Name": "Extend",
+          "Ident": "extend",
+          "Type": "i32",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "Segment",
+          "XmlName": "Segment",
+          "Ident": "segment",
+          "Type": "Segment",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "Point",
+      "Ident": "Point",
+      "XmlName": "Point",
+      "Attributes": [
+        {
+          "Name": "X",
+          "Ident": "x",
+          "Type": "f64",
+          "IsOption": false
+        },
+        {
+          "Name": "Y",
+          "Ident": "y",
+          "Type": "f64",
+          "IsOption": false
+        },
+        {
+          "Name": "EdgeFlag",
+          "Ident": "edge_flag",
+          "Type": "PointEdgeFlag",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "Color",
+          "XmlName": "Color",
+          "Ident": "color",
+          "Type": "CtColor",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CT_GouraudShd",
+      "Ident": "CtGouraudShd",
+      "XmlName": null,
+      "Attributes": [
+        {
+          "Name": "Extend",
+          "Ident": "extend",
+          "Type": "i32",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "Point",
+          "XmlName": "Point",
+          "Ident": "point",
+          "Type": "Point",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": true
+        },
+        {
+          "Name": "BackColor",
+          "XmlName": "BackColor",
+          "Ident": "back_color",
+          "Type": "CtColor",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CT_LaGouraudShdPoint",
+      "Ident": "CtLaGouraudShdPoint",
+      "XmlName": "Point",
+      "Attributes": [
+        {
+          "Name": "X",
+          "Ident": "x",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "Y",
+          "Ident": "y",
+          "Type": "f64",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "Color",
+          "XmlName": "Color",
+          "Ident": "color",
+          "Type": "CtColor",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CT_LaGouraudShd",
+      "Ident": "CtLaGouraudShd",
+      "XmlName": null,
+      "Attributes": [
+        {
+          "Name": "VerticesPerRow",
+          "Ident": "vertices_per_row",
+          "Type": "i32",
+          "IsOption": false
+        },
+        {
+          "Name": "Extend",
+          "Ident": "extend",
+          "Type": "i32",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "Point",
+          "XmlName": "Point",
+          "Ident": "point",
+          "Type": "CtLaGouraudShdPoint",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": true
+        },
+        {
+          "Name": "BackColor",
+          "XmlName": "BackColor",
+          "Ident": "back_color",
+          "Type": "CtColor",
+          "SourceModuleName": "page",
+          "IsOption": true,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CT_Color",
+      "Ident": "CtColor",
+      "XmlName": null,
+      "Attributes": [
+        {
+          "Name": "Value",
+          "Ident": "value",
+          "Type": "crate::schemas::definitions::StArray",
+          "IsOption": true
+        },
+        {
+          "Name": "Index",
+          "Ident": "index",
+          "Type": "i32",
+          "IsOption": true
+        },
+        {
+          "Name": "ColorSpace",
+          "Ident": "color_space",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": true
+        },
+        {
+          "Name": "Alpha",
+          "Ident": "alpha",
+          "Type": "i32",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [],
+      "Children": [
+        {
+          "Name": "Pattern",
+          "XmlName": "Pattern",
+          "Ident": "Pattern",
+          "Type": "CtPattern",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "AxialShd",
+          "XmlName": "AxialShd",
+          "Ident": "AxialShd",
+          "Type": "CtAxialShd",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "RadialShd",
+          "XmlName": "RadialShd",
+          "Ident": "RadialShd",
+          "Type": "CtRadialShd",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "GouraudShd",
+          "XmlName": "GouraudShd",
+          "Ident": "GouraudShd",
+          "Type": "CtGouraudShd",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "LaGourandShd",
+          "XmlName": "LaGourandShd",
+          "Ident": "LaGourandShd",
+          "Type": "CtLaGouraudShd",
+          "SourceModuleName": "page",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ]
+    }
+  ],
+  "Elements": [
+    {
+      "Name": "Template",
+      "Ident": "Template",
+      "XmlName": "Template",
+      "Type": "Template",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "PageRes",
+      "Ident": "PageRes",
+      "XmlName": "PageRes",
+      "Type": "crate::schemas::definitions::StLoc",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Area",
+      "Ident": "Area",
+      "XmlName": "Area",
+      "Type": "crate::schemas::definitions::CtPageArea",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Layer",
+      "Ident": "Layer",
+      "XmlName": "Layer",
+      "Type": "Layer",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Content",
+      "Ident": "Content",
+      "XmlName": "Content",
+      "Type": "Content",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Action",
+      "Ident": "Action",
+      "XmlName": "Action",
+      "Type": "crate::schemas::definitions::CtAction",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Actions",
+      "Ident": "Actions",
+      "XmlName": "Actions",
+      "Type": "Actions",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Page",
+      "Ident": "Page",
+      "XmlName": "Page",
+      "Type": "Page",
+      "IsTopLevel": true
+    },
+    {
+      "Name": "Path",
+      "Ident": "Path",
+      "XmlName": "Path",
+      "Type": "CtPath",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Text",
+      "Ident": "Text",
+      "XmlName": "Text",
+      "Type": "CtText",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Area",
+      "Ident": "Area",
+      "XmlName": "Area",
+      "Type": "Area",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "TextObject",
+      "Ident": "TextObject",
+      "XmlName": "TextObject",
+      "Type": "TextObject",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "PathObject",
+      "Ident": "PathObject",
+      "XmlName": "PathObject",
+      "Type": "PathObject",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "ImageObject",
+      "Ident": "ImageObject",
+      "XmlName": "ImageObject",
+      "Type": "ImageObject",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "CompositeObject",
+      "Ident": "CompositeObject",
+      "XmlName": "CompositeObject",
+      "Type": "CompositeObject",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "PageBlock",
+      "Ident": "PageBlock",
+      "XmlName": "PageBlock",
+      "Type": "PageBlock",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Clip",
+      "Ident": "Clip",
+      "XmlName": "Clip",
+      "Type": "CtClip",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Clips",
+      "Ident": "Clips",
+      "XmlName": "Clips",
+      "Type": "Clips",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "FillColor",
+      "Ident": "FillColor",
+      "XmlName": "FillColor",
+      "Type": "CtColor",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "StrokeColor",
+      "Ident": "StrokeColor",
+      "XmlName": "StrokeColor",
+      "Type": "CtColor",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "CGTransform",
+      "Ident": "CgTransform",
+      "XmlName": "CGTransform",
+      "Type": "CtCgTransform",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "TextCode",
+      "Ident": "TextCode",
+      "XmlName": "TextCode",
+      "Type": "TextCode",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Glyphs",
+      "Ident": "Glyphs",
+      "XmlName": "Glyphs",
+      "Type": "crate::schemas::definitions::StArray",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "BorderColor",
+      "Ident": "BorderColor",
+      "XmlName": "BorderColor",
+      "Type": "CtColor",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Border",
+      "Ident": "Border",
+      "XmlName": "Border",
+      "Type": "Border",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "AbbreviatedData",
+      "Ident": "AbbreviatedData",
+      "XmlName": "AbbreviatedData",
+      "Type": "String",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "CellContent",
+      "Ident": "CellContent",
+      "XmlName": "CellContent",
+      "Type": "CellContent",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Color",
+      "Ident": "Color",
+      "XmlName": "Color",
+      "Type": "CtColor",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Segment",
+      "Ident": "Segment",
+      "XmlName": "Segment",
+      "Type": "Segment",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Point",
+      "Ident": "Point",
+      "XmlName": "Point",
+      "Type": "Point",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "BackColor",
+      "Ident": "BackColor",
+      "XmlName": "BackColor",
+      "Type": "CtColor",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "CT_LaGouraudShdPoint",
+      "Ident": "CtLaGouraudShdPoint",
+      "XmlName": "Point",
+      "Type": "CtLaGouraudShdPoint",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Point",
+      "Ident": "Point",
+      "XmlName": "Point",
+      "Type": "CtLaGouraudShdPoint",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Pattern",
+      "Ident": "Pattern",
+      "XmlName": "Pattern",
+      "Type": "CtPattern",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "AxialShd",
+      "Ident": "AxialShd",
+      "XmlName": "AxialShd",
+      "Type": "CtAxialShd",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "RadialShd",
+      "Ident": "RadialShd",
+      "XmlName": "RadialShd",
+      "Type": "CtRadialShd",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "GouraudShd",
+      "Ident": "GouraudShd",
+      "XmlName": "GouraudShd",
+      "Type": "CtGouraudShd",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "LaGourandShd",
+      "Ident": "LaGourandShd",
+      "XmlName": "LaGourandShd",
+      "Type": "CtLaGouraudShd",
+      "IsTopLevel": false
+    }
+  ],
+  "Enums": [
+    {
+      "Name": "TemplateZOrder",
+      "Ident": "TemplateZOrder",
+      "Variants": [
+        {
+          "Ident": "Background",
+          "Value": "Background"
+        },
+        {
+          "Ident": "Foreground",
+          "Value": "Foreground"
+        }
+      ],
+      "DefaultIndex": 0
+    },
+    {
+      "Name": "CtLayerType",
+      "Ident": "CtLayerType",
+      "Variants": [
+        {
+          "Ident": "Body",
+          "Value": "Body"
+        },
+        {
+          "Ident": "Background",
+          "Value": "Background"
+        },
+        {
+          "Ident": "Foreground",
+          "Value": "Foreground"
+        },
+        {
+          "Ident": "Custom",
+          "Value": "Custom"
+        }
+      ],
+      "DefaultIndex": 0
+    },
+    {
+      "Name": "CtGraphicUnitCap",
+      "Ident": "CtGraphicUnitCap",
+      "Variants": [
+        {
+          "Ident": "Butt",
+          "Value": "Butt"
+        },
+        {
+          "Ident": "Round",
+          "Value": "Round"
+        },
+        {
+          "Ident": "Square",
+          "Value": "Square"
+        }
+      ],
+      "DefaultIndex": 0
+    },
+    {
+      "Name": "CtGraphicUnitJoin",
+      "Ident": "CtGraphicUnitJoin",
+      "Variants": [
+        {
+          "Ident": "Miter",
+          "Value": "Miter"
+        },
+        {
+          "Ident": "Round",
+          "Value": "Round"
+        },
+        {
+          "Ident": "Bevel",
+          "Value": "Bevel"
+        }
+      ],
+      "DefaultIndex": 0
+    },
+    {
+      "Name": "CtTextWeight",
+      "Ident": "CtTextWeight",
+      "Variants": [
+        {
+          "Ident": "_0",
+          "Value": "0"
+        },
+        {
+          "Ident": "_100",
+          "Value": "100"
+        },
+        {
+          "Ident": "_200",
+          "Value": "200"
+        },
+        {
+          "Ident": "_300",
+          "Value": "300"
+        },
+        {
+          "Ident": "_400",
+          "Value": "400"
+        },
+        {
+          "Ident": "_500",
+          "Value": "500"
+        },
+        {
+          "Ident": "_600",
+          "Value": "600"
+        },
+        {
+          "Ident": "_700",
+          "Value": "700"
+        },
+        {
+          "Ident": "_800",
+          "Value": "800"
+        },
+        {
+          "Ident": "_900",
+          "Value": "900"
+        },
+        {
+          "Ident": "_1000",
+          "Value": "1000"
+        }
+      ],
+      "DefaultIndex": 0
+    },
+    {
+      "Name": "CtPathRule",
+      "Ident": "CtPathRule",
+      "Variants": [
+        {
+          "Ident": "NonZero",
+          "Value": "NonZero"
+        },
+        {
+          "Ident": "_EvenOdd",
+          "Value": "Even-Odd"
+        }
+      ],
+      "DefaultIndex": 0
+    },
+    {
+      "Name": "CtPatternReflectMethod",
+      "Ident": "CtPatternReflectMethod",
+      "Variants": [
+        {
+          "Ident": "Normal",
+          "Value": "Normal"
+        },
+        {
+          "Ident": "Row",
+          "Value": "Row"
+        },
+        {
+          "Ident": "Column",
+          "Value": "Column"
+        },
+        {
+          "Ident": "RowAndColumn",
+          "Value": "RowAndColumn"
+        }
+      ],
+      "DefaultIndex": 0
+    },
+    {
+      "Name": "CtPatternRelativeTo",
+      "Ident": "CtPatternRelativeTo",
+      "Variants": [
+        {
+          "Ident": "Page",
+          "Value": "Page"
+        },
+        {
+          "Ident": "Object",
+          "Value": "Object"
+        }
+      ],
+      "DefaultIndex": 0
+    },
+    {
+      "Name": "CtAxialShdMapType",
+      "Ident": "CtAxialShdMapType",
+      "Variants": [
+        {
+          "Ident": "Direct",
+          "Value": "Direct"
+        },
+        {
+          "Ident": "Repeat",
+          "Value": "Repeat"
+        },
+        {
+          "Ident": "Reflect",
+          "Value": "Reflect"
+        }
+      ],
+      "DefaultIndex": 0
+    },
+    {
+      "Name": "CtAxialShdExtend",
+      "Ident": "CtAxialShdExtend",
+      "Variants": [
+        {
+          "Ident": "_0",
+          "Value": "0"
+        },
+        {
+          "Ident": "_1",
+          "Value": "1"
+        },
+        {
+          "Ident": "_2",
+          "Value": "2"
+        },
+        {
+          "Ident": "_3",
+          "Value": "3"
+        }
+      ],
+      "DefaultIndex": 0
+    },
+    {
+      "Name": "CtRadialShdMapType",
+      "Ident": "CtRadialShdMapType",
+      "Variants": [
+        {
+          "Ident": "Direct",
+          "Value": "Direct"
+        },
+        {
+          "Ident": "Repeat",
+          "Value": "Repeat"
+        },
+        {
+          "Ident": "Reflect",
+          "Value": "Reflect"
+        }
+      ],
+      "DefaultIndex": 0
+    },
+    {
+      "Name": "PointEdgeFlag",
+      "Ident": "PointEdgeFlag",
+      "Variants": [
+        {
+          "Ident": "_0",
+          "Value": "0"
+        },
+        {
+          "Ident": "_1",
+          "Value": "1"
+        },
+        {
+          "Ident": "_2",
+          "Value": "2"
+        }
+      ],
+      "DefaultIndex": 0
+    }
+  ],
+  "Aliases": [],
+  "ModuleName": "page"
+}

@@ -1,0 +1,8 @@
+{
+  "Name": "Annotation",
+  "Base": "OfdPart",
+  "SchemaModule": "annotation",
+  "RootElement": "PageAnnot",
+  "Path": "ReferenceField",
+  "Children": []
+}

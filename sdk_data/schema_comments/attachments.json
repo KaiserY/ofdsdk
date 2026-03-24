@@ -1,0 +1,134 @@
+{
+  "Entries": [
+    {
+      "Schema": "attachments",
+      "Type": "Attachments",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "附件列表根节点。"
+        }
+      ]
+    },
+    {
+      "Schema": "attachments",
+      "Type": "Attachments",
+      "Field": "Attachment",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "附件。"
+        }
+      ]
+    },
+    {
+      "Schema": "attachments",
+      "Type": "CtAttachment",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "附件属性。"
+        }
+      ]
+    },
+    {
+      "Schema": "attachments",
+      "Type": "CtAttachment",
+      "Field": "ID",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "附件标识。"
+        }
+      ]
+    },
+    {
+      "Schema": "attachments",
+      "Type": "CtAttachment",
+      "Field": "Name",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "附件名称。"
+        }
+      ]
+    },
+    {
+      "Schema": "attachments",
+      "Type": "CtAttachment",
+      "Field": "Format",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "附件格式。"
+        }
+      ]
+    },
+    {
+      "Schema": "attachments",
+      "Type": "CtAttachment",
+      "Field": "CreationDate",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "创建时间。"
+        }
+      ]
+    },
+    {
+      "Schema": "attachments",
+      "Type": "CtAttachment",
+      "Field": "ModDate",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "修改时间。"
+        }
+      ]
+    },
+    {
+      "Schema": "attachments",
+      "Type": "CtAttachment",
+      "Field": "Size",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "附件大小，以 KB 为单位。"
+        }
+      ]
+    },
+    {
+      "Schema": "attachments",
+      "Type": "CtAttachment",
+      "Field": "Visible",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "附件是否可见。默认为 true。"
+        }
+      ]
+    },
+    {
+      "Schema": "attachments",
+      "Type": "CtAttachment",
+      "Field": "Usage",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "附件用途。默认为 none。"
+        }
+      ]
+    },
+    {
+      "Schema": "attachments",
+      "Type": "CtAttachment",
+      "Field": "FileLoc",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "附件内容在包内的路径。"
+        }
+      ]
+    }
+  ]
+}

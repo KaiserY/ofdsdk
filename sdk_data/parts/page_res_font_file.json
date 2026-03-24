@@ -1,0 +1,12 @@
+{
+  "Name": "PageResFontFile",
+  "Base": "OfdPart",
+  "Path": {
+    "ReferenceFieldWithBase": {
+      "BaseFieldPath": [
+        "BaseLoc"
+      ]
+    }
+  },
+  "Children": []
+}

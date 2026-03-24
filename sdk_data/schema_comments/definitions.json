@@ -1,0 +1,601 @@
+{
+  "Entries": [
+    {
+      "Schema": "definitions",
+      "Type": "CtPageArea",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "页面区域。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "CtPageArea",
+      "Field": "PhysicalBox",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "页面物理区域，左上角的坐标为页面空间坐标系的原点。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "CtPageArea",
+      "Field": "ApplicationBox",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "显示区域，页面内容实际显示或打印输出的区域，位于页面物理区域内，包含页眉、页脚、版心等内容。\n[例外处理]如果显示区域不完全位于页面物理区域内，页面物理区域外的部分则被忽略。如果显示区域完全位于页面物理区域外，则该页为空白页。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "CtPageArea",
+      "Field": "ContentBox",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "版心区域，即文件的正文区域，位于显示区域内。左上角的坐标决定了其在显示区域内的位置。\n[例外处理]如果版心区域不完全位于显示区域内，显示区域外的部分则被忽略。如果版心区域完全位于显示区域外，则版心内容不被绘制。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "CtPageArea",
+      "Field": "BleedBox",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "出血区域，即超出设备性能限制的额外出血区域，位于页面物理区域外。不出现时，默认值为页面物理区域。\n[例外处理]如果出血区域不完全位于页面物理区域外，页面物理区域内的部分则被忽略。如果出血区域完全位于页面物理区域内，出血区域无效。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "Move",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "从当前点移动到新的当前点。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "Move",
+      "Field": "Point1",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "移动后新的当前绘制点。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "Line",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "从当前点连接一条到指定点的线段，并将当前点移动到指定点。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "Line",
+      "Field": "Point1",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "线段的结束点。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "QuadraticBezier",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "从当前点连接一条到 Point2 的二次贝塞尔曲线，并将当前点移动到 Point2，此贝塞尔曲线使用 Point1 作为其控制点。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "QuadraticBezier",
+      "Field": "Point1",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "二次贝塞尔曲线的控制点。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "QuadraticBezier",
+      "Field": "Point2",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "二次贝塞尔曲线的结束点，下一路径的起始点。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "CubicBezier",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "从当前点连接一条到 Point3 的三次贝塞尔曲线，并将当前点移动到 Point3，使用 Point1 和 Point2 作为控制点。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "CubicBezier",
+      "Field": "Point1",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "三次贝塞尔曲线的第一个控制点。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "CubicBezier",
+      "Field": "Point2",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "三次贝塞尔曲线的第二个控制点。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "CubicBezier",
+      "Field": "Point3",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "三次贝塞尔曲线的结束点，下一路径的起始点。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "Arc",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "从当前点连接一条到 EndPoint 点的圆弧，并将当前点移动到 EndPoint 点。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "Arc",
+      "Field": "EndPoint",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "圆弧的结束点，下个路径的起始点，不能与当前的绘制起始点为同一位置。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "Arc",
+      "Field": "EllipseSize",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "形如 [200 100] 的数组，2 个正浮点数值依次对应椭圆的长、短轴长度，较大的一个为长轴。数组长度超过 2 时只取前两个数值；数组长度为 1 时认为这是一个圆，该数值为圆半径；数组前两个数值中有一个为 0，或者数组为空时，圆弧退化为一条从当前点到 EndPoint 的线段；数组数值为负值时取其绝对值。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "Arc",
+      "Field": "RotationAngle",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "表示按 EllipseSize 绘制的椭圆在当前坐标系下旋转的角度，正值为顺时针，负值为逆时针。角度大于 360° 时以 360 取模。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "Arc",
+      "Field": "LargeArc",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "是否是大圆弧。true 表示此线型对应的为度数大于 180° 的弧，false 表示对应度数小于 180° 的弧。对于恰好 180° 的弧，此属性不被参考，可由 SweepDirection 属性确定圆弧的形状。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "Arc",
+      "Field": "SweepDirection",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "弧线方向是否为顺时针。true 表示由圆弧起始点到结束点是顺时针旋转，false 表示由圆弧起始点到结束点是逆时针旋转。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "Close",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "自动闭合到当前分路径的起始点，并以该点为当前点。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "CtRegion",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "指定多个复杂区域为该链接对象的启动区域，不出现时以所在图元或页面的外接矩形作为启动区域。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "CtRegion",
+      "Field": "Area",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "区域集合。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "CtDest",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "跳转的目标区域。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "CtDest",
+      "Field": "Type",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "声明目标区域的描述方法，可取值为 XYZ、Fit、FitH、FitV、FitR。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "CtDest",
+      "Field": "PageID",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "引用跳转目标页面的标识。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "CtDest",
+      "Field": "Left",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "目标区域左上角 x 坐标。默认为 0。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "CtDest",
+      "Field": "Right",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "目标区域右下角 x 坐标。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "CtDest",
+      "Field": "Top",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "目标区域左上角 y 坐标。默认为 0。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "CtDest",
+      "Field": "Bottom",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "目标区域右下角 y 坐标。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "CtDest",
+      "Field": "Zoom",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "目标区域页面缩放比例，为 0 或不出现则按照当前缩放比例跳转，可取值范围 [0.1, 64.0]。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "Bookmark",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "跳转的目标书签。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "Bookmark",
+      "Field": "Name",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "目标书签的名称，引用文档书签定义中的名称。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "Goto",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "本文档内的跳转。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "Uri",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "打开或访问一个 URI 链接。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "Uri",
+      "Field": "URI",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "目标 URI 的位置。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "Uri",
+      "Field": "Base",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "Base URI，用于相对地址。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "GotoA",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "打开本文档附件。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "GotoA",
+      "Field": "AttachID",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "附件的标识。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "GotoA",
+      "Field": "NewWindow",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "是否在新窗口中打开。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "Sound",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "播放一段音频。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "Sound",
+      "Field": "ResourceID",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "引用资源文件中的音频资源标识。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "Sound",
+      "Field": "Volume",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "播放的音量，取值范围 [0, 100]。默认值为 100。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "Sound",
+      "Field": "Repeat",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "此音频是否需要循环播放。如果此属性为 true，则 Synchronous 值无效。默认为 false。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "Sound",
+      "Field": "Synchronous",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "是否同步播放。true 表示后续动作应等待此音频播放结束后才能开始，false 表示立刻返回并开始下一个动作。默认值为 false。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "Movie",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "播放一段视频。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "Movie",
+      "Field": "ResourceID",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "引用资源文件中定义的视频资源标识。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "Movie",
+      "Field": "Operator",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "放映参数，见表 59。默认值为 Play。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "CtAction",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "动作类型属性。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "CtAction",
+      "Field": "Event",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "事件类型，触发动作的条件，事件的具体类型见表 52。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "CtAction",
+      "Field": "Region",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "指定多个复杂区域为该链接对象的启动区域，不出现时以所在图元或页面的外接矩形作为启动区域，见 9.3。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "CtActionEvent",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "事件类型。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "CtDestType",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "目标区域的描述方法。"
+        }
+      ]
+    },
+    {
+      "Schema": "definitions",
+      "Type": "MovieOperator",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "放映参数。"
+        }
+      ]
+    }
+  ]
+}

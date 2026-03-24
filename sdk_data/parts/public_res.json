@@ -1,0 +1,37 @@
+{
+  "Name": "PublicRes",
+  "Base": "OfdPart",
+  "SchemaModule": "res",
+  "RootElement": "Res",
+  "Path": "ReferenceField",
+  "Children": [
+    {
+      "ApiName": "PublicResFontFiles",
+      "Name": "PublicResFontFile",
+      "From": {
+        "Parent": "PublicRes",
+        "FieldPath": [
+          "Fonts",
+          "Font",
+          "FontFile"
+        ],
+        "IsVec": true
+      },
+      "MaxOccursGreatThanOne": true
+    },
+    {
+      "ApiName": "PublicResMediaFiles",
+      "Name": "PublicResMediaFile",
+      "From": {
+        "Parent": "PublicRes",
+        "FieldPath": [
+          "MultiMedias",
+          "MultiMedia",
+          "MediaFile"
+        ],
+        "IsVec": true
+      },
+      "MaxOccursGreatThanOne": true
+    }
+  ]
+}

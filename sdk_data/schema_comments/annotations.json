@@ -1,0 +1,57 @@
+{
+  "Entries": [
+    {
+      "Schema": "annotations",
+      "Type": "Page",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "注释所在页。"
+        }
+      ]
+    },
+    {
+      "Schema": "annotations",
+      "Type": "Page",
+      "Field": "PageID",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "引用注释所在页面的标识。"
+        }
+      ]
+    },
+    {
+      "Schema": "annotations",
+      "Type": "Page",
+      "Field": "FileLoc",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "指向包内的分页注释文件。"
+        }
+      ]
+    },
+    {
+      "Schema": "annotations",
+      "Type": "Annotations",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "注释列表属性。"
+        }
+      ]
+    },
+    {
+      "Schema": "annotations",
+      "Type": "Annotations",
+      "Field": "Page",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "注释所在页。"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,240 @@
+{
+  "Entries": [
+    {
+      "Schema": "annotation",
+      "Type": "Parameter",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "注释参数(键值对)。"
+        }
+      ]
+    },
+    {
+      "Schema": "annotation",
+      "Type": "Parameter",
+      "Field": "Name",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "注释参数名称。"
+        }
+      ]
+    },
+    {
+      "Schema": "annotation",
+      "Type": "Parameters",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "一组注释参数。"
+        }
+      ]
+    },
+    {
+      "Schema": "annotation",
+      "Type": "Parameters",
+      "Field": "Parameter",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "注释参数(键值对)。"
+        }
+      ]
+    },
+    {
+      "Schema": "annotation",
+      "Type": "Appearance",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "注释的静态呈现效果，使用页面块定义来描述。"
+        }
+      ]
+    },
+    {
+      "Schema": "annotation",
+      "Type": "Annot",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "注释信息属性。"
+        }
+      ]
+    },
+    {
+      "Schema": "annotation",
+      "Type": "Annot",
+      "Field": "ID",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "注释的标识。"
+        }
+      ]
+    },
+    {
+      "Schema": "annotation",
+      "Type": "Annot",
+      "Field": "Type",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "注释类型，具体取值请见表 62。"
+        }
+      ]
+    },
+    {
+      "Schema": "annotation",
+      "Type": "Annot",
+      "Field": "Creator",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "注释创建者。"
+        }
+      ]
+    },
+    {
+      "Schema": "annotation",
+      "Type": "Annot",
+      "Field": "LastModDate",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "最近一次修改的时间。"
+        }
+      ]
+    },
+    {
+      "Schema": "annotation",
+      "Type": "Annot",
+      "Field": "Subtype",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "注释子类型。"
+        }
+      ]
+    },
+    {
+      "Schema": "annotation",
+      "Type": "Annot",
+      "Field": "Visible",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "表示该注释对象是否显示。默认值为 true。"
+        }
+      ]
+    },
+    {
+      "Schema": "annotation",
+      "Type": "Annot",
+      "Field": "Print",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "对象的 Remark 信息是否随页面一起打印。默认值为 true。"
+        }
+      ]
+    },
+    {
+      "Schema": "annotation",
+      "Type": "Annot",
+      "Field": "NoZoom",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "对象的 Remark 信息是否不随页面缩放而同步缩放。默认值为 false。"
+        }
+      ]
+    },
+    {
+      "Schema": "annotation",
+      "Type": "Annot",
+      "Field": "NoRotate",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "对象的 Remark 信息是否不随页面旋转而同步旋转。默认值为 false。"
+        }
+      ]
+    },
+    {
+      "Schema": "annotation",
+      "Type": "Annot",
+      "Field": "ReadOnly",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "对象的 Remark 信息是否不能被用户更改。默认值为 true。"
+        }
+      ]
+    },
+    {
+      "Schema": "annotation",
+      "Type": "Annot",
+      "Field": "Remark",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "注释说明内容。"
+        }
+      ]
+    },
+    {
+      "Schema": "annotation",
+      "Type": "Annot",
+      "Field": "Parameters",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "一组注释参数。"
+        }
+      ]
+    },
+    {
+      "Schema": "annotation",
+      "Type": "Annot",
+      "Field": "Appearance",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "注释的静态呈现效果，使用页面块定义来描述。"
+        }
+      ]
+    },
+    {
+      "Schema": "annotation",
+      "Type": "PageAnnot",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "注释信息集合。"
+        }
+      ]
+    },
+    {
+      "Schema": "annotation",
+      "Type": "PageAnnot",
+      "Field": "Annot",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "注释信息。"
+        }
+      ]
+    },
+    {
+      "Schema": "annotation",
+      "Type": "AnnotType",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "注释类型取值。"
+        }
+      ]
+    }
+  ]
+}

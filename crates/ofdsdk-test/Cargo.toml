@@ -1,0 +1,20 @@
+[package]
+name = "ofdsdk-test"
+version.workspace = true
+edition.workspace = true
+publish = false
+
+[dependencies]
+ofdsdk = { workspace = true, features = ["parts"] }
+
+[dev-dependencies]
+criterion = { workspace = true }
+zip = { workspace = true }
+
+[[bench]]
+name = "page"
+harness = false
+
+[[bench]]
+name = "document"
+harness = false

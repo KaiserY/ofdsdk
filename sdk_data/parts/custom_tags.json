@@ -1,0 +1,35 @@
+{
+  "Name": "CustomTags",
+  "Base": "OfdPart",
+  "SchemaModule": "custom_tags",
+  "RootElement": "CustomTags",
+  "Path": "ReferenceField",
+  "Children": [
+    {
+      "ApiName": "CustomTagFiles",
+      "Name": "CustomTagFile",
+      "From": {
+        "Parent": "CustomTags",
+        "FieldPath": [
+          "CustomTag",
+          "FileLoc"
+        ],
+        "IsVec": true
+      },
+      "MaxOccursGreatThanOne": true
+    },
+    {
+      "ApiName": "CustomTagSchemas",
+      "Name": "CustomTagSchema",
+      "From": {
+        "Parent": "CustomTags",
+        "FieldPath": [
+          "CustomTag",
+          "SchemaLoc"
+        ],
+        "IsVec": true
+      },
+      "MaxOccursGreatThanOne": true
+    }
+  ]
+}

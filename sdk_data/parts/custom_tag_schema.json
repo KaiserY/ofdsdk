@@ -1,0 +1,6 @@
+{
+  "Name": "CustomTagSchema",
+  "Base": "OfdPart",
+  "Path": "ReferenceField",
+  "Children": []
+}

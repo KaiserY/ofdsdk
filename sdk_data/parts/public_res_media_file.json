@@ -1,0 +1,12 @@
+{
+  "Name": "PublicResMediaFile",
+  "Base": "OfdPart",
+  "Path": {
+    "ReferenceFieldWithBase": {
+      "BaseFieldPath": [
+        "BaseLoc"
+      ]
+    }
+  },
+  "Children": []
+}

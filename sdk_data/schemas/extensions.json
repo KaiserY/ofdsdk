@@ -1,0 +1,161 @@
+{
+  "TargetNamespace": "http://www.ofdspec.org/2016",
+  "Types": [
+    {
+      "Name": "Extensions",
+      "Ident": "Extensions",
+      "XmlName": "Extensions",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "Extension",
+          "XmlName": "Extension",
+          "Ident": "extension",
+          "Type": "CtExtension",
+          "SourceModuleName": "extensions",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "Property",
+      "Ident": "Property",
+      "XmlName": "Property",
+      "Attributes": [
+        {
+          "Name": "Name",
+          "Ident": "name",
+          "Type": "String",
+          "IsOption": false
+        },
+        {
+          "Name": "Type",
+          "Ident": "type",
+          "Type": "String",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "xml_value",
+          "XmlName": null,
+          "Ident": "xml_value",
+          "Type": "String",
+          "SourceModuleName": "extensions",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CT_Extension",
+      "Ident": "CtExtension",
+      "XmlName": null,
+      "Attributes": [
+        {
+          "Name": "AppName",
+          "Ident": "app_name",
+          "Type": "String",
+          "IsOption": false
+        },
+        {
+          "Name": "Company",
+          "Ident": "company",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "AppVersion",
+          "Ident": "app_version",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "Date",
+          "Ident": "date",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "RefId",
+          "Ident": "ref_id",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [],
+      "Children": [
+        {
+          "Name": "Property",
+          "XmlName": "Property",
+          "Ident": "Property",
+          "Type": "Property",
+          "SourceModuleName": "extensions",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "Data",
+          "XmlName": "Data",
+          "Ident": "Data",
+          "Type": "String",
+          "SourceModuleName": "extensions",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "ExtendData",
+          "XmlName": "ExtendData",
+          "Ident": "ExtendData",
+          "Type": "crate::schemas::definitions::StLoc",
+          "SourceModuleName": "extensions",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ]
+    }
+  ],
+  "Elements": [
+    {
+      "Name": "Extension",
+      "Ident": "Extension",
+      "XmlName": "Extension",
+      "Type": "CtExtension",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Extensions",
+      "Ident": "Extensions",
+      "XmlName": "Extensions",
+      "Type": "Extensions",
+      "IsTopLevel": true
+    },
+    {
+      "Name": "Property",
+      "Ident": "Property",
+      "XmlName": "Property",
+      "Type": "Property",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Data",
+      "Ident": "Data",
+      "XmlName": "Data",
+      "Type": "String",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "ExtendData",
+      "Ident": "ExtendData",
+      "XmlName": "ExtendData",
+      "Type": "crate::schemas::definitions::StLoc",
+      "IsTopLevel": false
+    }
+  ],
+  "Enums": [],
+  "Aliases": [],
+  "ModuleName": "extensions"
+}

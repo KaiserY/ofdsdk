@@ -1,0 +1,768 @@
+{
+  "TargetNamespace": "http://www.ofdspec.org/2016",
+  "Types": [
+    {
+      "Name": "CT_Dest",
+      "Ident": "CtDest",
+      "XmlName": null,
+      "Attributes": [
+        {
+          "Name": "Type",
+          "Ident": "type",
+          "Type": "CtDestType",
+          "IsOption": false
+        },
+        {
+          "Name": "PageID",
+          "Ident": "page_id",
+          "Type": "StRefId",
+          "IsOption": false
+        },
+        {
+          "Name": "Left",
+          "Ident": "left",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "Top",
+          "Ident": "top",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "Right",
+          "Ident": "right",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "Bottom",
+          "Ident": "bottom",
+          "Type": "f64",
+          "IsOption": true
+        },
+        {
+          "Name": "Zoom",
+          "Ident": "zoom",
+          "Type": "f64",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [],
+      "Children": []
+    },
+    {
+      "Name": "CT_PageArea",
+      "Ident": "CtPageArea",
+      "XmlName": null,
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "PhysicalBox",
+          "XmlName": "PhysicalBox",
+          "Ident": "physical_box",
+          "Type": "StBox",
+          "SourceModuleName": "definitions",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "ApplicationBox",
+          "XmlName": "ApplicationBox",
+          "Ident": "application_box",
+          "Type": "StBox",
+          "SourceModuleName": "definitions",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "ContentBox",
+          "XmlName": "ContentBox",
+          "Ident": "content_box",
+          "Type": "StBox",
+          "SourceModuleName": "definitions",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "BleedBox",
+          "XmlName": "BleedBox",
+          "Ident": "bleed_box",
+          "Type": "StBox",
+          "SourceModuleName": "definitions",
+          "IsOption": true,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "Bookmark",
+      "Ident": "Bookmark",
+      "XmlName": "Bookmark",
+      "Attributes": [
+        {
+          "Name": "Name",
+          "Ident": "name",
+          "Type": "String",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [],
+      "Children": []
+    },
+    {
+      "Name": "Goto",
+      "Ident": "Goto",
+      "XmlName": "Goto",
+      "Attributes": [],
+      "Sequences": [],
+      "Children": [
+        {
+          "Name": "Dest",
+          "XmlName": "Dest",
+          "Ident": "Dest",
+          "Type": "CtDest",
+          "SourceModuleName": "definitions",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "Bookmark",
+          "XmlName": "Bookmark",
+          "Ident": "Bookmark",
+          "Type": "Bookmark",
+          "SourceModuleName": "definitions",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ]
+    },
+    {
+      "Name": "URI",
+      "Ident": "Uri",
+      "XmlName": "URI",
+      "Attributes": [
+        {
+          "Name": "URI",
+          "Ident": "uri",
+          "Type": "String",
+          "IsOption": false
+        },
+        {
+          "Name": "Base",
+          "Ident": "base",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "Target",
+          "Ident": "target",
+          "Type": "String",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [],
+      "Children": []
+    },
+    {
+      "Name": "GotoA",
+      "Ident": "GotoA",
+      "XmlName": "GotoA",
+      "Attributes": [
+        {
+          "Name": "AttachID",
+          "Ident": "attach_id",
+          "Type": "String",
+          "IsOption": false
+        },
+        {
+          "Name": "NewWindow",
+          "Ident": "new_window",
+          "Type": "bool",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [],
+      "Children": []
+    },
+    {
+      "Name": "Sound",
+      "Ident": "Sound",
+      "XmlName": "Sound",
+      "Attributes": [
+        {
+          "Name": "ResourceID",
+          "Ident": "resource_id",
+          "Type": "StRefId",
+          "IsOption": false
+        },
+        {
+          "Name": "Volume",
+          "Ident": "volume",
+          "Type": "i32",
+          "IsOption": true
+        },
+        {
+          "Name": "Repeat",
+          "Ident": "repeat",
+          "Type": "bool",
+          "IsOption": true
+        },
+        {
+          "Name": "Synchronous",
+          "Ident": "synchronous",
+          "Type": "bool",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [],
+      "Children": []
+    },
+    {
+      "Name": "Movie",
+      "Ident": "Movie",
+      "XmlName": "Movie",
+      "Attributes": [
+        {
+          "Name": "ResourceID",
+          "Ident": "resource_id",
+          "Type": "StRefId",
+          "IsOption": false
+        },
+        {
+          "Name": "Operator",
+          "Ident": "operator",
+          "Type": "MovieOperator",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [],
+      "Children": []
+    },
+    {
+      "Name": "CT_Action",
+      "Ident": "CtAction",
+      "XmlName": null,
+      "Attributes": [
+        {
+          "Name": "Event",
+          "Ident": "event",
+          "Type": "CtActionEvent",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "Region",
+          "XmlName": "Region",
+          "Ident": "region",
+          "Type": "CtRegion",
+          "SourceModuleName": "definitions",
+          "IsOption": true,
+          "IsVec": false
+        }
+      ],
+      "Children": [
+        {
+          "Name": "Goto",
+          "XmlName": "Goto",
+          "Ident": "Goto",
+          "Type": "Goto",
+          "SourceModuleName": "definitions",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "URI",
+          "XmlName": "URI",
+          "Ident": "Uri",
+          "Type": "Uri",
+          "SourceModuleName": "definitions",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "GotoA",
+          "XmlName": "GotoA",
+          "Ident": "GotoA",
+          "Type": "GotoA",
+          "SourceModuleName": "definitions",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "Sound",
+          "XmlName": "Sound",
+          "Ident": "Sound",
+          "Type": "Sound",
+          "SourceModuleName": "definitions",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "Movie",
+          "XmlName": "Movie",
+          "Ident": "Movie",
+          "Type": "Movie",
+          "SourceModuleName": "definitions",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ]
+    },
+    {
+      "Name": "Move",
+      "Ident": "Move",
+      "XmlName": "Move",
+      "Attributes": [
+        {
+          "Name": "Point1",
+          "Ident": "point1",
+          "Type": "StPos",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [],
+      "Children": []
+    },
+    {
+      "Name": "Line",
+      "Ident": "Line",
+      "XmlName": "Line",
+      "Attributes": [
+        {
+          "Name": "Point1",
+          "Ident": "point1",
+          "Type": "StPos",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [],
+      "Children": []
+    },
+    {
+      "Name": "QuadraticBezier",
+      "Ident": "QuadraticBezier",
+      "XmlName": "QuadraticBezier",
+      "Attributes": [
+        {
+          "Name": "Point1",
+          "Ident": "point1",
+          "Type": "StPos",
+          "IsOption": false
+        },
+        {
+          "Name": "Point2",
+          "Ident": "point2",
+          "Type": "StPos",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [],
+      "Children": []
+    },
+    {
+      "Name": "CubicBezier",
+      "Ident": "CubicBezier",
+      "XmlName": "CubicBezier",
+      "Attributes": [
+        {
+          "Name": "Point1",
+          "Ident": "point1",
+          "Type": "StPos",
+          "IsOption": true
+        },
+        {
+          "Name": "Point2",
+          "Ident": "point2",
+          "Type": "StPos",
+          "IsOption": true
+        },
+        {
+          "Name": "Point3",
+          "Ident": "point3",
+          "Type": "StPos",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [],
+      "Children": []
+    },
+    {
+      "Name": "Arc",
+      "Ident": "Arc",
+      "XmlName": "Arc",
+      "Attributes": [
+        {
+          "Name": "SweepDirection",
+          "Ident": "sweep_direction",
+          "Type": "bool",
+          "IsOption": false
+        },
+        {
+          "Name": "LargeArc",
+          "Ident": "large_arc",
+          "Type": "bool",
+          "IsOption": false
+        },
+        {
+          "Name": "RotationAngle",
+          "Ident": "rotation_angle",
+          "Type": "f64",
+          "IsOption": false
+        },
+        {
+          "Name": "EllipseSize",
+          "Ident": "ellipse_size",
+          "Type": "StArray",
+          "IsOption": false
+        },
+        {
+          "Name": "EndPoint",
+          "Ident": "end_point",
+          "Type": "StPos",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [],
+      "Children": []
+    },
+    {
+      "Name": "Close",
+      "Ident": "Close",
+      "XmlName": "Close",
+      "Attributes": [],
+      "Sequences": [],
+      "Children": []
+    },
+    {
+      "Name": "Area",
+      "Ident": "Area",
+      "XmlName": "Area",
+      "Attributes": [
+        {
+          "Name": "Start",
+          "Ident": "start",
+          "Type": "StPos",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [],
+      "Children": [
+        {
+          "Name": "Move",
+          "XmlName": "Move",
+          "Ident": "Move",
+          "Type": "Move",
+          "SourceModuleName": "definitions",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "Line",
+          "XmlName": "Line",
+          "Ident": "Line",
+          "Type": "Line",
+          "SourceModuleName": "definitions",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "QuadraticBezier",
+          "XmlName": "QuadraticBezier",
+          "Ident": "QuadraticBezier",
+          "Type": "QuadraticBezier",
+          "SourceModuleName": "definitions",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "CubicBezier",
+          "XmlName": "CubicBezier",
+          "Ident": "CubicBezier",
+          "Type": "CubicBezier",
+          "SourceModuleName": "definitions",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "Arc",
+          "XmlName": "Arc",
+          "Ident": "Arc",
+          "Type": "Arc",
+          "SourceModuleName": "definitions",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "Close",
+          "XmlName": "Close",
+          "Ident": "Close",
+          "Type": "Close",
+          "SourceModuleName": "definitions",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ]
+    },
+    {
+      "Name": "CT_Region",
+      "Ident": "CtRegion",
+      "XmlName": null,
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "Area",
+          "XmlName": "Area",
+          "Ident": "area",
+          "Type": "Area",
+          "SourceModuleName": "definitions",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    }
+  ],
+  "Elements": [
+    {
+      "Name": "PhysicalBox",
+      "Ident": "PhysicalBox",
+      "XmlName": "PhysicalBox",
+      "Type": "StBox",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "ApplicationBox",
+      "Ident": "ApplicationBox",
+      "XmlName": "ApplicationBox",
+      "Type": "StBox",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "ContentBox",
+      "Ident": "ContentBox",
+      "XmlName": "ContentBox",
+      "Type": "StBox",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "BleedBox",
+      "Ident": "BleedBox",
+      "XmlName": "BleedBox",
+      "Type": "StBox",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Region",
+      "Ident": "Region",
+      "XmlName": "Region",
+      "Type": "CtRegion",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Dest",
+      "Ident": "Dest",
+      "XmlName": "Dest",
+      "Type": "CtDest",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Bookmark",
+      "Ident": "Bookmark",
+      "XmlName": "Bookmark",
+      "Type": "Bookmark",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Goto",
+      "Ident": "Goto",
+      "XmlName": "Goto",
+      "Type": "Goto",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "URI",
+      "Ident": "Uri",
+      "XmlName": "URI",
+      "Type": "Uri",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "GotoA",
+      "Ident": "GotoA",
+      "XmlName": "GotoA",
+      "Type": "GotoA",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Sound",
+      "Ident": "Sound",
+      "XmlName": "Sound",
+      "Type": "Sound",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Movie",
+      "Ident": "Movie",
+      "XmlName": "Movie",
+      "Type": "Movie",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Move",
+      "Ident": "Move",
+      "XmlName": "Move",
+      "Type": "Move",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Line",
+      "Ident": "Line",
+      "XmlName": "Line",
+      "Type": "Line",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "QuadraticBezier",
+      "Ident": "QuadraticBezier",
+      "XmlName": "QuadraticBezier",
+      "Type": "QuadraticBezier",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "CubicBezier",
+      "Ident": "CubicBezier",
+      "XmlName": "CubicBezier",
+      "Type": "CubicBezier",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Arc",
+      "Ident": "Arc",
+      "XmlName": "Arc",
+      "Type": "Arc",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Close",
+      "Ident": "Close",
+      "XmlName": "Close",
+      "Type": "Close",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Area",
+      "Ident": "Area",
+      "XmlName": "Area",
+      "Type": "Area",
+      "IsTopLevel": false
+    }
+  ],
+  "Enums": [
+    {
+      "Name": "CtDestType",
+      "Ident": "CtDestType",
+      "Variants": [
+        {
+          "Ident": "Xyz",
+          "Value": "XYZ"
+        },
+        {
+          "Ident": "Fit",
+          "Value": "Fit"
+        },
+        {
+          "Ident": "FitH",
+          "Value": "FitH"
+        },
+        {
+          "Ident": "FitV",
+          "Value": "FitV"
+        },
+        {
+          "Ident": "FitR",
+          "Value": "FitR"
+        }
+      ],
+      "DefaultIndex": 0
+    },
+    {
+      "Name": "MovieOperator",
+      "Ident": "MovieOperator",
+      "Variants": [
+        {
+          "Ident": "Play",
+          "Value": "Play"
+        },
+        {
+          "Ident": "Stop",
+          "Value": "Stop"
+        },
+        {
+          "Ident": "Pause",
+          "Value": "Pause"
+        },
+        {
+          "Ident": "Resume",
+          "Value": "Resume"
+        }
+      ],
+      "DefaultIndex": 0
+    },
+    {
+      "Name": "CtActionEvent",
+      "Ident": "CtActionEvent",
+      "Variants": [
+        {
+          "Ident": "Do",
+          "Value": "DO"
+        },
+        {
+          "Ident": "Po",
+          "Value": "PO"
+        },
+        {
+          "Ident": "Click",
+          "Value": "CLICK"
+        }
+      ],
+      "DefaultIndex": 0
+    }
+  ],
+  "Aliases": [
+    {
+      "Name": "ST_ID",
+      "Ident": "StId",
+      "Type": "u32"
+    },
+    {
+      "Name": "ST_RefID",
+      "Ident": "StRefId",
+      "Type": "u32"
+    },
+    {
+      "Name": "ST_Loc",
+      "Ident": "StLoc",
+      "Type": "String"
+    },
+    {
+      "Name": "ST_Array",
+      "Ident": "StArray",
+      "Type": "String"
+    },
+    {
+      "Name": "ST_Pos",
+      "Ident": "StPos",
+      "Type": "String"
+    },
+    {
+      "Name": "ST_Box",
+      "Ident": "StBox",
+      "Type": "String"
+    }
+  ],
+  "ModuleName": "definitions"
+}

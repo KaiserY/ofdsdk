@@ -1,0 +1,12 @@
+{
+  "Name": "PageResMediaFile",
+  "Base": "OfdPart",
+  "Path": {
+    "ReferenceFieldWithBase": {
+      "BaseFieldPath": [
+        "BaseLoc"
+      ]
+    }
+  },
+  "Children": []
+}

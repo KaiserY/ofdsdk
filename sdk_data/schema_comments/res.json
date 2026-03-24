@@ -1,0 +1,515 @@
+{
+  "Entries": [
+    {
+      "Schema": "res",
+      "Type": "Res",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "资源文件。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "Res",
+      "Field": "BaseLoc",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "定义此资源文件的通用数据存储路径。BaseLoc 属性的意义在于明确资源文件存储的位置，比如 R1.xml 中可以指定 BaseLoc 为“./Res”，表明该资源文件中所有数据文件的默认存储位置在当前路径的 Res 目录下。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "ColorSpaces",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "包含了一组颜色空间的描述。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "ColorSpace",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "颜色空间资源描述，在基础类型上扩展定义 ID 属性，类型为 ST_ID。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "DrawParams",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "包含了一组绘制参数的描述。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "DrawParam",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "绘制参数资源描述，在基础类型上扩展定义 ID 属性，类型为 ST_ID。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "Fonts",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "包含了一组文档所用字型的描述。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "Font",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "字型资源描述，在基础类型上扩展定义 ID 属性，类型为 ST_ID。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "Font",
+      "Field": "FontName",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "字型名。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "Font",
+      "Field": "FamilyName",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "字型族名，用于匹配替代字型。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "Font",
+      "Field": "Charset",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "字型适用的字符分类，用于匹配替代字型。可取值为 symbol、prc、big5、unicode 等。默认值为 unicode。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "Font",
+      "Field": "Serif",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "是否是带衬线字型，用于匹配替代字型。默认值是 false。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "Font",
+      "Field": "Bold",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "是否是粗体字型，用于匹配替代字型。默认值是 false。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "Font",
+      "Field": "Italic",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "是否是斜体字型，用于匹配替代字型。默认值是 false。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "Font",
+      "Field": "FixedWidth",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "是否是等宽字型，用于匹配替代字型。默认值是 false。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "Font",
+      "Field": "FontFile",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "指向内嵌字型文件，嵌入字型文件应使用 OpenType 格式。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "MultiMedias",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "包含了一组文档所用多媒体对象的描述。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "MultiMedia",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "多媒体资源描述，在基础类型上扩展定义 ID 属性，类型为 ST_ID。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CompositeGraphicUnits",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "包含了一组矢量图像（被复合图元对象所引用）的描述。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CompositeGraphicUnit",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "矢量图像资源描述，在基础类型上扩展定义 ID 属性，类型为 ST_ID。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CompositeGraphicUnit",
+      "Field": "Width",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "矢量图像的宽度。超出部分做裁剪处理。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CompositeGraphicUnit",
+      "Field": "Height",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "矢量图像的高度。超出部分做裁剪处理。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CompositeGraphicUnit",
+      "Field": "Thumbnail",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "缩略图，指向包内的图像文件。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CompositeGraphicUnit",
+      "Field": "Substitution",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "替换图像，用于高分辨率输出时将缩略图替换为此高分辨率的图像，指向包内的图像文件。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CompositeGraphicUnit",
+      "Field": "Content",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "内容的矢量描述。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CtFont",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "字型资源描述。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CtVectorG",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "矢量图像资源描述。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CtMultiMedia",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "多媒体资源属性。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CtMultiMedia",
+      "Field": "Type",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "多媒体类型。支持位图图像、视频、音频三种多媒体类型。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CtMultiMedia",
+      "Field": "Format",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "资源的格式。支持 BMP、JPEG、PNG、TIFF 及 AVS 等格式，其中 TIFF 格式不支持多页。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CtMultiMedia",
+      "Field": "MediaFile",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "指向 OFD 包内的多媒体文件的位置。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CtDrawParam",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "绘制参数属性。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CtDrawParam",
+      "Field": "Relative",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "基础绘制参数，引用资源文件中的绘制参数的标识。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CtDrawParam",
+      "Field": "Join",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "线条连接样式，指定了两个线的端点结合时采用的样式。可取值为 Miter、Round、Bevel，默认值为 Miter。线条连接样式的取值和显示效果之间的关系见表 22。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CtDrawParam",
+      "Field": "LineWidth",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "线宽，非负浮点数，指定了路径绘制时线的宽度。默认值为 0.353 mm。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CtDrawParam",
+      "Field": "DashOffset",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "线条虚线样式开始的位置，默认值为 0。当 DashPattern 不出现时，该参数无效。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CtDrawParam",
+      "Field": "DashPattern",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "线条虚线的重复样式，数组中共含两个值，第一个值代表虚线线段的长度，第二个值代表虚线间隔的长度。默认值为空。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CtDrawParam",
+      "Field": "Cap",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "线端点样式，枚举值，指定了一条线的端点样式。可取值为 Butt、Round、Square，默认值为 Butt。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CtDrawParam",
+      "Field": "MiterLimit",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "Join 为 Miter 时小角度结合点长度的截断值，默认值为 3.528。当 Join 不等于 Miter 时该参数无效。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CtDrawParam",
+      "Field": "FillColor",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "填充颜色，用以填充路径形成的区域以及文字轮廓内的区域，默认值为透明色。关于颜色的描述见 8.3。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CtDrawParam",
+      "Field": "StrokeColor",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "勾边颜色，指定路径绘制的颜色以及文字轮廓的颜色，默认值为黑色。颜色的描述见 8.3。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CtColorSpace",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "颜色空间属性。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CtColorSpace",
+      "Field": "Type",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "颜色空间的类型，可取值如下：GRAY、RGB、CMYK。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CtColorSpace",
+      "Field": "BitsPerComponent",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "每个颜色通道所使用的位数，有效取值为 1、2、4、8、16，默认值为 8。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CtColorSpace",
+      "Field": "Profile",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "指向包内颜色配置文件。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "CtColorSpace",
+      "Field": "Palette",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "调色板。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "Palette",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "调色板。"
+        }
+      ]
+    },
+    {
+      "Schema": "res",
+      "Type": "Palette",
+      "Field": "CV",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "调色板中预定义颜色。调色板中颜色的索引编号从 0 开始。"
+        }
+      ]
+    }
+  ]
+}

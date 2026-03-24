@@ -1,0 +1,22 @@
+{
+  "Name": "Signatures",
+  "Base": "OfdPart",
+  "SchemaModule": "signatures",
+  "RootElement": "Signatures",
+  "Path": "ReferenceField",
+  "Children": [
+    {
+      "ApiName": "Signatures",
+      "Name": "Signature",
+      "From": {
+        "Parent": "Signatures",
+        "FieldPath": [
+          "Signature",
+          "BaseLoc"
+        ],
+        "IsVec": true
+      },
+      "MaxOccursGreatThanOne": true
+    }
+  ]
+}

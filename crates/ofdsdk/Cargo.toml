@@ -1,0 +1,21 @@
+[package]
+name = "ofdsdk"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+documentation.workspace = true
+description.workspace = true
+keywords.workspace = true
+categories.workspace = true
+readme.workspace = true
+
+[features]
+parts = ["dep:zip"]
+
+[dependencies]
+quick-xml = { workspace = true }
+thiserror = { workspace = true }
+zip = { workspace = true, optional = true }

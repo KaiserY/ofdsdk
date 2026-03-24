@@ -1,0 +1,980 @@
+{
+  "TargetNamespace": "http://www.ofdspec.org/2016",
+  "Types": [
+    {
+      "Name": "TemplatePage",
+      "Ident": "TemplatePage",
+      "XmlName": "TemplatePage",
+      "Attributes": [
+        {
+          "Name": "ID",
+          "Ident": "id",
+          "Type": "crate::schemas::definitions::StId",
+          "IsOption": false
+        },
+        {
+          "Name": "Name",
+          "Ident": "name",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "ZOrder",
+          "Ident": "z_order",
+          "Type": "TemplatePageZOrder",
+          "IsOption": true
+        },
+        {
+          "Name": "BaseLoc",
+          "Ident": "base_loc",
+          "Type": "crate::schemas::definitions::StLoc",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [],
+      "Children": []
+    },
+    {
+      "Name": "CommonData",
+      "Ident": "CommonData",
+      "XmlName": "CommonData",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "MaxUnitID",
+          "XmlName": "MaxUnitID",
+          "Ident": "max_unit_id",
+          "Type": "crate::schemas::definitions::StId",
+          "SourceModuleName": "document",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "PageArea",
+          "XmlName": "PageArea",
+          "Ident": "page_area",
+          "Type": "crate::schemas::definitions::CtPageArea",
+          "SourceModuleName": "document",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "PublicRes",
+          "XmlName": "PublicRes",
+          "Ident": "public_res",
+          "Type": "crate::schemas::definitions::StLoc",
+          "SourceModuleName": "document",
+          "IsOption": false,
+          "IsVec": true
+        },
+        {
+          "Name": "DocumentRes",
+          "XmlName": "DocumentRes",
+          "Ident": "document_res",
+          "Type": "crate::schemas::definitions::StLoc",
+          "SourceModuleName": "document",
+          "IsOption": false,
+          "IsVec": true
+        },
+        {
+          "Name": "TemplatePage",
+          "XmlName": "TemplatePage",
+          "Ident": "template_page",
+          "Type": "TemplatePage",
+          "SourceModuleName": "document",
+          "IsOption": false,
+          "IsVec": true
+        },
+        {
+          "Name": "DefaultCS",
+          "XmlName": "DefaultCS",
+          "Ident": "default_cs",
+          "Type": "crate::schemas::definitions::StRefId",
+          "SourceModuleName": "document",
+          "IsOption": true,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "Page",
+      "Ident": "Page",
+      "XmlName": "Page",
+      "Attributes": [
+        {
+          "Name": "ID",
+          "Ident": "id",
+          "Type": "crate::schemas::definitions::StId",
+          "IsOption": false
+        },
+        {
+          "Name": "BaseLoc",
+          "Ident": "base_loc",
+          "Type": "crate::schemas::definitions::StLoc",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [],
+      "Children": []
+    },
+    {
+      "Name": "Pages",
+      "Ident": "Pages",
+      "XmlName": "Pages",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "Page",
+          "XmlName": "Page",
+          "Ident": "page",
+          "Type": "Page",
+          "SourceModuleName": "document",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "Outlines",
+      "Ident": "Outlines",
+      "XmlName": "Outlines",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "OutlineElem",
+          "XmlName": "OutlineElem",
+          "Ident": "outline_elem",
+          "Type": "CtOutlineElem",
+          "SourceModuleName": "document",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "Actions",
+      "Ident": "Actions",
+      "XmlName": "Actions",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "Action",
+          "XmlName": "Action",
+          "Ident": "action",
+          "Type": "crate::schemas::definitions::CtAction",
+          "SourceModuleName": "document",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "Bookmarks",
+      "Ident": "Bookmarks",
+      "XmlName": "Bookmarks",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "Bookmark",
+          "XmlName": "Bookmark",
+          "Ident": "bookmark",
+          "Type": "CtBookmark",
+          "SourceModuleName": "document",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "Document",
+      "Ident": "Document",
+      "XmlName": "Document",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "CommonData",
+          "XmlName": "CommonData",
+          "Ident": "common_data",
+          "Type": "CommonData",
+          "SourceModuleName": "document",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "Pages",
+          "XmlName": "Pages",
+          "Ident": "pages",
+          "Type": "Pages",
+          "SourceModuleName": "document",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "Outlines",
+          "XmlName": "Outlines",
+          "Ident": "outlines",
+          "Type": "Outlines",
+          "SourceModuleName": "document",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Permissions",
+          "XmlName": "Permissions",
+          "Ident": "permissions",
+          "Type": "CtPermission",
+          "SourceModuleName": "document",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Actions",
+          "XmlName": "Actions",
+          "Ident": "actions",
+          "Type": "Actions",
+          "SourceModuleName": "document",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "VPreferences",
+          "XmlName": "VPreferences",
+          "Ident": "v_preferences",
+          "Type": "CtVPreferences",
+          "SourceModuleName": "document",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Bookmarks",
+          "XmlName": "Bookmarks",
+          "Ident": "bookmarks",
+          "Type": "Bookmarks",
+          "SourceModuleName": "document",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Annotations",
+          "XmlName": "Annotations",
+          "Ident": "annotations",
+          "Type": "crate::schemas::definitions::StLoc",
+          "SourceModuleName": "document",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "CustomTags",
+          "XmlName": "CustomTags",
+          "Ident": "custom_tags",
+          "Type": "crate::schemas::definitions::StLoc",
+          "SourceModuleName": "document",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Attachments",
+          "XmlName": "Attachments",
+          "Ident": "attachments",
+          "Type": "crate::schemas::definitions::StLoc",
+          "SourceModuleName": "document",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Extensions",
+          "XmlName": "Extensions",
+          "Ident": "extensions",
+          "Type": "crate::schemas::definitions::StLoc",
+          "SourceModuleName": "document",
+          "IsOption": true,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "Print",
+      "Ident": "Print",
+      "XmlName": "Print",
+      "Attributes": [
+        {
+          "Name": "Printable",
+          "Ident": "printable",
+          "Type": "bool",
+          "IsOption": false
+        },
+        {
+          "Name": "Copies",
+          "Ident": "copies",
+          "Type": "i32",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [],
+      "Children": []
+    },
+    {
+      "Name": "ValidPeriod",
+      "Ident": "ValidPeriod",
+      "XmlName": "ValidPeriod",
+      "Attributes": [
+        {
+          "Name": "StartDate",
+          "Ident": "start_date",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "EndDate",
+          "Ident": "end_date",
+          "Type": "String",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [],
+      "Children": []
+    },
+    {
+      "Name": "CT_Permission",
+      "Ident": "CtPermission",
+      "XmlName": null,
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "Edit",
+          "XmlName": "Edit",
+          "Ident": "edit",
+          "Type": "bool",
+          "SourceModuleName": "document",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Annot",
+          "XmlName": "Annot",
+          "Ident": "annot",
+          "Type": "bool",
+          "SourceModuleName": "document",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Export",
+          "XmlName": "Export",
+          "Ident": "export",
+          "Type": "bool",
+          "SourceModuleName": "document",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Signature",
+          "XmlName": "Signature",
+          "Ident": "signature",
+          "Type": "bool",
+          "SourceModuleName": "document",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Watermark",
+          "XmlName": "Watermark",
+          "Ident": "watermark",
+          "Type": "bool",
+          "SourceModuleName": "document",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "PrintScreen",
+          "XmlName": "PrintScreen",
+          "Ident": "print_screen",
+          "Type": "bool",
+          "SourceModuleName": "document",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "Print",
+          "XmlName": "Print",
+          "Ident": "print",
+          "Type": "Print",
+          "SourceModuleName": "document",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "ValidPeriod",
+          "XmlName": "ValidPeriod",
+          "Ident": "valid_period",
+          "Type": "ValidPeriod",
+          "SourceModuleName": "document",
+          "IsOption": true,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CT_VPreferences",
+      "Ident": "CtVPreferences",
+      "XmlName": null,
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "PageMode",
+          "XmlName": "PageMode",
+          "Ident": "page_mode",
+          "Type": "PageMode",
+          "SourceModuleName": "document",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "PageLayout",
+          "XmlName": "PageLayout",
+          "Ident": "page_layout",
+          "Type": "PageLayout",
+          "SourceModuleName": "document",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "TabDisplay",
+          "XmlName": "TabDisplay",
+          "Ident": "tab_display",
+          "Type": "TabDisplay",
+          "SourceModuleName": "document",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "HideToolbar",
+          "XmlName": "HideToolbar",
+          "Ident": "hide_toolbar",
+          "Type": "bool",
+          "SourceModuleName": "document",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "HideMenubar",
+          "XmlName": "HideMenubar",
+          "Ident": "hide_menubar",
+          "Type": "bool",
+          "SourceModuleName": "document",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "HideWindowUI",
+          "XmlName": "HideWindowUI",
+          "Ident": "hide_window_ui",
+          "Type": "bool",
+          "SourceModuleName": "document",
+          "IsOption": true,
+          "IsVec": false
+        }
+      ],
+      "Children": [
+        {
+          "Name": "ZoomMode",
+          "XmlName": "ZoomMode",
+          "Ident": "ZoomMode",
+          "Type": "ZoomMode",
+          "SourceModuleName": "document",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "Zoom",
+          "XmlName": "Zoom",
+          "Ident": "Zoom",
+          "Type": "f64",
+          "SourceModuleName": "document",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ]
+    },
+    {
+      "Name": "CT_OutlineElem",
+      "Ident": "CtOutlineElem",
+      "XmlName": null,
+      "Attributes": [
+        {
+          "Name": "Title",
+          "Ident": "title",
+          "Type": "String",
+          "IsOption": false
+        },
+        {
+          "Name": "Count",
+          "Ident": "count",
+          "Type": "i32",
+          "IsOption": true
+        },
+        {
+          "Name": "Expanded",
+          "Ident": "expanded",
+          "Type": "bool",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "Actions",
+          "XmlName": "Actions",
+          "Ident": "actions",
+          "Type": "Actions",
+          "SourceModuleName": "document",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "OutlineElem",
+          "XmlName": "OutlineElem",
+          "Ident": "outline_elem",
+          "Type": "CtOutlineElem",
+          "SourceModuleName": "document",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "CT_Bookmark",
+      "Ident": "CtBookmark",
+      "XmlName": null,
+      "Attributes": [
+        {
+          "Name": "Name",
+          "Ident": "name",
+          "Type": "String",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "Dest",
+          "XmlName": "Dest",
+          "Ident": "dest",
+          "Type": "crate::schemas::definitions::CtDest",
+          "SourceModuleName": "document",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    }
+  ],
+  "Elements": [
+    {
+      "Name": "MaxUnitID",
+      "Ident": "MaxUnitId",
+      "XmlName": "MaxUnitID",
+      "Type": "crate::schemas::definitions::StId",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "PageArea",
+      "Ident": "PageArea",
+      "XmlName": "PageArea",
+      "Type": "crate::schemas::definitions::CtPageArea",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "PublicRes",
+      "Ident": "PublicRes",
+      "XmlName": "PublicRes",
+      "Type": "crate::schemas::definitions::StLoc",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "DocumentRes",
+      "Ident": "DocumentRes",
+      "XmlName": "DocumentRes",
+      "Type": "crate::schemas::definitions::StLoc",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "TemplatePage",
+      "Ident": "TemplatePage",
+      "XmlName": "TemplatePage",
+      "Type": "TemplatePage",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "DefaultCS",
+      "Ident": "DefaultCs",
+      "XmlName": "DefaultCS",
+      "Type": "crate::schemas::definitions::StRefId",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "CommonData",
+      "Ident": "CommonData",
+      "XmlName": "CommonData",
+      "Type": "CommonData",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Page",
+      "Ident": "Page",
+      "XmlName": "Page",
+      "Type": "Page",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Pages",
+      "Ident": "Pages",
+      "XmlName": "Pages",
+      "Type": "Pages",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "OutlineElem",
+      "Ident": "OutlineElem",
+      "XmlName": "OutlineElem",
+      "Type": "CtOutlineElem",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Outlines",
+      "Ident": "Outlines",
+      "XmlName": "Outlines",
+      "Type": "Outlines",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Permissions",
+      "Ident": "Permissions",
+      "XmlName": "Permissions",
+      "Type": "CtPermission",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Action",
+      "Ident": "Action",
+      "XmlName": "Action",
+      "Type": "crate::schemas::definitions::CtAction",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Actions",
+      "Ident": "Actions",
+      "XmlName": "Actions",
+      "Type": "Actions",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "VPreferences",
+      "Ident": "VPreferences",
+      "XmlName": "VPreferences",
+      "Type": "CtVPreferences",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Bookmark",
+      "Ident": "Bookmark",
+      "XmlName": "Bookmark",
+      "Type": "CtBookmark",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Bookmarks",
+      "Ident": "Bookmarks",
+      "XmlName": "Bookmarks",
+      "Type": "Bookmarks",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Annotations",
+      "Ident": "Annotations",
+      "XmlName": "Annotations",
+      "Type": "crate::schemas::definitions::StLoc",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "CustomTags",
+      "Ident": "CustomTags",
+      "XmlName": "CustomTags",
+      "Type": "crate::schemas::definitions::StLoc",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Attachments",
+      "Ident": "Attachments",
+      "XmlName": "Attachments",
+      "Type": "crate::schemas::definitions::StLoc",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Extensions",
+      "Ident": "Extensions",
+      "XmlName": "Extensions",
+      "Type": "crate::schemas::definitions::StLoc",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Document",
+      "Ident": "Document",
+      "XmlName": "Document",
+      "Type": "Document",
+      "IsTopLevel": true
+    },
+    {
+      "Name": "Edit",
+      "Ident": "Edit",
+      "XmlName": "Edit",
+      "Type": "bool",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Annot",
+      "Ident": "Annot",
+      "XmlName": "Annot",
+      "Type": "bool",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Export",
+      "Ident": "Export",
+      "XmlName": "Export",
+      "Type": "bool",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Signature",
+      "Ident": "Signature",
+      "XmlName": "Signature",
+      "Type": "bool",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Watermark",
+      "Ident": "Watermark",
+      "XmlName": "Watermark",
+      "Type": "bool",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "PrintScreen",
+      "Ident": "PrintScreen",
+      "XmlName": "PrintScreen",
+      "Type": "bool",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Print",
+      "Ident": "Print",
+      "XmlName": "Print",
+      "Type": "Print",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "ValidPeriod",
+      "Ident": "ValidPeriod",
+      "XmlName": "ValidPeriod",
+      "Type": "ValidPeriod",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "PageMode",
+      "Ident": "PageMode",
+      "XmlName": "PageMode",
+      "Type": "PageMode",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "PageLayout",
+      "Ident": "PageLayout",
+      "XmlName": "PageLayout",
+      "Type": "PageLayout",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "TabDisplay",
+      "Ident": "TabDisplay",
+      "XmlName": "TabDisplay",
+      "Type": "TabDisplay",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "HideToolbar",
+      "Ident": "HideToolbar",
+      "XmlName": "HideToolbar",
+      "Type": "bool",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "HideMenubar",
+      "Ident": "HideMenubar",
+      "XmlName": "HideMenubar",
+      "Type": "bool",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "HideWindowUI",
+      "Ident": "HideWindowUi",
+      "XmlName": "HideWindowUI",
+      "Type": "bool",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "ZoomMode",
+      "Ident": "ZoomMode",
+      "XmlName": "ZoomMode",
+      "Type": "ZoomMode",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Zoom",
+      "Ident": "Zoom",
+      "XmlName": "Zoom",
+      "Type": "f64",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Dest",
+      "Ident": "Dest",
+      "XmlName": "Dest",
+      "Type": "crate::schemas::definitions::CtDest",
+      "IsTopLevel": false
+    }
+  ],
+  "Enums": [
+    {
+      "Name": "TemplatePageZOrder",
+      "Ident": "TemplatePageZOrder",
+      "Variants": [
+        {
+          "Ident": "Background",
+          "Value": "Background"
+        },
+        {
+          "Ident": "Foreground",
+          "Value": "Foreground"
+        }
+      ],
+      "DefaultIndex": 0
+    },
+    {
+      "Name": "PageMode",
+      "Ident": "PageMode",
+      "Variants": [
+        {
+          "Ident": "None",
+          "Value": "None"
+        },
+        {
+          "Ident": "FullScreen",
+          "Value": "FullScreen"
+        },
+        {
+          "Ident": "UseOutlines",
+          "Value": "UseOutlines"
+        },
+        {
+          "Ident": "UseThumbs",
+          "Value": "UseThumbs"
+        },
+        {
+          "Ident": "UseCustomTags",
+          "Value": "UseCustomTags"
+        },
+        {
+          "Ident": "UseLayers",
+          "Value": "UseLayers"
+        },
+        {
+          "Ident": "UseAttatchs",
+          "Value": "UseAttatchs"
+        },
+        {
+          "Ident": "UseBookmarks",
+          "Value": "UseBookmarks"
+        }
+      ],
+      "DefaultIndex": 0
+    },
+    {
+      "Name": "PageLayout",
+      "Ident": "PageLayout",
+      "Variants": [
+        {
+          "Ident": "OnePage",
+          "Value": "OnePage"
+        },
+        {
+          "Ident": "OneColumn",
+          "Value": "OneColumn"
+        },
+        {
+          "Ident": "TwoPageL",
+          "Value": "TwoPageL"
+        },
+        {
+          "Ident": "TwoColumnL",
+          "Value": "TwoColumnL"
+        },
+        {
+          "Ident": "TwoPageR",
+          "Value": "TwoPageR"
+        },
+        {
+          "Ident": "TwoColumnR",
+          "Value": "TwoColumnR"
+        }
+      ],
+      "DefaultIndex": 0
+    },
+    {
+      "Name": "TabDisplay",
+      "Ident": "TabDisplay",
+      "Variants": [
+        {
+          "Ident": "DocTitle",
+          "Value": "DocTitle"
+        },
+        {
+          "Ident": "FileName",
+          "Value": "FileName"
+        }
+      ],
+      "DefaultIndex": 0
+    },
+    {
+      "Name": "ZoomMode",
+      "Ident": "ZoomMode",
+      "Variants": [
+        {
+          "Ident": "Default",
+          "Value": "Default"
+        },
+        {
+          "Ident": "FitHeight",
+          "Value": "FitHeight"
+        },
+        {
+          "Ident": "FitWidth",
+          "Value": "FitWidth"
+        },
+        {
+          "Ident": "FitRect",
+          "Value": "FitRect"
+        }
+      ],
+      "DefaultIndex": 0
+    }
+  ],
+  "Aliases": [],
+  "ModuleName": "document"
+}

@@ -1,0 +1,756 @@
+{
+  "Entries": [
+    {
+      "Schema": "document",
+      "Type": "Document",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档根节点。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "Document",
+      "Field": "CommonData",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档公共数据，定义了页面区域、公共资源等数据。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "Document",
+      "Field": "Pages",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "页树，有关页树的描述见 7.6。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "Document",
+      "Field": "Outlines",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "大纲，有关大纲的描述见 7.8。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "Document",
+      "Field": "Permissions",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档的权限声明。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "Document",
+      "Field": "Actions",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档关联的动作序列，当存在多个 Action 对象时，所有动作依次执行。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "Actions",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档关联的动作序列。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "Actions",
+      "Field": "Action",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档关联的动作，事件类型应为 DO（文档打开，见表 52 事件类型）。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "Document",
+      "Field": "VPreferences",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档的视图首选项。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "Document",
+      "Field": "Bookmarks",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档的书签集，包含一组书签。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "Bookmarks",
+      "Field": "Bookmark",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档的书签。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "Document",
+      "Field": "Attachments",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "指向附件列表文件。有关附件描述见第 20 章。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "Document",
+      "Field": "Annotations",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "指向注释列表文件，有关注释描述见第 15 章。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "Document",
+      "Field": "CustomTags",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "指向自定义标引列表文件，有关自定义标引描述见第 16 章。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "Document",
+      "Field": "Extensions",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "指向扩展列表文件，有关扩展描述见第 17 章。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CommonData",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档公共数据。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CommonData",
+      "Field": "MaxUnitID",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "当前文档中所有对象使用标识的最大值，初始值为 0。MaxUnitID 主要用于文档编辑，在向文档中新增加一个对象时，需要分配一个新的标识，新标识取值宜为 MaxUnitID + 1，同时需要修改此 MaxUnitID 值。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CommonData",
+      "Field": "PageArea",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "指定该文档页面区域的默认大小和位置。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CommonData",
+      "Field": "PublicRes",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "公共资源序列，每个节点指向 OFD 包内的一个资源描述文档，资源部分的描述见 7.9，字型和颜色空间等宜在公共资源文件中描述。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CommonData",
+      "Field": "DocumentRes",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档资源序列，每个节点指向 OFD 包内的一个资源描述文档，资源部分的描述见 7.9，绘制参数、多媒体和矢量图像等宜在文档资源文件中描述。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CommonData",
+      "Field": "TemplatePage",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "模板页序列，为一系列模板页的集合，模板页内容结构和普通页相同，描述见 7.7。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CommonData",
+      "Field": "DefaultCS",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "引用在资源文件中定义的颜色空间标识，有关颜色空间的描述见 8.3.1。如果此项不存在，采用 RGB 作为默认颜色空间。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CtVPreferences",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档的视图首选项。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CtVPreferences",
+      "Field": "PageMode",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "窗口模式，可取值如下：\nNone——常规模式\nFullScreen——打开后全文显示\nUseOutlines——同时呈现文档大纲\nUseThumbs——同时呈现缩略图\nUseCustomTags——同时呈现语义结构\nUseLayers——同时呈现图层\nUseAttachments——同时呈现附件\nUseBookmarks——同时呈现书签\n默认值为 None。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CtVPreferences",
+      "Field": "PageLayout",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "页面布局模式，可取值如下：\nOnePage——单页模式\nOneColumn——单列模式\nTwoPageL——对开模式\nTwoColumnL——对开连续模式\nTwoPageR——对开靠右模式\nTwoColumnR——对开连续靠右模式\n默认值为 OneColumn。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CtVPreferences",
+      "Field": "TabDisplay",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "标题栏显示模式，可取值如下：\nFileName——文件名称\nDocTitle——呈现元数据中的 Title 属性\n默认值为 FileName。当设置为 DocTitle 但不存在 Title 属性时，按照 FileName 处理。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CtVPreferences",
+      "Field": "HideToolbar",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "是否隐藏工具栏。默认值为 false。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CtVPreferences",
+      "Field": "HideMenubar",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "是否隐藏菜单栏。默认值为 false。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CtVPreferences",
+      "Field": "HideWindowUI",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "是否隐藏主窗口之外的其他窗体组件。默认值为 false。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CtVPreferences",
+      "Field": "ZoomMode",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "自动缩放模式，可取值如下：\nDefault——默认缩放\nFitHeight——适合高度\nFitWidth——适合宽度\nFitRect——适合区域\n默认值为 Default。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CtVPreferences",
+      "Field": "Zoom",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档的缩放率。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CtPermission",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档权限声明。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CtPermission",
+      "Field": "Edit",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "是否允许编辑。默认值为 true。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CtPermission",
+      "Field": "Annot",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "是否允许添加或修改标注。默认值为 true。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CtPermission",
+      "Field": "Export",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "是否允许导出。默认值为 true。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CtPermission",
+      "Field": "Signature",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "是否允许进行数字签名。默认值为 true。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CtPermission",
+      "Field": "Watermark",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "是否允许添加水印。默认值为 true。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CtPermission",
+      "Field": "PrintScreen",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "是否允许截屏。默认值为 true。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CtPermission",
+      "Field": "Print",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "打印权限，其具体的权限和份数设置由其属性 Printable 及 Copies 控制，若不设置 Print 节点，则默认为可以打印，并且打印份数不受限制。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "Print",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "打印权限设置。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "Print",
+      "Field": "Printable",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档是否允许被打印。默认值为 true。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "Print",
+      "Field": "Copies",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "打印份数，在 Printable 为 true 时有效，若 Printable 为 true 并且不设置 Copies 则打印份数不受限，若 Copies 的值为负值时，打印份数不受限，当 Copies 的值为 0 时，不允许打印，当 Copies 的值大于 0 时，则代表实际可打印的份数值。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CtPermission",
+      "Field": "ValidPeriod",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "有效期，即此文档允许访问的期限，其具体期限取决于开始日期和结束日期，其中开始日期不能晚于结束日期，并且开始日期和结束日期至少出现一个。当不设置开始日期时，代表不限定开始日期，当不设置结束日期时代表不限定结束日期；当此不设置此节点时，表示开始日期和结束日期均不受限。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "ValidPeriod",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档访问有效期。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "ValidPeriod",
+      "Field": "StartDate",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "有效期开始日期。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "ValidPeriod",
+      "Field": "EndDate",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "有效期结束日期。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "Page",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "页树节点。一个页树中可以包含一个或多个页节点，页顺序是根据页树进行前序遍历时叶节点的访问顺序。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "Page",
+      "Field": "ID",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "声明该页的标识，不能与已有标识重复。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "Page",
+      "Field": "BaseLoc",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "指向页对象描述文件。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "Pages",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "页树。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "Outlines",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "大纲。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "Bookmarks",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "文档的书签集，包含一组书签。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "Bookmark",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "书签。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "Bookmark",
+      "Field": "Name",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "书签名称。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "Bookmark",
+      "Field": "Dest",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "书签对应的文档位置，见表 54。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "TemplatePage",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "模板页。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "TemplatePage",
+      "Field": "ID",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "模板页的标识，不能与已有标识重复。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "TemplatePage",
+      "Field": "BaseLoc",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "指向模板页内容描述文件。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "TemplatePage",
+      "Field": "Name",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "模板页名称。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "TemplatePage",
+      "Field": "ZOrder",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "模板页的默认图层类型，其类型描述和呈现顺序与 Layer 中 Type 的描述和处理一致。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CtOutlineElem",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "大纲节点。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CtOutlineElem",
+      "Field": "Title",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "大纲节点标题。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CtOutlineElem",
+      "Field": "Count",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "该节点下所有叶节点的数目参考值，应根据该节点下实际出现的子节点数为准。默认值为 0。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CtOutlineElem",
+      "Field": "Expanded",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "在有子节点存在时有效，如果为 true，表示该大纲在初始状态下展开子节点；如果为 false，则表示不展开。默认值为 true。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CtOutlineElem",
+      "Field": "Actions",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "当此大纲节点被激活时将执行的动作序列。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "CtOutlineElem",
+      "Field": "OutlineElem",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "该节点的子大纲节点。层层嵌套，形成树状结构。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "PageMode",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "窗口模式。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "PageLayout",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "页面布局模式。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "TabDisplay",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "标题栏显示模式。"
+        }
+      ]
+    },
+    {
+      "Schema": "document",
+      "Type": "ZoomMode",
+      "Docs": [
+        {
+          "Kind": "Description",
+          "Text": "自动缩放模式。"
+        }
+      ]
+    }
+  ]
+}

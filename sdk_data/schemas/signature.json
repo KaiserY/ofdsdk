@@ -1,0 +1,328 @@
+{
+  "TargetNamespace": "http://www.ofdspec.org/2016",
+  "Types": [
+    {
+      "Name": "Provider",
+      "Ident": "Provider",
+      "XmlName": "Provider",
+      "Attributes": [
+        {
+          "Name": "ProviderName",
+          "Ident": "provider_name",
+          "Type": "String",
+          "IsOption": false
+        },
+        {
+          "Name": "Version",
+          "Ident": "version",
+          "Type": "String",
+          "IsOption": true
+        },
+        {
+          "Name": "Company",
+          "Ident": "company",
+          "Type": "String",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [],
+      "Children": []
+    },
+    {
+      "Name": "Reference",
+      "Ident": "Reference",
+      "XmlName": "Reference",
+      "Attributes": [
+        {
+          "Name": "FileRef",
+          "Ident": "file_ref",
+          "Type": "crate::schemas::definitions::StLoc",
+          "IsOption": false
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "CheckValue",
+          "XmlName": "CheckValue",
+          "Ident": "check_value",
+          "Type": "String",
+          "SourceModuleName": "signature",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "References",
+      "Ident": "References",
+      "XmlName": "References",
+      "Attributes": [
+        {
+          "Name": "CheckMethod",
+          "Ident": "check_method",
+          "Type": "ReferencesCheckMethod",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [
+        {
+          "Name": "Reference",
+          "XmlName": "Reference",
+          "Ident": "reference",
+          "Type": "Reference",
+          "SourceModuleName": "signature",
+          "IsOption": false,
+          "IsVec": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "StampAnnot",
+      "Ident": "StampAnnot",
+      "XmlName": "StampAnnot",
+      "Attributes": [
+        {
+          "Name": "ID",
+          "Ident": "id",
+          "Type": "String",
+          "IsOption": false
+        },
+        {
+          "Name": "PageRef",
+          "Ident": "page_ref",
+          "Type": "crate::schemas::definitions::StRefId",
+          "IsOption": false
+        },
+        {
+          "Name": "Boundary",
+          "Ident": "boundary",
+          "Type": "crate::schemas::definitions::StBox",
+          "IsOption": false
+        },
+        {
+          "Name": "Clip",
+          "Ident": "clip",
+          "Type": "crate::schemas::definitions::StBox",
+          "IsOption": true
+        }
+      ],
+      "Sequences": [],
+      "Children": []
+    },
+    {
+      "Name": "Seal",
+      "Ident": "Seal",
+      "XmlName": "Seal",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "BaseLoc",
+          "XmlName": "BaseLoc",
+          "Ident": "base_loc",
+          "Type": "crate::schemas::definitions::StLoc",
+          "SourceModuleName": "signature",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "SignedInfo",
+      "Ident": "SignedInfo",
+      "XmlName": "SignedInfo",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "Provider",
+          "XmlName": "Provider",
+          "Ident": "provider",
+          "Type": "Provider",
+          "SourceModuleName": "signature",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "SignatureMethod",
+          "XmlName": "SignatureMethod",
+          "Ident": "signature_method",
+          "Type": "String",
+          "SourceModuleName": "signature",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "SignatureDateTime",
+          "XmlName": "SignatureDateTime",
+          "Ident": "signature_date_time",
+          "Type": "String",
+          "SourceModuleName": "signature",
+          "IsOption": true,
+          "IsVec": false
+        },
+        {
+          "Name": "References",
+          "XmlName": "References",
+          "Ident": "references",
+          "Type": "References",
+          "SourceModuleName": "signature",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "StampAnnot",
+          "XmlName": "StampAnnot",
+          "Ident": "stamp_annot",
+          "Type": "StampAnnot",
+          "SourceModuleName": "signature",
+          "IsOption": false,
+          "IsVec": true
+        },
+        {
+          "Name": "Seal",
+          "XmlName": "Seal",
+          "Ident": "seal",
+          "Type": "Seal",
+          "SourceModuleName": "signature",
+          "IsOption": true,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "Signature",
+      "Ident": "Signature",
+      "XmlName": "Signature",
+      "Attributes": [],
+      "Sequences": [
+        {
+          "Name": "SignedInfo",
+          "XmlName": "SignedInfo",
+          "Ident": "signed_info",
+          "Type": "SignedInfo",
+          "SourceModuleName": "signature",
+          "IsOption": false,
+          "IsVec": false
+        },
+        {
+          "Name": "SignedValue",
+          "XmlName": "SignedValue",
+          "Ident": "signed_value",
+          "Type": "crate::schemas::definitions::StLoc",
+          "SourceModuleName": "signature",
+          "IsOption": false,
+          "IsVec": false
+        }
+      ],
+      "Children": []
+    }
+  ],
+  "Elements": [
+    {
+      "Name": "Provider",
+      "Ident": "Provider",
+      "XmlName": "Provider",
+      "Type": "Provider",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "SignatureMethod",
+      "Ident": "SignatureMethod",
+      "XmlName": "SignatureMethod",
+      "Type": "String",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "SignatureDateTime",
+      "Ident": "SignatureDateTime",
+      "XmlName": "SignatureDateTime",
+      "Type": "String",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "CheckValue",
+      "Ident": "CheckValue",
+      "XmlName": "CheckValue",
+      "Type": "String",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Reference",
+      "Ident": "Reference",
+      "XmlName": "Reference",
+      "Type": "Reference",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "References",
+      "Ident": "References",
+      "XmlName": "References",
+      "Type": "References",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "StampAnnot",
+      "Ident": "StampAnnot",
+      "XmlName": "StampAnnot",
+      "Type": "StampAnnot",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "BaseLoc",
+      "Ident": "BaseLoc",
+      "XmlName": "BaseLoc",
+      "Type": "crate::schemas::definitions::StLoc",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Seal",
+      "Ident": "Seal",
+      "XmlName": "Seal",
+      "Type": "Seal",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "SignedInfo",
+      "Ident": "SignedInfo",
+      "XmlName": "SignedInfo",
+      "Type": "SignedInfo",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "SignedValue",
+      "Ident": "SignedValue",
+      "XmlName": "SignedValue",
+      "Type": "crate::schemas::definitions::StLoc",
+      "IsTopLevel": false
+    },
+    {
+      "Name": "Signature",
+      "Ident": "Signature",
+      "XmlName": "Signature",
+      "Type": "Signature",
+      "IsTopLevel": true
+    }
+  ],
+  "Enums": [
+    {
+      "Name": "ReferencesCheckMethod",
+      "Ident": "ReferencesCheckMethod",
+      "Variants": [
+        {
+          "Ident": "Md5",
+          "Value": "MD5"
+        },
+        {
+          "Ident": "Sha1",
+          "Value": "SHA1"
+        }
+      ],
+      "DefaultIndex": 0
+    }
+  ],
+  "Aliases": [],
+  "ModuleName": "signature"
+}
