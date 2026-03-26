@@ -9,6 +9,12 @@ use crate::models::sdk_data::{
 use crate::sdk_code::schemas::escape_ident;
 use crate::sdk_data::compatibility::{enum_value_alias_rules, find_missing_attribute_rule};
 
+#[derive(Clone, Copy)]
+enum DeserializeMode {
+  Slice,
+  Io,
+}
+
 pub fn gen_schema_deserializer(
   sdk_data_schema: &SdkDataSchema,
   sdk_data_schemas: &[SdkDataSchema],
@@ -163,23 +169,41 @@ fn gen_element_wrapper_deserializer(
         reader: R,
       ) -> Result<Self, crate::common::SdkError> {
         let mut xml_reader = crate::common::from_reader_inner(reader)?;
+        let mut buf = Vec::new();
 
-        Self::deserialize_inner_named(
+        Self::deserialize_from_reader_named(
           &mut xml_reader,
+          &mut buf,
           None,
           #element_name_prefix,
           #element_name,
         )
       }
 
-      pub(crate) fn deserialize_inner_named<'de, R: crate::common::XmlReader<'de>>(
-        xml_reader: &mut R,
+      pub(crate) fn deserialize_inner_named<'de>(
+        xml_reader: &mut quick_xml::Reader<&'de [u8]>,
         xml_event: Option<(quick_xml::events::BytesStart<'de>, bool)>,
         tag_name_prefix: &[u8],
         tag_name: &[u8],
       ) -> Result<Self, crate::common::SdkError> {
         Ok(Self(<#inner_type>::deserialize_inner_named(
           xml_reader,
+          xml_event,
+          tag_name_prefix,
+          tag_name,
+        )?))
+      }
+
+      pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
+        xml_reader: &mut quick_xml::Reader<R>,
+        buf: &mut Vec<u8>,
+        xml_event: Option<(quick_xml::events::BytesStart<'static>, bool)>,
+        tag_name_prefix: &[u8],
+        tag_name: &[u8],
+      ) -> Result<Self, crate::common::SdkError> {
+        Ok(Self(<#inner_type>::deserialize_from_reader_named(
+          xml_reader,
+          buf,
           xml_event,
           tag_name_prefix,
           tag_name,
@@ -363,6 +387,7 @@ fn gen_struct_deserializer(
         sdk_data_schemas,
         s,
         child,
+        DeserializeMode::Slice,
       )?);
     }
 
@@ -398,6 +423,7 @@ fn gen_struct_deserializer(
       sdk_data_schema,
       sdk_data_schemas,
       child,
+      DeserializeMode::Slice,
     )?);
   }
 
@@ -417,7 +443,7 @@ fn gen_struct_deserializer(
     })?)
   };
 
-  let child_dispatch: Stmt = if child_match_arms.is_empty() {
+  let child_dispatch_slice: Stmt = if child_match_arms.is_empty() {
     parse2(quote! {
       if let Some(e) = e_opt
         && !e_empty
@@ -433,6 +459,61 @@ fn gen_struct_deserializer(
           _ => {
             if !e_empty {
               xml_reader.read_to_end(e.to_end().name())?;
+            }
+          }
+        }
+      }
+    })?
+  };
+
+  let child_match_arms_io: Vec<Arm> = s
+    .children
+    .iter()
+    .map(|child| {
+      gen_choice_child_match_arm(
+        &struct_name_literal,
+        sdk_data_schema,
+        sdk_data_schemas,
+        s,
+        child,
+        DeserializeMode::Io,
+      )
+    })
+    .collect::<anyhow::Result<_>>()?;
+  let sequence_match_arms_io: Vec<Arm> = s
+    .sequences
+    .iter()
+    .filter(|child| child.ident != "xml_value")
+    .map(|child| {
+      gen_sequence_child_match_arm(
+        &struct_name_literal,
+        sdk_data_schema,
+        sdk_data_schemas,
+        child,
+        DeserializeMode::Io,
+      )
+    })
+    .collect::<anyhow::Result<_>>()?;
+  let mut child_match_arms_io_all = vec![];
+  child_match_arms_io_all.extend(child_match_arms_io);
+  child_match_arms_io_all.extend(sequence_match_arms_io);
+
+  let child_dispatch_io: Stmt = if child_match_arms_io_all.is_empty() {
+    parse2(quote! {
+      if let Some(e) = e_opt
+        && !e_empty
+      {
+        xml_reader.read_to_end_into(e.to_end().name(), buf)?;
+      }
+    })?
+  } else {
+    parse2(quote! {
+      if let Some(e) = e_opt {
+        match e.name().as_ref() {
+          #( #child_match_arms_io_all )*
+          _ => {
+            if !e_empty {
+              xml_reader.read_to_end_into(e.to_end().name(), buf)?;
             }
           }
         }
@@ -457,19 +538,26 @@ fn gen_struct_deserializer(
       reader: R,
     ) -> Result<Self, crate::common::SdkError> {
       let mut xml_reader = crate::common::from_reader_inner(reader)?;
+      let mut buf = Vec::new();
 
-      Self::deserialize_inner_named(&mut xml_reader, None, #struct_name_prefix, #struct_name)
+      Self::deserialize_from_reader_named(
+        &mut xml_reader,
+        &mut buf,
+        None,
+        #struct_name_prefix,
+        #struct_name,
+      )
     }
   })?;
 
   let deserialize_inner_fn: ItemFn = parse2(quote! {
-    pub(crate) fn deserialize_inner_named<'de, R: crate::common::XmlReader<'de>>(
-      xml_reader: &mut R,
+    pub(crate) fn deserialize_inner_named<'de>(
+      xml_reader: &mut quick_xml::Reader<&'de [u8]>,
       xml_event: Option<(quick_xml::events::BytesStart<'de>, bool)>,
       tag_name_prefix: &[u8],
       tag_name: &[u8],
     ) -> Result<Self, crate::common::SdkError> {
-      let (#expect_event_ident, empty_tag) = crate::common::expect_event_start!(
+      let (#expect_event_ident, empty_tag) = crate::common::expect_event_start_slice!(
         xml_reader,
         xml_event,
         #struct_name_literal,
@@ -487,7 +575,7 @@ fn gen_struct_deserializer(
           let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
           let mut e_empty = false;
 
-          match xml_reader.next()? {
+          match xml_reader.read_event()? {
             quick_xml::events::Event::Start(e) => {
               e_opt = Some(e);
             }
@@ -506,7 +594,69 @@ fn gen_struct_deserializer(
             _ => (),
           }
 
-          #child_dispatch
+          #child_dispatch_slice
+        }
+      }
+
+      #( #field_post_process )*
+      #( #field_unwraps )*
+
+      Ok(Self {
+        #( #field_idents, )*
+      })
+    }
+  })?;
+
+  let event_match_arms_io = event_match_arms.clone();
+
+  let deserialize_from_reader_fn: ItemFn = parse2(quote! {
+    pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
+      xml_reader: &mut quick_xml::Reader<R>,
+      buf: &mut Vec<u8>,
+      xml_event: Option<(quick_xml::events::BytesStart<'static>, bool)>,
+      tag_name_prefix: &[u8],
+      tag_name: &[u8],
+    ) -> Result<Self, crate::common::SdkError> {
+      let (#expect_event_ident, empty_tag) = crate::common::expect_event_start_io!(
+        xml_reader,
+        buf,
+        xml_event,
+        #struct_name_literal,
+        #struct_xml_name_literal,
+        tag_name_prefix,
+        tag_name
+      );
+
+      #( #field_declarations )*
+
+      #attr_loop
+
+      if !empty_tag {
+        loop {
+          let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
+          let mut e_empty = false;
+
+          buf.clear();
+          match xml_reader.read_event_into(buf)? {
+            quick_xml::events::Event::Start(e) => {
+              e_opt = Some(e.into_owned());
+            }
+            quick_xml::events::Event::Empty(e) => {
+              e_empty = true;
+              e_opt = Some(e.into_owned());
+            }
+            #( #event_match_arms_io )*
+            quick_xml::events::Event::End(e) => match e.name().as_ref() {
+              name if name == tag_name_prefix || name == tag_name => {
+                break;
+              }
+              _ => (),
+            },
+            quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof(#struct_name_literal))?,
+            _ => (),
+          }
+
+          #child_dispatch_io
         }
       }
 
@@ -524,6 +674,8 @@ fn gen_struct_deserializer(
       #from_reader_fn
 
       #deserialize_inner_fn
+
+      #deserialize_from_reader_fn
     }
   })?;
 
@@ -578,6 +730,7 @@ fn gen_sequence_child_match_arm(
   _sdk_data_schema: &SdkDataSchema,
   _sdk_data_schemas: &[SdkDataSchema],
   child: &Child,
+  mode: DeserializeMode,
 ) -> anyhow::Result<Arm> {
   let child_xml_name = child.resolved_xml_name.as_str();
   let child_type_name = child.resolved_type.as_str();
@@ -591,12 +744,21 @@ fn gen_sequence_child_match_arm(
 
   if child.is_struct {
     let child_type: Type = parse_str(child_type_name)?;
+    let deserialize_fn = match mode {
+      DeserializeMode::Slice => quote! { deserialize_inner_named },
+      DeserializeMode::Io => quote! { deserialize_from_reader_named },
+    };
+    let buf_arg = match mode {
+      DeserializeMode::Slice => quote! {},
+      DeserializeMode::Io => quote! { buf, },
+    };
 
     if child.is_vec {
       Ok(parse2(quote! {
         #child_name_prefix | #child_name => {
-          #child_ident.push(#child_type::deserialize_inner_named(
+          #child_ident.push(#child_type::#deserialize_fn(
             xml_reader,
+            #buf_arg
             Some((e, e_empty)),
             #child_name_prefix,
             #child_name,
@@ -606,8 +768,9 @@ fn gen_sequence_child_match_arm(
     } else {
       Ok(parse2(quote! {
         #child_name_prefix | #child_name => {
-          #child_ident = Some(#child_type::deserialize_inner_named(
+          #child_ident = Some(#child_type::#deserialize_fn(
             xml_reader,
+            #buf_arg
             Some((e, e_empty)),
             #child_name_prefix,
             #child_name,
@@ -623,6 +786,7 @@ fn gen_sequence_child_match_arm(
       child_name.clone(),
       &child.type_kind,
       child_type_name,
+      mode,
     )?;
 
     if child.is_vec {
@@ -649,6 +813,7 @@ fn gen_choice_child_match_arm(
   _sdk_data_schemas: &[SdkDataSchema],
   s: &SdkDataStruct,
   child: &Child,
+  mode: DeserializeMode,
 ) -> anyhow::Result<Arm> {
   let child_xml_name = child.resolved_xml_name.as_str();
   let child_type_name = child.resolved_type.as_str();
@@ -666,12 +831,21 @@ fn gen_choice_child_match_arm(
 
   if child.is_struct {
     let child_type: Type = parse_str(child_type_name)?;
+    let deserialize_fn = match mode {
+      DeserializeMode::Slice => quote! { deserialize_inner_named },
+      DeserializeMode::Io => quote! { deserialize_from_reader_named },
+    };
+    let buf_arg = match mode {
+      DeserializeMode::Slice => quote! {},
+      DeserializeMode::Io => quote! { buf, },
+    };
 
     Ok(parse2(quote! {
       #child_name_prefix | #child_name => {
         xml_children.push(#child_choice_type::#child_variant_ident(Box::new(
-          #child_type::deserialize_inner_named(
+          #child_type::#deserialize_fn(
             xml_reader,
+            #buf_arg
             Some((e, e_empty)),
             #child_name_prefix,
             #child_name,
@@ -687,6 +861,7 @@ fn gen_choice_child_match_arm(
       child_name.clone(),
       &child.type_kind,
       child_type_name,
+      mode,
     )?;
     let child_type: Type = parse_str(child_type_name)?;
 
@@ -706,59 +881,213 @@ fn gen_simple_child_value_block(
   child_name: LitByteStr,
   type_kind: &CodegenTypeKind,
   resolved_type: &str,
+  mode: DeserializeMode,
 ) -> anyhow::Result<TokenStream> {
   if matches!(type_kind, CodegenTypeKind::Enum) {
     let enum_type: Type = parse_str(resolved_type)?;
-
-    return Ok(quote! {{
+    let slice_expr = quote! {{
       if e_empty {
         <#enum_type>::from_bytes(b"")?
       } else {
-        crate::common::read_text_enum_content(
+        let mut first_text = None;
+        let mut value = None;
+
+        loop {
+          match xml_reader.read_event()? {
+            quick_xml::events::Event::Text(text) => {
+              if let Some(first) = first_text.take() {
+                crate::common::push_xml_text(&mut value, first)?;
+                crate::common::push_xml_text(&mut value, text)?;
+              } else if value.is_some() {
+                crate::common::push_xml_text(&mut value, text)?;
+              } else {
+                first_text = Some(text);
+              }
+            }
+            quick_xml::events::Event::GeneralRef(text) => {
+              if let Some(first) = first_text.take() {
+                crate::common::push_xml_text(&mut value, first)?;
+              }
+              crate::common::push_xml_general_ref(&mut value, text, #struct_name, #field_name)?;
+            }
+            quick_xml::events::Event::End(end) => match end.name().as_ref() {
+              name if name == #child_name_prefix || name == #child_name => {
+                break if let Some(first) = first_text {
+                  match <#enum_type>::from_bytes(first.as_ref()) {
+                    Ok(value) => value,
+                    Err(_) => first.xml10_content()?.as_ref().parse::<#enum_type>()?,
+                  }
+                } else {
+                  value.unwrap_or_default().parse::<#enum_type>()?
+                };
+              }
+              _ => {}
+            },
+            quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof(#struct_name))?,
+            _ => {}
+          }
+        }
+      }
+    }};
+
+    let io_expr = quote! {{
+      if e_empty {
+        <#enum_type>::from_bytes(b"")?
+      } else {
+        crate::common::read_text_enum_content_io(
           xml_reader,
-          #struct_name,
-          #field_name,
-          #child_name_prefix,
-          #child_name,
+          buf,
+          crate::common::TextReadSpec {
+            ty: #struct_name,
+            field: #field_name,
+            tag_name_prefix: #child_name_prefix,
+            tag_name: #child_name,
+          },
           <#enum_type>::from_bytes,
         )?
       }
-    }});
+    }};
+
+    return Ok(match mode {
+      DeserializeMode::Slice => slice_expr,
+      DeserializeMode::Io => io_expr,
+    });
   }
 
   if matches!(type_kind, CodegenTypeKind::String) {
-    return Ok(quote! {{
+    let slice_expr = quote! {{
       if e_empty {
         String::new()
       } else {
-        crate::common::read_text_content(
+        let mut value = None;
+
+        loop {
+          match xml_reader.read_event()? {
+            quick_xml::events::Event::Text(text) => crate::common::push_xml_text(&mut value, text)?,
+            quick_xml::events::Event::GeneralRef(text) => {
+              crate::common::push_xml_general_ref(&mut value, text, #struct_name, #field_name)?;
+            }
+            quick_xml::events::Event::End(end) => match end.name().as_ref() {
+              name if name == #child_name_prefix || name == #child_name => {
+                break value.unwrap_or_default();
+              }
+              _ => {}
+            },
+            quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof(#struct_name))?,
+            _ => {}
+          }
+        }
+      }
+    }};
+
+    let io_expr = quote! {{
+      if e_empty {
+        String::new()
+      } else {
+        crate::common::read_text_content_io(
           xml_reader,
-          #struct_name,
-          #field_name,
-          #child_name_prefix,
-          #child_name,
+          buf,
+          crate::common::TextReadSpec {
+            ty: #struct_name,
+            field: #field_name,
+            tag_name_prefix: #child_name_prefix,
+            tag_name: #child_name,
+          },
         )?
       }
-    }});
+    }};
+
+    return Ok(match mode {
+      DeserializeMode::Slice => slice_expr,
+      DeserializeMode::Io => io_expr,
+    });
   }
 
   let text_expr = gen_value_from_string_expr(struct_name, field_name, type_kind, resolved_type)?;
 
-  Ok(quote! {{
-    let value = if e_empty {
-      String::new()
-    } else {
-      crate::common::read_text_content(
-        xml_reader,
-        #struct_name,
-        #field_name,
-        #child_name_prefix,
-        #child_name,
-      )?
-    };
+  let parse_bytes_expr = gen_value_from_bytes_expr(struct_name, field_name, type_kind)?;
 
-    { #text_expr }
-  }})
+  let slice_expr = quote! {{
+    if e_empty {
+      let value = String::new();
+      { #text_expr }
+    } else {
+      let parse_bytes = |value: &[u8]| { #parse_bytes_expr };
+      let mut first_text = None;
+      let mut value = None;
+
+      loop {
+        match xml_reader.read_event()? {
+          quick_xml::events::Event::Text(text) => {
+            if let Some(first) = first_text.take() {
+              crate::common::push_xml_text(&mut value, first)?;
+              crate::common::push_xml_text(&mut value, text)?;
+            } else if value.is_some() {
+              crate::common::push_xml_text(&mut value, text)?;
+            } else {
+              first_text = Some(text);
+            }
+          }
+          quick_xml::events::Event::GeneralRef(text) => {
+            if let Some(first) = first_text.take() {
+              crate::common::push_xml_text(&mut value, first)?;
+            }
+            crate::common::push_xml_general_ref(&mut value, text, #struct_name, #field_name)?;
+          }
+          quick_xml::events::Event::End(end) => match end.name().as_ref() {
+            name if name == #child_name_prefix || name == #child_name => {
+              break if let Some(first) = first_text {
+                match parse_bytes(first.as_ref()) {
+                  Ok(value) => value,
+                  Err(_) => {
+                    let value = first.xml10_content()?.into_owned();
+                    { #text_expr }
+                  }
+                }
+              } else {
+                let value = value.unwrap_or_default();
+                match parse_bytes(value.as_bytes()) {
+                  Ok(value) => value,
+                  Err(_) => { #text_expr }
+                }
+              };
+            }
+            _ => {}
+          },
+          quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof(#struct_name))?,
+          _ => {}
+        }
+      }
+    }
+  }};
+
+  let io_expr = quote! {{
+    if e_empty {
+      let value = String::new();
+      { #text_expr }
+    } else {
+      crate::common::read_text_parsed_content_io(
+        xml_reader,
+        buf,
+        crate::common::TextReadSpec {
+          ty: #struct_name,
+          field: #field_name,
+          tag_name_prefix: #child_name_prefix,
+          tag_name: #child_name,
+        },
+        |value| { #parse_bytes_expr },
+        |value| {
+          let value = value.to_string();
+          Ok({ #text_expr })
+        },
+      )?
+    }
+  }};
+
+  Ok(match mode {
+    DeserializeMode::Slice => slice_expr,
+    DeserializeMode::Io => io_expr,
+  })
 }
 
 fn gen_value_from_attr_expr(
@@ -835,6 +1164,64 @@ fn gen_value_from_string_expr(
     }
     CodegenTypeKind::Struct => {
       anyhow::bail!("string value type `{resolved_type}` cannot be a struct")
+    }
+  }
+}
+
+fn gen_value_from_bytes_expr(
+  ty_name: &syn::LitStr,
+  field_name: &syn::LitStr,
+  type_kind: &CodegenTypeKind,
+) -> anyhow::Result<TokenStream> {
+  match type_kind {
+    CodegenTypeKind::Bool => Ok(quote! {
+      crate::common::parse_bool_bytes(value)
+        .map_err(|_| {
+          crate::common::invalid_field_value(
+            #ty_name,
+            #field_name,
+            String::from_utf8_lossy(value).into_owned(),
+          )
+        })
+    }),
+    CodegenTypeKind::F64 => Ok(quote! {
+      std::str::from_utf8(value)
+        .ok()
+        .and_then(|value| value.parse::<f64>().ok())
+        .ok_or_else(|| {
+          crate::common::invalid_field_value(
+            #ty_name,
+            #field_name,
+            String::from_utf8_lossy(value).into_owned(),
+          )
+        })
+    }),
+    CodegenTypeKind::I32 => Ok(quote! {
+      std::str::from_utf8(value)
+        .ok()
+        .and_then(|value| value.parse::<i32>().ok())
+        .ok_or_else(|| {
+          crate::common::invalid_field_value(
+            #ty_name,
+            #field_name,
+            String::from_utf8_lossy(value).into_owned(),
+          )
+        })
+    }),
+    CodegenTypeKind::U32 => Ok(quote! {
+      std::str::from_utf8(value)
+        .ok()
+        .and_then(|value| value.parse::<u32>().ok())
+        .ok_or_else(|| {
+          crate::common::invalid_field_value(
+            #ty_name,
+            #field_name,
+            String::from_utf8_lossy(value).into_owned(),
+          )
+        })
+    }),
+    CodegenTypeKind::String | CodegenTypeKind::Enum | CodegenTypeKind::Struct => {
+      anyhow::bail!("bytes value type is not supported for `{type_kind:?}`")
     }
   }
 }

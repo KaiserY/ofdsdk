@@ -94,15 +94,22 @@ impl std::str::FromStr for crate::schemas::res::ColorSpace {
 impl crate::schemas::res::ColorSpace {
   pub fn from_reader<R: std::io::BufRead>(reader: R) -> Result<Self, crate::common::SdkError> {
     let mut xml_reader = crate::common::from_reader_inner(reader)?;
-    Self::deserialize_inner_named(&mut xml_reader, None, b"ofd:ColorSpace", b"ColorSpace")
+    let mut buf = Vec::new();
+    Self::deserialize_from_reader_named(
+      &mut xml_reader,
+      &mut buf,
+      None,
+      b"ofd:ColorSpace",
+      b"ColorSpace",
+    )
   }
-  pub(crate) fn deserialize_inner_named<'de, R: crate::common::XmlReader<'de>>(
-    xml_reader: &mut R,
+  pub(crate) fn deserialize_inner_named<'de>(
+    xml_reader: &mut quick_xml::Reader<&'de [u8]>,
     xml_event: Option<(quick_xml::events::BytesStart<'de>, bool)>,
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (e, empty_tag) = crate::common::expect_event_start!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "ColorSpace",
@@ -154,7 +161,7 @@ impl crate::schemas::res::ColorSpace {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
         let mut e_empty = false;
-        match xml_reader.next()? {
+        match xml_reader.read_event()? {
           quick_xml::events::Event::Start(e) => {
             e_opt = Some(e);
           }
@@ -200,6 +207,114 @@ impl crate::schemas::res::ColorSpace {
       palette,
     })
   }
+  pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
+    xml_reader: &mut quick_xml::Reader<R>,
+    buf: &mut Vec<u8>,
+    xml_event: Option<(quick_xml::events::BytesStart<'static>, bool)>,
+    tag_name_prefix: &[u8],
+    tag_name: &[u8],
+  ) -> Result<Self, crate::common::SdkError> {
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
+      xml_reader,
+      buf,
+      xml_event,
+      "ColorSpace",
+      "ColorSpace",
+      tag_name_prefix,
+      tag_name
+    );
+    let mut r#type = None;
+    let mut bits_per_component = None;
+    let mut profile = None;
+    let mut id = None;
+    let mut palette = None;
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      #[allow(clippy::single_match)]
+      match attr.key.as_ref() {
+        b"Type" => {
+          r#type = Some(if let Some(value) = crate::common::attr_raw_value(&attr) {
+            <crate::schemas::res::CtColorSpaceType>::from_bytes(value)?
+          } else {
+            crate::common::decode_attr_value(&attr, xml_reader.decoder())?
+              .parse::<crate::schemas::res::CtColorSpaceType>()?
+          });
+        }
+        b"BitsPerComponent" => {
+          bits_per_component = Some(crate::common::parse_i32_attr(
+            &attr,
+            xml_reader.decoder(),
+            "ColorSpace",
+            "bits_per_component",
+          )?);
+        }
+        b"Profile" => {
+          profile =
+            Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
+        }
+        b"ID" => {
+          id = Some(crate::common::parse_u32_attr(
+            &attr,
+            xml_reader.decoder(),
+            "ColorSpace",
+            "id",
+          )?);
+        }
+        _ => {}
+      }
+    }
+    if !empty_tag {
+      loop {
+        let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
+        let mut e_empty = false;
+        buf.clear();
+        match xml_reader.read_event_into(buf)? {
+          quick_xml::events::Event::Start(e) => {
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::Empty(e) => {
+            e_empty = true;
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::End(e) => match e.name().as_ref() {
+            name if name == tag_name_prefix || name == tag_name => {
+              break;
+            }
+            _ => {}
+          },
+          quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("ColorSpace"))?,
+          _ => {}
+        }
+        if let Some(e) = e_opt {
+          match e.name().as_ref() {
+            b"ofd:Palette" | b"Palette" => {
+              palette = Some(crate::schemas::res::Palette::deserialize_from_reader_named(
+                xml_reader,
+                buf,
+                Some((e, e_empty)),
+                b"ofd:Palette",
+                b"Palette",
+              )?);
+            }
+            _ => {
+              if !e_empty {
+                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
+              }
+            }
+          }
+        }
+      }
+    }
+    let r#type = r#type.ok_or_else(|| crate::common::missing_field("ColorSpace", "type"))?;
+    let id = id.ok_or_else(|| crate::common::missing_field("ColorSpace", "id"))?;
+    Ok(Self {
+      r#type,
+      bits_per_component,
+      profile,
+      id,
+      palette,
+    })
+  }
 }
 impl std::str::FromStr for crate::schemas::res::ColorSpaces {
   type Err = crate::common::SdkError;
@@ -211,15 +326,22 @@ impl std::str::FromStr for crate::schemas::res::ColorSpaces {
 impl crate::schemas::res::ColorSpaces {
   pub fn from_reader<R: std::io::BufRead>(reader: R) -> Result<Self, crate::common::SdkError> {
     let mut xml_reader = crate::common::from_reader_inner(reader)?;
-    Self::deserialize_inner_named(&mut xml_reader, None, b"ofd:ColorSpaces", b"ColorSpaces")
+    let mut buf = Vec::new();
+    Self::deserialize_from_reader_named(
+      &mut xml_reader,
+      &mut buf,
+      None,
+      b"ofd:ColorSpaces",
+      b"ColorSpaces",
+    )
   }
-  pub(crate) fn deserialize_inner_named<'de, R: crate::common::XmlReader<'de>>(
-    xml_reader: &mut R,
+  pub(crate) fn deserialize_inner_named<'de>(
+    xml_reader: &mut quick_xml::Reader<&'de [u8]>,
     xml_event: Option<(quick_xml::events::BytesStart<'de>, bool)>,
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start!(
+    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "ColorSpaces",
@@ -232,7 +354,7 @@ impl crate::schemas::res::ColorSpaces {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
         let mut e_empty = false;
-        match xml_reader.next()? {
+        match xml_reader.read_event()? {
           quick_xml::events::Event::Start(e) => {
             e_opt = Some(e);
           }
@@ -270,6 +392,69 @@ impl crate::schemas::res::ColorSpaces {
     }
     Ok(Self { color_space })
   }
+  pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
+    xml_reader: &mut quick_xml::Reader<R>,
+    buf: &mut Vec<u8>,
+    xml_event: Option<(quick_xml::events::BytesStart<'static>, bool)>,
+    tag_name_prefix: &[u8],
+    tag_name: &[u8],
+  ) -> Result<Self, crate::common::SdkError> {
+    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+      xml_reader,
+      buf,
+      xml_event,
+      "ColorSpaces",
+      "ColorSpaces",
+      tag_name_prefix,
+      tag_name
+    );
+    let mut color_space = vec![];
+    if !empty_tag {
+      loop {
+        let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
+        let mut e_empty = false;
+        buf.clear();
+        match xml_reader.read_event_into(buf)? {
+          quick_xml::events::Event::Start(e) => {
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::Empty(e) => {
+            e_empty = true;
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::End(e) => match e.name().as_ref() {
+            name if name == tag_name_prefix || name == tag_name => {
+              break;
+            }
+            _ => {}
+          },
+          quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("ColorSpaces"))?,
+          _ => {}
+        }
+        if let Some(e) = e_opt {
+          match e.name().as_ref() {
+            b"ofd:ColorSpace" | b"ColorSpace" => {
+              color_space.push(
+                crate::schemas::res::ColorSpace::deserialize_from_reader_named(
+                  xml_reader,
+                  buf,
+                  Some((e, e_empty)),
+                  b"ofd:ColorSpace",
+                  b"ColorSpace",
+                )?,
+              );
+            }
+            _ => {
+              if !e_empty {
+                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
+              }
+            }
+          }
+        }
+      }
+    }
+    Ok(Self { color_space })
+  }
 }
 impl std::str::FromStr for crate::schemas::res::DrawParam {
   type Err = crate::common::SdkError;
@@ -281,15 +466,22 @@ impl std::str::FromStr for crate::schemas::res::DrawParam {
 impl crate::schemas::res::DrawParam {
   pub fn from_reader<R: std::io::BufRead>(reader: R) -> Result<Self, crate::common::SdkError> {
     let mut xml_reader = crate::common::from_reader_inner(reader)?;
-    Self::deserialize_inner_named(&mut xml_reader, None, b"ofd:DrawParam", b"DrawParam")
+    let mut buf = Vec::new();
+    Self::deserialize_from_reader_named(
+      &mut xml_reader,
+      &mut buf,
+      None,
+      b"ofd:DrawParam",
+      b"DrawParam",
+    )
   }
-  pub(crate) fn deserialize_inner_named<'de, R: crate::common::XmlReader<'de>>(
-    xml_reader: &mut R,
+  pub(crate) fn deserialize_inner_named<'de>(
+    xml_reader: &mut quick_xml::Reader<&'de [u8]>,
     xml_event: Option<(quick_xml::events::BytesStart<'de>, bool)>,
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (e, empty_tag) = crate::common::expect_event_start!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "DrawParam",
@@ -368,7 +560,7 @@ impl crate::schemas::res::DrawParam {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
         let mut e_empty = false;
-        match xml_reader.next()? {
+        match xml_reader.read_event()? {
           quick_xml::events::Event::Start(e) => {
             e_opt = Some(e);
           }
@@ -426,6 +618,158 @@ impl crate::schemas::res::DrawParam {
       stroke_color,
     })
   }
+  pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
+    xml_reader: &mut quick_xml::Reader<R>,
+    buf: &mut Vec<u8>,
+    xml_event: Option<(quick_xml::events::BytesStart<'static>, bool)>,
+    tag_name_prefix: &[u8],
+    tag_name: &[u8],
+  ) -> Result<Self, crate::common::SdkError> {
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
+      xml_reader,
+      buf,
+      xml_event,
+      "DrawParam",
+      "DrawParam",
+      tag_name_prefix,
+      tag_name
+    );
+    let mut relative = None;
+    let mut line_width = None;
+    let mut join = None;
+    let mut cap = None;
+    let mut dash_offset = None;
+    let mut dash_pattern = None;
+    let mut miter_limit = None;
+    let mut id = None;
+    let mut fill_color = None;
+    let mut stroke_color = None;
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      #[allow(clippy::single_match)]
+      match attr.key.as_ref() {
+        b"Relative" => {
+          relative = Some(crate::common::parse_u32_attr(
+            &attr,
+            xml_reader.decoder(),
+            "DrawParam",
+            "relative",
+          )?);
+        }
+        b"LineWidth" => {
+          line_width = Some(crate::common::parse_f64_attr(
+            &attr,
+            xml_reader.decoder(),
+            "DrawParam",
+            "line_width",
+          )?);
+        }
+        b"Join" => {
+          join = Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
+        }
+        b"Cap" => {
+          cap = Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
+        }
+        b"DashOffset" => {
+          dash_offset = Some(crate::common::parse_f64_attr(
+            &attr,
+            xml_reader.decoder(),
+            "DrawParam",
+            "dash_offset",
+          )?);
+        }
+        b"DashPattern" => {
+          dash_pattern =
+            Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
+        }
+        b"MiterLimit" => {
+          miter_limit = Some(crate::common::parse_f64_attr(
+            &attr,
+            xml_reader.decoder(),
+            "DrawParam",
+            "miter_limit",
+          )?);
+        }
+        b"ID" => {
+          id = Some(crate::common::parse_u32_attr(
+            &attr,
+            xml_reader.decoder(),
+            "DrawParam",
+            "id",
+          )?);
+        }
+        _ => {}
+      }
+    }
+    if !empty_tag {
+      loop {
+        let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
+        let mut e_empty = false;
+        buf.clear();
+        match xml_reader.read_event_into(buf)? {
+          quick_xml::events::Event::Start(e) => {
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::Empty(e) => {
+            e_empty = true;
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::End(e) => match e.name().as_ref() {
+            name if name == tag_name_prefix || name == tag_name => {
+              break;
+            }
+            _ => {}
+          },
+          quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("DrawParam"))?,
+          _ => {}
+        }
+        if let Some(e) = e_opt {
+          match e.name().as_ref() {
+            b"ofd:FillColor" | b"FillColor" => {
+              fill_color = Some(
+                crate::schemas::page::CtColor::deserialize_from_reader_named(
+                  xml_reader,
+                  buf,
+                  Some((e, e_empty)),
+                  b"ofd:FillColor",
+                  b"FillColor",
+                )?,
+              );
+            }
+            b"ofd:StrokeColor" | b"StrokeColor" => {
+              stroke_color = Some(
+                crate::schemas::page::CtColor::deserialize_from_reader_named(
+                  xml_reader,
+                  buf,
+                  Some((e, e_empty)),
+                  b"ofd:StrokeColor",
+                  b"StrokeColor",
+                )?,
+              );
+            }
+            _ => {
+              if !e_empty {
+                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
+              }
+            }
+          }
+        }
+      }
+    }
+    let id = id.ok_or_else(|| crate::common::missing_field("DrawParam", "id"))?;
+    Ok(Self {
+      relative,
+      line_width,
+      join,
+      cap,
+      dash_offset,
+      dash_pattern,
+      miter_limit,
+      id,
+      fill_color,
+      stroke_color,
+    })
+  }
 }
 impl std::str::FromStr for crate::schemas::res::DrawParams {
   type Err = crate::common::SdkError;
@@ -437,15 +781,22 @@ impl std::str::FromStr for crate::schemas::res::DrawParams {
 impl crate::schemas::res::DrawParams {
   pub fn from_reader<R: std::io::BufRead>(reader: R) -> Result<Self, crate::common::SdkError> {
     let mut xml_reader = crate::common::from_reader_inner(reader)?;
-    Self::deserialize_inner_named(&mut xml_reader, None, b"ofd:DrawParams", b"DrawParams")
+    let mut buf = Vec::new();
+    Self::deserialize_from_reader_named(
+      &mut xml_reader,
+      &mut buf,
+      None,
+      b"ofd:DrawParams",
+      b"DrawParams",
+    )
   }
-  pub(crate) fn deserialize_inner_named<'de, R: crate::common::XmlReader<'de>>(
-    xml_reader: &mut R,
+  pub(crate) fn deserialize_inner_named<'de>(
+    xml_reader: &mut quick_xml::Reader<&'de [u8]>,
     xml_event: Option<(quick_xml::events::BytesStart<'de>, bool)>,
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start!(
+    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "DrawParams",
@@ -458,7 +809,7 @@ impl crate::schemas::res::DrawParams {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
         let mut e_empty = false;
-        match xml_reader.next()? {
+        match xml_reader.read_event()? {
           quick_xml::events::Event::Start(e) => {
             e_opt = Some(e);
           }
@@ -496,6 +847,69 @@ impl crate::schemas::res::DrawParams {
     }
     Ok(Self { draw_param })
   }
+  pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
+    xml_reader: &mut quick_xml::Reader<R>,
+    buf: &mut Vec<u8>,
+    xml_event: Option<(quick_xml::events::BytesStart<'static>, bool)>,
+    tag_name_prefix: &[u8],
+    tag_name: &[u8],
+  ) -> Result<Self, crate::common::SdkError> {
+    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+      xml_reader,
+      buf,
+      xml_event,
+      "DrawParams",
+      "DrawParams",
+      tag_name_prefix,
+      tag_name
+    );
+    let mut draw_param = vec![];
+    if !empty_tag {
+      loop {
+        let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
+        let mut e_empty = false;
+        buf.clear();
+        match xml_reader.read_event_into(buf)? {
+          quick_xml::events::Event::Start(e) => {
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::Empty(e) => {
+            e_empty = true;
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::End(e) => match e.name().as_ref() {
+            name if name == tag_name_prefix || name == tag_name => {
+              break;
+            }
+            _ => {}
+          },
+          quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("DrawParams"))?,
+          _ => {}
+        }
+        if let Some(e) = e_opt {
+          match e.name().as_ref() {
+            b"ofd:DrawParam" | b"DrawParam" => {
+              draw_param.push(
+                crate::schemas::res::DrawParam::deserialize_from_reader_named(
+                  xml_reader,
+                  buf,
+                  Some((e, e_empty)),
+                  b"ofd:DrawParam",
+                  b"DrawParam",
+                )?,
+              );
+            }
+            _ => {
+              if !e_empty {
+                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
+              }
+            }
+          }
+        }
+      }
+    }
+    Ok(Self { draw_param })
+  }
 }
 impl std::str::FromStr for crate::schemas::res::Font {
   type Err = crate::common::SdkError;
@@ -507,15 +921,16 @@ impl std::str::FromStr for crate::schemas::res::Font {
 impl crate::schemas::res::Font {
   pub fn from_reader<R: std::io::BufRead>(reader: R) -> Result<Self, crate::common::SdkError> {
     let mut xml_reader = crate::common::from_reader_inner(reader)?;
-    Self::deserialize_inner_named(&mut xml_reader, None, b"ofd:Font", b"Font")
+    let mut buf = Vec::new();
+    Self::deserialize_from_reader_named(&mut xml_reader, &mut buf, None, b"ofd:Font", b"Font")
   }
-  pub(crate) fn deserialize_inner_named<'de, R: crate::common::XmlReader<'de>>(
-    xml_reader: &mut R,
+  pub(crate) fn deserialize_inner_named<'de>(
+    xml_reader: &mut quick_xml::Reader<&'de [u8]>,
     xml_event: Option<(quick_xml::events::BytesStart<'de>, bool)>,
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (e, empty_tag) = crate::common::expect_event_start!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "Font",
@@ -599,7 +1014,7 @@ impl crate::schemas::res::Font {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
         let mut e_empty = false;
-        match xml_reader.next()? {
+        match xml_reader.read_event()? {
           quick_xml::events::Event::Start(e) => {
             e_opt = Some(e);
           }
@@ -623,13 +1038,25 @@ impl crate::schemas::res::Font {
                 if e_empty {
                   String::new()
                 } else {
-                  crate::common::read_text_content(
-                    xml_reader,
-                    "Font",
-                    "font_file",
-                    b"ofd:FontFile",
-                    b"FontFile",
-                  )?
+                  let mut value = None;
+                  loop {
+                    match xml_reader.read_event()? {
+                      quick_xml::events::Event::Text(text) => {
+                        crate::common::push_xml_text(&mut value, text)?
+                      }
+                      quick_xml::events::Event::GeneralRef(text) => {
+                        crate::common::push_xml_general_ref(&mut value, text, "Font", "font_file")?;
+                      }
+                      quick_xml::events::Event::End(end) => match end.name().as_ref() {
+                        name if name == b"ofd:FontFile" || name == b"FontFile" => {
+                          break value.unwrap_or_default();
+                        }
+                        _ => {}
+                      },
+                      quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("Font"))?,
+                      _ => {}
+                    }
+                  }
                 }
               };
               font_file = Some(parsed_value);
@@ -637,6 +1064,160 @@ impl crate::schemas::res::Font {
             _ => {
               if !e_empty {
                 xml_reader.read_to_end(e.to_end().name())?;
+              }
+            }
+          }
+        }
+      }
+    }
+    let font_name = font_name.ok_or_else(|| crate::common::missing_field("Font", "font_name"))?;
+    let id = id.ok_or_else(|| crate::common::missing_field("Font", "id"))?;
+    Ok(Self {
+      font_name,
+      family_name,
+      charset,
+      italic,
+      bold,
+      serif,
+      fixed_width,
+      id,
+      font_file,
+    })
+  }
+  pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
+    xml_reader: &mut quick_xml::Reader<R>,
+    buf: &mut Vec<u8>,
+    xml_event: Option<(quick_xml::events::BytesStart<'static>, bool)>,
+    tag_name_prefix: &[u8],
+    tag_name: &[u8],
+  ) -> Result<Self, crate::common::SdkError> {
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
+      xml_reader,
+      buf,
+      xml_event,
+      "Font",
+      "Font",
+      tag_name_prefix,
+      tag_name
+    );
+    let mut font_name = None;
+    let mut family_name = None;
+    let mut charset = None;
+    let mut italic = None;
+    let mut bold = None;
+    let mut serif = None;
+    let mut fixed_width = None;
+    let mut id = None;
+    let mut font_file = None;
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      #[allow(clippy::single_match)]
+      match attr.key.as_ref() {
+        b"FontName" => {
+          font_name =
+            Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
+        }
+        b"FamilyName" => {
+          family_name =
+            Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
+        }
+        b"Charset" => {
+          charset = Some(if let Some(value) = crate::common::attr_raw_value(&attr) {
+            <crate::schemas::res::CtFontCharset>::from_bytes(value)?
+          } else {
+            crate::common::decode_attr_value(&attr, xml_reader.decoder())?
+              .parse::<crate::schemas::res::CtFontCharset>()?
+          });
+        }
+        b"Italic" => {
+          italic = Some(crate::common::parse_bool_attr(
+            &attr,
+            xml_reader.decoder(),
+            "Font",
+            "italic",
+          )?);
+        }
+        b"Bold" => {
+          bold = Some(crate::common::parse_bool_attr(
+            &attr,
+            xml_reader.decoder(),
+            "Font",
+            "bold",
+          )?);
+        }
+        b"Serif" => {
+          serif = Some(crate::common::parse_bool_attr(
+            &attr,
+            xml_reader.decoder(),
+            "Font",
+            "serif",
+          )?);
+        }
+        b"FixedWidth" => {
+          fixed_width = Some(crate::common::parse_bool_attr(
+            &attr,
+            xml_reader.decoder(),
+            "Font",
+            "fixed_width",
+          )?);
+        }
+        b"ID" => {
+          id = Some(crate::common::parse_u32_attr(
+            &attr,
+            xml_reader.decoder(),
+            "Font",
+            "id",
+          )?);
+        }
+        _ => {}
+      }
+    }
+    if !empty_tag {
+      loop {
+        let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
+        let mut e_empty = false;
+        buf.clear();
+        match xml_reader.read_event_into(buf)? {
+          quick_xml::events::Event::Start(e) => {
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::Empty(e) => {
+            e_empty = true;
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::End(e) => match e.name().as_ref() {
+            name if name == tag_name_prefix || name == tag_name => {
+              break;
+            }
+            _ => {}
+          },
+          quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("Font"))?,
+          _ => {}
+        }
+        if let Some(e) = e_opt {
+          match e.name().as_ref() {
+            b"ofd:FontFile" | b"FontFile" => {
+              let parsed_value = {
+                if e_empty {
+                  String::new()
+                } else {
+                  crate::common::read_text_content_io(
+                    xml_reader,
+                    buf,
+                    crate::common::TextReadSpec {
+                      ty: "Font",
+                      field: "font_file",
+                      tag_name_prefix: b"ofd:FontFile",
+                      tag_name: b"FontFile",
+                    },
+                  )?
+                }
+              };
+              font_file = Some(parsed_value);
+            }
+            _ => {
+              if !e_empty {
+                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
               }
             }
           }
@@ -668,15 +1249,16 @@ impl std::str::FromStr for crate::schemas::res::Fonts {
 impl crate::schemas::res::Fonts {
   pub fn from_reader<R: std::io::BufRead>(reader: R) -> Result<Self, crate::common::SdkError> {
     let mut xml_reader = crate::common::from_reader_inner(reader)?;
-    Self::deserialize_inner_named(&mut xml_reader, None, b"ofd:Fonts", b"Fonts")
+    let mut buf = Vec::new();
+    Self::deserialize_from_reader_named(&mut xml_reader, &mut buf, None, b"ofd:Fonts", b"Fonts")
   }
-  pub(crate) fn deserialize_inner_named<'de, R: crate::common::XmlReader<'de>>(
-    xml_reader: &mut R,
+  pub(crate) fn deserialize_inner_named<'de>(
+    xml_reader: &mut quick_xml::Reader<&'de [u8]>,
     xml_event: Option<(quick_xml::events::BytesStart<'de>, bool)>,
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start!(
+    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "Fonts",
@@ -689,7 +1271,7 @@ impl crate::schemas::res::Fonts {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
         let mut e_empty = false;
-        match xml_reader.next()? {
+        match xml_reader.read_event()? {
           quick_xml::events::Event::Start(e) => {
             e_opt = Some(e);
           }
@@ -727,6 +1309,67 @@ impl crate::schemas::res::Fonts {
     }
     Ok(Self { font })
   }
+  pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
+    xml_reader: &mut quick_xml::Reader<R>,
+    buf: &mut Vec<u8>,
+    xml_event: Option<(quick_xml::events::BytesStart<'static>, bool)>,
+    tag_name_prefix: &[u8],
+    tag_name: &[u8],
+  ) -> Result<Self, crate::common::SdkError> {
+    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+      xml_reader,
+      buf,
+      xml_event,
+      "Fonts",
+      "Fonts",
+      tag_name_prefix,
+      tag_name
+    );
+    let mut font = vec![];
+    if !empty_tag {
+      loop {
+        let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
+        let mut e_empty = false;
+        buf.clear();
+        match xml_reader.read_event_into(buf)? {
+          quick_xml::events::Event::Start(e) => {
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::Empty(e) => {
+            e_empty = true;
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::End(e) => match e.name().as_ref() {
+            name if name == tag_name_prefix || name == tag_name => {
+              break;
+            }
+            _ => {}
+          },
+          quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("Fonts"))?,
+          _ => {}
+        }
+        if let Some(e) = e_opt {
+          match e.name().as_ref() {
+            b"ofd:Font" | b"Font" => {
+              font.push(crate::schemas::res::Font::deserialize_from_reader_named(
+                xml_reader,
+                buf,
+                Some((e, e_empty)),
+                b"ofd:Font",
+                b"Font",
+              )?);
+            }
+            _ => {
+              if !e_empty {
+                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
+              }
+            }
+          }
+        }
+      }
+    }
+    Ok(Self { font })
+  }
 }
 impl std::str::FromStr for crate::schemas::res::MultiMedia {
   type Err = crate::common::SdkError;
@@ -738,15 +1381,22 @@ impl std::str::FromStr for crate::schemas::res::MultiMedia {
 impl crate::schemas::res::MultiMedia {
   pub fn from_reader<R: std::io::BufRead>(reader: R) -> Result<Self, crate::common::SdkError> {
     let mut xml_reader = crate::common::from_reader_inner(reader)?;
-    Self::deserialize_inner_named(&mut xml_reader, None, b"ofd:MultiMedia", b"MultiMedia")
+    let mut buf = Vec::new();
+    Self::deserialize_from_reader_named(
+      &mut xml_reader,
+      &mut buf,
+      None,
+      b"ofd:MultiMedia",
+      b"MultiMedia",
+    )
   }
-  pub(crate) fn deserialize_inner_named<'de, R: crate::common::XmlReader<'de>>(
-    xml_reader: &mut R,
+  pub(crate) fn deserialize_inner_named<'de>(
+    xml_reader: &mut quick_xml::Reader<&'de [u8]>,
     xml_event: Option<(quick_xml::events::BytesStart<'de>, bool)>,
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (e, empty_tag) = crate::common::expect_event_start!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "MultiMedia",
@@ -789,7 +1439,7 @@ impl crate::schemas::res::MultiMedia {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
         let mut e_empty = false;
-        match xml_reader.next()? {
+        match xml_reader.read_event()? {
           quick_xml::events::Event::Start(e) => {
             e_opt = Some(e);
           }
@@ -813,13 +1463,32 @@ impl crate::schemas::res::MultiMedia {
                 if e_empty {
                   String::new()
                 } else {
-                  crate::common::read_text_content(
-                    xml_reader,
-                    "MultiMedia",
-                    "media_file",
-                    b"ofd:MediaFile",
-                    b"MediaFile",
-                  )?
+                  let mut value = None;
+                  loop {
+                    match xml_reader.read_event()? {
+                      quick_xml::events::Event::Text(text) => {
+                        crate::common::push_xml_text(&mut value, text)?
+                      }
+                      quick_xml::events::Event::GeneralRef(text) => {
+                        crate::common::push_xml_general_ref(
+                          &mut value,
+                          text,
+                          "MultiMedia",
+                          "media_file",
+                        )?;
+                      }
+                      quick_xml::events::Event::End(end) => match end.name().as_ref() {
+                        name if name == b"ofd:MediaFile" || name == b"MediaFile" => {
+                          break value.unwrap_or_default();
+                        }
+                        _ => {}
+                      },
+                      quick_xml::events::Event::Eof => {
+                        Err(crate::common::unexpected_eof("MultiMedia"))?
+                      }
+                      _ => {}
+                    }
+                  }
                 }
               };
               media_file = Some(parsed_value);
@@ -827,6 +1496,116 @@ impl crate::schemas::res::MultiMedia {
             _ => {
               if !e_empty {
                 xml_reader.read_to_end(e.to_end().name())?;
+              }
+            }
+          }
+        }
+      }
+    }
+    let r#type = r#type.ok_or_else(|| crate::common::missing_field("MultiMedia", "type"))?;
+    let id = id.ok_or_else(|| crate::common::missing_field("MultiMedia", "id"))?;
+    let media_file =
+      media_file.ok_or_else(|| crate::common::missing_field("MultiMedia", "media_file"))?;
+    Ok(Self {
+      r#type,
+      format,
+      id,
+      media_file,
+    })
+  }
+  pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
+    xml_reader: &mut quick_xml::Reader<R>,
+    buf: &mut Vec<u8>,
+    xml_event: Option<(quick_xml::events::BytesStart<'static>, bool)>,
+    tag_name_prefix: &[u8],
+    tag_name: &[u8],
+  ) -> Result<Self, crate::common::SdkError> {
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
+      xml_reader,
+      buf,
+      xml_event,
+      "MultiMedia",
+      "MultiMedia",
+      tag_name_prefix,
+      tag_name
+    );
+    let mut r#type = None;
+    let mut format = None;
+    let mut id = None;
+    let mut media_file = None;
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      #[allow(clippy::single_match)]
+      match attr.key.as_ref() {
+        b"Type" => {
+          r#type = Some(if let Some(value) = crate::common::attr_raw_value(&attr) {
+            <crate::schemas::res::CtMultiMediaType>::from_bytes(value)?
+          } else {
+            crate::common::decode_attr_value(&attr, xml_reader.decoder())?
+              .parse::<crate::schemas::res::CtMultiMediaType>()?
+          });
+        }
+        b"Format" => {
+          format =
+            Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
+        }
+        b"ID" => {
+          id = Some(crate::common::parse_u32_attr(
+            &attr,
+            xml_reader.decoder(),
+            "MultiMedia",
+            "id",
+          )?);
+        }
+        _ => {}
+      }
+    }
+    if !empty_tag {
+      loop {
+        let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
+        let mut e_empty = false;
+        buf.clear();
+        match xml_reader.read_event_into(buf)? {
+          quick_xml::events::Event::Start(e) => {
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::Empty(e) => {
+            e_empty = true;
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::End(e) => match e.name().as_ref() {
+            name if name == tag_name_prefix || name == tag_name => {
+              break;
+            }
+            _ => {}
+          },
+          quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("MultiMedia"))?,
+          _ => {}
+        }
+        if let Some(e) = e_opt {
+          match e.name().as_ref() {
+            b"ofd:MediaFile" | b"MediaFile" => {
+              let parsed_value = {
+                if e_empty {
+                  String::new()
+                } else {
+                  crate::common::read_text_content_io(
+                    xml_reader,
+                    buf,
+                    crate::common::TextReadSpec {
+                      ty: "MultiMedia",
+                      field: "media_file",
+                      tag_name_prefix: b"ofd:MediaFile",
+                      tag_name: b"MediaFile",
+                    },
+                  )?
+                }
+              };
+              media_file = Some(parsed_value);
+            }
+            _ => {
+              if !e_empty {
+                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
               }
             }
           }
@@ -855,15 +1634,22 @@ impl std::str::FromStr for crate::schemas::res::MultiMedias {
 impl crate::schemas::res::MultiMedias {
   pub fn from_reader<R: std::io::BufRead>(reader: R) -> Result<Self, crate::common::SdkError> {
     let mut xml_reader = crate::common::from_reader_inner(reader)?;
-    Self::deserialize_inner_named(&mut xml_reader, None, b"ofd:MultiMedias", b"MultiMedias")
+    let mut buf = Vec::new();
+    Self::deserialize_from_reader_named(
+      &mut xml_reader,
+      &mut buf,
+      None,
+      b"ofd:MultiMedias",
+      b"MultiMedias",
+    )
   }
-  pub(crate) fn deserialize_inner_named<'de, R: crate::common::XmlReader<'de>>(
-    xml_reader: &mut R,
+  pub(crate) fn deserialize_inner_named<'de>(
+    xml_reader: &mut quick_xml::Reader<&'de [u8]>,
     xml_event: Option<(quick_xml::events::BytesStart<'de>, bool)>,
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start!(
+    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "MultiMedias",
@@ -876,7 +1662,7 @@ impl crate::schemas::res::MultiMedias {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
         let mut e_empty = false;
-        match xml_reader.next()? {
+        match xml_reader.read_event()? {
           quick_xml::events::Event::Start(e) => {
             e_opt = Some(e);
           }
@@ -914,6 +1700,69 @@ impl crate::schemas::res::MultiMedias {
     }
     Ok(Self { multi_media })
   }
+  pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
+    xml_reader: &mut quick_xml::Reader<R>,
+    buf: &mut Vec<u8>,
+    xml_event: Option<(quick_xml::events::BytesStart<'static>, bool)>,
+    tag_name_prefix: &[u8],
+    tag_name: &[u8],
+  ) -> Result<Self, crate::common::SdkError> {
+    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+      xml_reader,
+      buf,
+      xml_event,
+      "MultiMedias",
+      "MultiMedias",
+      tag_name_prefix,
+      tag_name
+    );
+    let mut multi_media = vec![];
+    if !empty_tag {
+      loop {
+        let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
+        let mut e_empty = false;
+        buf.clear();
+        match xml_reader.read_event_into(buf)? {
+          quick_xml::events::Event::Start(e) => {
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::Empty(e) => {
+            e_empty = true;
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::End(e) => match e.name().as_ref() {
+            name if name == tag_name_prefix || name == tag_name => {
+              break;
+            }
+            _ => {}
+          },
+          quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("MultiMedias"))?,
+          _ => {}
+        }
+        if let Some(e) = e_opt {
+          match e.name().as_ref() {
+            b"ofd:MultiMedia" | b"MultiMedia" => {
+              multi_media.push(
+                crate::schemas::res::MultiMedia::deserialize_from_reader_named(
+                  xml_reader,
+                  buf,
+                  Some((e, e_empty)),
+                  b"ofd:MultiMedia",
+                  b"MultiMedia",
+                )?,
+              );
+            }
+            _ => {
+              if !e_empty {
+                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
+              }
+            }
+          }
+        }
+      }
+    }
+    Ok(Self { multi_media })
+  }
 }
 impl std::str::FromStr for crate::schemas::res::CompositeGraphicUnit {
   type Err = crate::common::SdkError;
@@ -930,20 +1779,22 @@ impl std::str::FromStr for crate::schemas::res::CompositeGraphicUnit {
 impl crate::schemas::res::CompositeGraphicUnit {
   pub fn from_reader<R: std::io::BufRead>(reader: R) -> Result<Self, crate::common::SdkError> {
     let mut xml_reader = crate::common::from_reader_inner(reader)?;
-    Self::deserialize_inner_named(
+    let mut buf = Vec::new();
+    Self::deserialize_from_reader_named(
       &mut xml_reader,
+      &mut buf,
       None,
       b"ofd:CompositeGraphicUnit",
       b"CompositeGraphicUnit",
     )
   }
-  pub(crate) fn deserialize_inner_named<'de, R: crate::common::XmlReader<'de>>(
-    xml_reader: &mut R,
+  pub(crate) fn deserialize_inner_named<'de>(
+    xml_reader: &mut quick_xml::Reader<&'de [u8]>,
     xml_event: Option<(quick_xml::events::BytesStart<'de>, bool)>,
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (e, empty_tag) = crate::common::expect_event_start!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "CompositeGraphicUnit",
@@ -992,7 +1843,7 @@ impl crate::schemas::res::CompositeGraphicUnit {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
         let mut e_empty = false;
-        match xml_reader.next()? {
+        match xml_reader.read_event()? {
           quick_xml::events::Event::Start(e) => {
             e_opt = Some(e);
           }
@@ -1015,50 +1866,190 @@ impl crate::schemas::res::CompositeGraphicUnit {
           match e.name().as_ref() {
             b"ofd:Thumbnail" | b"Thumbnail" => {
               let parsed_value = {
-                let value = if e_empty {
-                  String::new()
+                if e_empty {
+                  let value = String::new();
+                  {
+                    value.parse::<u32>().map_err(|_| {
+                      crate::common::invalid_field_value(
+                        "CompositeGraphicUnit",
+                        "thumbnail",
+                        value.clone(),
+                      )
+                    })?
+                  }
                 } else {
-                  crate::common::read_text_content(
-                    xml_reader,
-                    "CompositeGraphicUnit",
-                    "thumbnail",
-                    b"ofd:Thumbnail",
-                    b"Thumbnail",
-                  )?
-                };
-                {
-                  value.parse::<u32>().map_err(|_| {
-                    crate::common::invalid_field_value(
-                      "CompositeGraphicUnit",
-                      "thumbnail",
-                      value.clone(),
-                    )
-                  })?
+                  let parse_bytes = |value: &[u8]| {
+                    std::str::from_utf8(value)
+                      .ok()
+                      .and_then(|value| value.parse::<u32>().ok())
+                      .ok_or_else(|| {
+                        crate::common::invalid_field_value(
+                          "CompositeGraphicUnit",
+                          "thumbnail",
+                          String::from_utf8_lossy(value).into_owned(),
+                        )
+                      })
+                  };
+                  let mut first_text = None;
+                  let mut value = None;
+                  loop {
+                    match xml_reader.read_event()? {
+                      quick_xml::events::Event::Text(text) => {
+                        if let Some(first) = first_text.take() {
+                          crate::common::push_xml_text(&mut value, first)?;
+                          crate::common::push_xml_text(&mut value, text)?;
+                        } else if value.is_some() {
+                          crate::common::push_xml_text(&mut value, text)?;
+                        } else {
+                          first_text = Some(text);
+                        }
+                      }
+                      quick_xml::events::Event::GeneralRef(text) => {
+                        if let Some(first) = first_text.take() {
+                          crate::common::push_xml_text(&mut value, first)?;
+                        }
+                        crate::common::push_xml_general_ref(
+                          &mut value,
+                          text,
+                          "CompositeGraphicUnit",
+                          "thumbnail",
+                        )?;
+                      }
+                      quick_xml::events::Event::End(end) => match end.name().as_ref() {
+                        name if name == b"ofd:Thumbnail" || name == b"Thumbnail" => {
+                          break if let Some(first) = first_text {
+                            match parse_bytes(first.as_ref()) {
+                              Ok(value) => value,
+                              Err(_) => {
+                                let value = first.xml10_content()?.into_owned();
+                                {
+                                  value.parse::<u32>().map_err(|_| {
+                                    crate::common::invalid_field_value(
+                                      "CompositeGraphicUnit",
+                                      "thumbnail",
+                                      value.clone(),
+                                    )
+                                  })?
+                                }
+                              }
+                            }
+                          } else {
+                            let value = value.unwrap_or_default();
+                            match parse_bytes(value.as_bytes()) {
+                              Ok(value) => value,
+                              Err(_) => value.parse::<u32>().map_err(|_| {
+                                crate::common::invalid_field_value(
+                                  "CompositeGraphicUnit",
+                                  "thumbnail",
+                                  value.clone(),
+                                )
+                              })?,
+                            }
+                          };
+                        }
+                        _ => {}
+                      },
+                      quick_xml::events::Event::Eof => {
+                        Err(crate::common::unexpected_eof("CompositeGraphicUnit"))?
+                      }
+                      _ => {}
+                    }
+                  }
                 }
               };
               thumbnail = Some(parsed_value);
             }
             b"ofd:Substitution" | b"Substitution" => {
               let parsed_value = {
-                let value = if e_empty {
-                  String::new()
+                if e_empty {
+                  let value = String::new();
+                  {
+                    value.parse::<u32>().map_err(|_| {
+                      crate::common::invalid_field_value(
+                        "CompositeGraphicUnit",
+                        "substitution",
+                        value.clone(),
+                      )
+                    })?
+                  }
                 } else {
-                  crate::common::read_text_content(
-                    xml_reader,
-                    "CompositeGraphicUnit",
-                    "substitution",
-                    b"ofd:Substitution",
-                    b"Substitution",
-                  )?
-                };
-                {
-                  value.parse::<u32>().map_err(|_| {
-                    crate::common::invalid_field_value(
-                      "CompositeGraphicUnit",
-                      "substitution",
-                      value.clone(),
-                    )
-                  })?
+                  let parse_bytes = |value: &[u8]| {
+                    std::str::from_utf8(value)
+                      .ok()
+                      .and_then(|value| value.parse::<u32>().ok())
+                      .ok_or_else(|| {
+                        crate::common::invalid_field_value(
+                          "CompositeGraphicUnit",
+                          "substitution",
+                          String::from_utf8_lossy(value).into_owned(),
+                        )
+                      })
+                  };
+                  let mut first_text = None;
+                  let mut value = None;
+                  loop {
+                    match xml_reader.read_event()? {
+                      quick_xml::events::Event::Text(text) => {
+                        if let Some(first) = first_text.take() {
+                          crate::common::push_xml_text(&mut value, first)?;
+                          crate::common::push_xml_text(&mut value, text)?;
+                        } else if value.is_some() {
+                          crate::common::push_xml_text(&mut value, text)?;
+                        } else {
+                          first_text = Some(text);
+                        }
+                      }
+                      quick_xml::events::Event::GeneralRef(text) => {
+                        if let Some(first) = first_text.take() {
+                          crate::common::push_xml_text(&mut value, first)?;
+                        }
+                        crate::common::push_xml_general_ref(
+                          &mut value,
+                          text,
+                          "CompositeGraphicUnit",
+                          "substitution",
+                        )?;
+                      }
+                      quick_xml::events::Event::End(end) => match end.name().as_ref() {
+                        name if name == b"ofd:Substitution" || name == b"Substitution" => {
+                          break if let Some(first) = first_text {
+                            match parse_bytes(first.as_ref()) {
+                              Ok(value) => value,
+                              Err(_) => {
+                                let value = first.xml10_content()?.into_owned();
+                                {
+                                  value.parse::<u32>().map_err(|_| {
+                                    crate::common::invalid_field_value(
+                                      "CompositeGraphicUnit",
+                                      "substitution",
+                                      value.clone(),
+                                    )
+                                  })?
+                                }
+                              }
+                            }
+                          } else {
+                            let value = value.unwrap_or_default();
+                            match parse_bytes(value.as_bytes()) {
+                              Ok(value) => value,
+                              Err(_) => value.parse::<u32>().map_err(|_| {
+                                crate::common::invalid_field_value(
+                                  "CompositeGraphicUnit",
+                                  "substitution",
+                                  value.clone(),
+                                )
+                              })?,
+                            }
+                          };
+                        }
+                        _ => {}
+                      },
+                      quick_xml::events::Event::Eof => {
+                        Err(crate::common::unexpected_eof("CompositeGraphicUnit"))?
+                      }
+                      _ => {}
+                    }
+                  }
                 }
               };
               substitution = Some(parsed_value);
@@ -1074,6 +2065,225 @@ impl crate::schemas::res::CompositeGraphicUnit {
             _ => {
               if !e_empty {
                 xml_reader.read_to_end(e.to_end().name())?;
+              }
+            }
+          }
+        }
+      }
+    }
+    let width =
+      width.ok_or_else(|| crate::common::missing_field("CompositeGraphicUnit", "width"))?;
+    let height =
+      height.ok_or_else(|| crate::common::missing_field("CompositeGraphicUnit", "height"))?;
+    let id = id.ok_or_else(|| crate::common::missing_field("CompositeGraphicUnit", "id"))?;
+    let content =
+      content.ok_or_else(|| crate::common::missing_field("CompositeGraphicUnit", "content"))?;
+    Ok(Self {
+      width,
+      height,
+      id,
+      thumbnail,
+      substitution,
+      content,
+    })
+  }
+  pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
+    xml_reader: &mut quick_xml::Reader<R>,
+    buf: &mut Vec<u8>,
+    xml_event: Option<(quick_xml::events::BytesStart<'static>, bool)>,
+    tag_name_prefix: &[u8],
+    tag_name: &[u8],
+  ) -> Result<Self, crate::common::SdkError> {
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
+      xml_reader,
+      buf,
+      xml_event,
+      "CompositeGraphicUnit",
+      "CompositeGraphicUnit",
+      tag_name_prefix,
+      tag_name
+    );
+    let mut width = None;
+    let mut height = None;
+    let mut id = None;
+    let mut thumbnail = None;
+    let mut substitution = None;
+    let mut content = None;
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      #[allow(clippy::single_match)]
+      match attr.key.as_ref() {
+        b"Width" => {
+          width = Some(crate::common::parse_f64_attr(
+            &attr,
+            xml_reader.decoder(),
+            "CompositeGraphicUnit",
+            "width",
+          )?);
+        }
+        b"Height" => {
+          height = Some(crate::common::parse_f64_attr(
+            &attr,
+            xml_reader.decoder(),
+            "CompositeGraphicUnit",
+            "height",
+          )?);
+        }
+        b"ID" => {
+          id = Some(crate::common::parse_u32_attr(
+            &attr,
+            xml_reader.decoder(),
+            "CompositeGraphicUnit",
+            "id",
+          )?);
+        }
+        _ => {}
+      }
+    }
+    if !empty_tag {
+      loop {
+        let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
+        let mut e_empty = false;
+        buf.clear();
+        match xml_reader.read_event_into(buf)? {
+          quick_xml::events::Event::Start(e) => {
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::Empty(e) => {
+            e_empty = true;
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::End(e) => match e.name().as_ref() {
+            name if name == tag_name_prefix || name == tag_name => {
+              break;
+            }
+            _ => {}
+          },
+          quick_xml::events::Event::Eof => {
+            Err(crate::common::unexpected_eof("CompositeGraphicUnit"))?
+          }
+          _ => {}
+        }
+        if let Some(e) = e_opt {
+          match e.name().as_ref() {
+            b"ofd:Thumbnail" | b"Thumbnail" => {
+              let parsed_value = {
+                if e_empty {
+                  let value = String::new();
+                  {
+                    value.parse::<u32>().map_err(|_| {
+                      crate::common::invalid_field_value(
+                        "CompositeGraphicUnit",
+                        "thumbnail",
+                        value.clone(),
+                      )
+                    })?
+                  }
+                } else {
+                  crate::common::read_text_parsed_content_io(
+                    xml_reader,
+                    buf,
+                    crate::common::TextReadSpec {
+                      ty: "CompositeGraphicUnit",
+                      field: "thumbnail",
+                      tag_name_prefix: b"ofd:Thumbnail",
+                      tag_name: b"Thumbnail",
+                    },
+                    |value| {
+                      std::str::from_utf8(value)
+                        .ok()
+                        .and_then(|value| value.parse::<u32>().ok())
+                        .ok_or_else(|| {
+                          crate::common::invalid_field_value(
+                            "CompositeGraphicUnit",
+                            "thumbnail",
+                            String::from_utf8_lossy(value).into_owned(),
+                          )
+                        })
+                    },
+                    |value| {
+                      let value = value.to_string();
+                      Ok({
+                        value.parse::<u32>().map_err(|_| {
+                          crate::common::invalid_field_value(
+                            "CompositeGraphicUnit",
+                            "thumbnail",
+                            value.clone(),
+                          )
+                        })?
+                      })
+                    },
+                  )?
+                }
+              };
+              thumbnail = Some(parsed_value);
+            }
+            b"ofd:Substitution" | b"Substitution" => {
+              let parsed_value = {
+                if e_empty {
+                  let value = String::new();
+                  {
+                    value.parse::<u32>().map_err(|_| {
+                      crate::common::invalid_field_value(
+                        "CompositeGraphicUnit",
+                        "substitution",
+                        value.clone(),
+                      )
+                    })?
+                  }
+                } else {
+                  crate::common::read_text_parsed_content_io(
+                    xml_reader,
+                    buf,
+                    crate::common::TextReadSpec {
+                      ty: "CompositeGraphicUnit",
+                      field: "substitution",
+                      tag_name_prefix: b"ofd:Substitution",
+                      tag_name: b"Substitution",
+                    },
+                    |value| {
+                      std::str::from_utf8(value)
+                        .ok()
+                        .and_then(|value| value.parse::<u32>().ok())
+                        .ok_or_else(|| {
+                          crate::common::invalid_field_value(
+                            "CompositeGraphicUnit",
+                            "substitution",
+                            String::from_utf8_lossy(value).into_owned(),
+                          )
+                        })
+                    },
+                    |value| {
+                      let value = value.to_string();
+                      Ok({
+                        value.parse::<u32>().map_err(|_| {
+                          crate::common::invalid_field_value(
+                            "CompositeGraphicUnit",
+                            "substitution",
+                            value.clone(),
+                          )
+                        })?
+                      })
+                    },
+                  )?
+                }
+              };
+              substitution = Some(parsed_value);
+            }
+            b"ofd:Content" | b"Content" => {
+              content = Some(
+                crate::schemas::page::CtPageBlock::deserialize_from_reader_named(
+                  xml_reader,
+                  buf,
+                  Some((e, e_empty)),
+                  b"ofd:Content",
+                  b"Content",
+                )?,
+              );
+            }
+            _ => {
+              if !e_empty {
+                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
               }
             }
           }
@@ -1112,20 +2322,22 @@ impl std::str::FromStr for crate::schemas::res::CompositeGraphicUnits {
 impl crate::schemas::res::CompositeGraphicUnits {
   pub fn from_reader<R: std::io::BufRead>(reader: R) -> Result<Self, crate::common::SdkError> {
     let mut xml_reader = crate::common::from_reader_inner(reader)?;
-    Self::deserialize_inner_named(
+    let mut buf = Vec::new();
+    Self::deserialize_from_reader_named(
       &mut xml_reader,
+      &mut buf,
       None,
       b"ofd:CompositeGraphicUnits",
       b"CompositeGraphicUnits",
     )
   }
-  pub(crate) fn deserialize_inner_named<'de, R: crate::common::XmlReader<'de>>(
-    xml_reader: &mut R,
+  pub(crate) fn deserialize_inner_named<'de>(
+    xml_reader: &mut quick_xml::Reader<&'de [u8]>,
     xml_event: Option<(quick_xml::events::BytesStart<'de>, bool)>,
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start!(
+    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "CompositeGraphicUnits",
@@ -1138,7 +2350,7 @@ impl crate::schemas::res::CompositeGraphicUnits {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
         let mut e_empty = false;
-        match xml_reader.next()? {
+        match xml_reader.read_event()? {
           quick_xml::events::Event::Start(e) => {
             e_opt = Some(e);
           }
@@ -1182,6 +2394,73 @@ impl crate::schemas::res::CompositeGraphicUnits {
       composite_graphic_unit,
     })
   }
+  pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
+    xml_reader: &mut quick_xml::Reader<R>,
+    buf: &mut Vec<u8>,
+    xml_event: Option<(quick_xml::events::BytesStart<'static>, bool)>,
+    tag_name_prefix: &[u8],
+    tag_name: &[u8],
+  ) -> Result<Self, crate::common::SdkError> {
+    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+      xml_reader,
+      buf,
+      xml_event,
+      "CompositeGraphicUnits",
+      "CompositeGraphicUnits",
+      tag_name_prefix,
+      tag_name
+    );
+    let mut composite_graphic_unit = vec![];
+    if !empty_tag {
+      loop {
+        let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
+        let mut e_empty = false;
+        buf.clear();
+        match xml_reader.read_event_into(buf)? {
+          quick_xml::events::Event::Start(e) => {
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::Empty(e) => {
+            e_empty = true;
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::End(e) => match e.name().as_ref() {
+            name if name == tag_name_prefix || name == tag_name => {
+              break;
+            }
+            _ => {}
+          },
+          quick_xml::events::Event::Eof => {
+            Err(crate::common::unexpected_eof("CompositeGraphicUnits"))?
+          }
+          _ => {}
+        }
+        if let Some(e) = e_opt {
+          match e.name().as_ref() {
+            b"ofd:CompositeGraphicUnit" | b"CompositeGraphicUnit" => {
+              composite_graphic_unit.push(
+                crate::schemas::res::CompositeGraphicUnit::deserialize_from_reader_named(
+                  xml_reader,
+                  buf,
+                  Some((e, e_empty)),
+                  b"ofd:CompositeGraphicUnit",
+                  b"CompositeGraphicUnit",
+                )?,
+              );
+            }
+            _ => {
+              if !e_empty {
+                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
+              }
+            }
+          }
+        }
+      }
+    }
+    Ok(Self {
+      composite_graphic_unit,
+    })
+  }
 }
 impl std::str::FromStr for crate::schemas::res::Res {
   type Err = crate::common::SdkError;
@@ -1193,15 +2472,16 @@ impl std::str::FromStr for crate::schemas::res::Res {
 impl crate::schemas::res::Res {
   pub fn from_reader<R: std::io::BufRead>(reader: R) -> Result<Self, crate::common::SdkError> {
     let mut xml_reader = crate::common::from_reader_inner(reader)?;
-    Self::deserialize_inner_named(&mut xml_reader, None, b"ofd:Res", b"Res")
+    let mut buf = Vec::new();
+    Self::deserialize_from_reader_named(&mut xml_reader, &mut buf, None, b"ofd:Res", b"Res")
   }
-  pub(crate) fn deserialize_inner_named<'de, R: crate::common::XmlReader<'de>>(
-    xml_reader: &mut R,
+  pub(crate) fn deserialize_inner_named<'de>(
+    xml_reader: &mut quick_xml::Reader<&'de [u8]>,
     xml_event: Option<(quick_xml::events::BytesStart<'de>, bool)>,
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (e, empty_tag) = crate::common::expect_event_start!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "Res",
@@ -1226,7 +2506,7 @@ impl crate::schemas::res::Res {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
         let mut e_empty = false;
-        match xml_reader.next()? {
+        match xml_reader.read_event()? {
           quick_xml::events::Event::Start(e) => {
             e_opt = Some(e);
           }
@@ -1312,6 +2592,135 @@ impl crate::schemas::res::Res {
       xml_children,
     })
   }
+  pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
+    xml_reader: &mut quick_xml::Reader<R>,
+    buf: &mut Vec<u8>,
+    xml_event: Option<(quick_xml::events::BytesStart<'static>, bool)>,
+    tag_name_prefix: &[u8],
+    tag_name: &[u8],
+  ) -> Result<Self, crate::common::SdkError> {
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
+      xml_reader,
+      buf,
+      xml_event,
+      "Res",
+      "Res",
+      tag_name_prefix,
+      tag_name
+    );
+    let mut base_loc = None;
+    let mut xml_children = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      #[allow(clippy::single_match)]
+      match attr.key.as_ref() {
+        b"BaseLoc" => {
+          base_loc =
+            Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
+        }
+        _ => {}
+      }
+    }
+    if !empty_tag {
+      loop {
+        let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
+        let mut e_empty = false;
+        buf.clear();
+        match xml_reader.read_event_into(buf)? {
+          quick_xml::events::Event::Start(e) => {
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::Empty(e) => {
+            e_empty = true;
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::End(e) => match e.name().as_ref() {
+            name if name == tag_name_prefix || name == tag_name => {
+              break;
+            }
+            _ => {}
+          },
+          quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("Res"))?,
+          _ => {}
+        }
+        if let Some(e) = e_opt {
+          match e.name().as_ref() {
+            b"ofd:ColorSpaces" | b"ColorSpaces" => {
+              xml_children.push(crate::schemas::res::ResContentChoice::ColorSpaces(
+                Box::new(
+                  crate::schemas::res::ColorSpaces::deserialize_from_reader_named(
+                    xml_reader,
+                    buf,
+                    Some((e, e_empty)),
+                    b"ofd:ColorSpaces",
+                    b"ColorSpaces",
+                  )?,
+                ),
+              ));
+            }
+            b"ofd:DrawParams" | b"DrawParams" => {
+              xml_children.push(crate::schemas::res::ResContentChoice::DrawParams(Box::new(
+                crate::schemas::res::DrawParams::deserialize_from_reader_named(
+                  xml_reader,
+                  buf,
+                  Some((e, e_empty)),
+                  b"ofd:DrawParams",
+                  b"DrawParams",
+                )?,
+              )));
+            }
+            b"ofd:Fonts" | b"Fonts" => {
+              xml_children.push(crate::schemas::res::ResContentChoice::Fonts(Box::new(
+                crate::schemas::res::Fonts::deserialize_from_reader_named(
+                  xml_reader,
+                  buf,
+                  Some((e, e_empty)),
+                  b"ofd:Fonts",
+                  b"Fonts",
+                )?,
+              )));
+            }
+            b"ofd:MultiMedias" | b"MultiMedias" => {
+              xml_children.push(crate::schemas::res::ResContentChoice::MultiMedias(
+                Box::new(
+                  crate::schemas::res::MultiMedias::deserialize_from_reader_named(
+                    xml_reader,
+                    buf,
+                    Some((e, e_empty)),
+                    b"ofd:MultiMedias",
+                    b"MultiMedias",
+                  )?,
+                ),
+              ));
+            }
+            b"ofd:CompositeGraphicUnits" | b"CompositeGraphicUnits" => {
+              xml_children.push(
+                crate::schemas::res::ResContentChoice::CompositeGraphicUnits(Box::new(
+                  crate::schemas::res::CompositeGraphicUnits::deserialize_from_reader_named(
+                    xml_reader,
+                    buf,
+                    Some((e, e_empty)),
+                    b"ofd:CompositeGraphicUnits",
+                    b"CompositeGraphicUnits",
+                  )?,
+                )),
+              );
+            }
+            _ => {
+              if !e_empty {
+                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
+              }
+            }
+          }
+        }
+      }
+    }
+    let base_loc = base_loc.ok_or_else(|| crate::common::missing_field("Res", "base_loc"))?;
+    Ok(Self {
+      base_loc,
+      xml_children,
+    })
+  }
 }
 impl std::str::FromStr for crate::schemas::res::Palette {
   type Err = crate::common::SdkError;
@@ -1323,15 +2732,16 @@ impl std::str::FromStr for crate::schemas::res::Palette {
 impl crate::schemas::res::Palette {
   pub fn from_reader<R: std::io::BufRead>(reader: R) -> Result<Self, crate::common::SdkError> {
     let mut xml_reader = crate::common::from_reader_inner(reader)?;
-    Self::deserialize_inner_named(&mut xml_reader, None, b"ofd:Palette", b"Palette")
+    let mut buf = Vec::new();
+    Self::deserialize_from_reader_named(&mut xml_reader, &mut buf, None, b"ofd:Palette", b"Palette")
   }
-  pub(crate) fn deserialize_inner_named<'de, R: crate::common::XmlReader<'de>>(
-    xml_reader: &mut R,
+  pub(crate) fn deserialize_inner_named<'de>(
+    xml_reader: &mut quick_xml::Reader<&'de [u8]>,
     xml_event: Option<(quick_xml::events::BytesStart<'de>, bool)>,
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start!(
+    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "Palette",
@@ -1344,7 +2754,7 @@ impl crate::schemas::res::Palette {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
         let mut e_empty = false;
-        match xml_reader.next()? {
+        match xml_reader.read_event()? {
           quick_xml::events::Event::Start(e) => {
             e_opt = Some(e);
           }
@@ -1368,7 +2778,27 @@ impl crate::schemas::res::Palette {
                 if e_empty {
                   String::new()
                 } else {
-                  crate::common::read_text_content(xml_reader, "Palette", "cv", b"ofd:CV", b"CV")?
+                  let mut value = None;
+                  loop {
+                    match xml_reader.read_event()? {
+                      quick_xml::events::Event::Text(text) => {
+                        crate::common::push_xml_text(&mut value, text)?
+                      }
+                      quick_xml::events::Event::GeneralRef(text) => {
+                        crate::common::push_xml_general_ref(&mut value, text, "Palette", "cv")?;
+                      }
+                      quick_xml::events::Event::End(end) => match end.name().as_ref() {
+                        name if name == b"ofd:CV" || name == b"CV" => {
+                          break value.unwrap_or_default();
+                        }
+                        _ => {}
+                      },
+                      quick_xml::events::Event::Eof => {
+                        Err(crate::common::unexpected_eof("Palette"))?
+                      }
+                      _ => {}
+                    }
+                  }
                 }
               };
               cv.push(parsed_value);
@@ -1376,6 +2806,77 @@ impl crate::schemas::res::Palette {
             _ => {
               if !e_empty {
                 xml_reader.read_to_end(e.to_end().name())?;
+              }
+            }
+          }
+        }
+      }
+    }
+    Ok(Self { cv })
+  }
+  pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
+    xml_reader: &mut quick_xml::Reader<R>,
+    buf: &mut Vec<u8>,
+    xml_event: Option<(quick_xml::events::BytesStart<'static>, bool)>,
+    tag_name_prefix: &[u8],
+    tag_name: &[u8],
+  ) -> Result<Self, crate::common::SdkError> {
+    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+      xml_reader,
+      buf,
+      xml_event,
+      "Palette",
+      "Palette",
+      tag_name_prefix,
+      tag_name
+    );
+    let mut cv = vec![];
+    if !empty_tag {
+      loop {
+        let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
+        let mut e_empty = false;
+        buf.clear();
+        match xml_reader.read_event_into(buf)? {
+          quick_xml::events::Event::Start(e) => {
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::Empty(e) => {
+            e_empty = true;
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::End(e) => match e.name().as_ref() {
+            name if name == tag_name_prefix || name == tag_name => {
+              break;
+            }
+            _ => {}
+          },
+          quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("Palette"))?,
+          _ => {}
+        }
+        if let Some(e) = e_opt {
+          match e.name().as_ref() {
+            b"ofd:CV" | b"CV" => {
+              let parsed_value = {
+                if e_empty {
+                  String::new()
+                } else {
+                  crate::common::read_text_content_io(
+                    xml_reader,
+                    buf,
+                    crate::common::TextReadSpec {
+                      ty: "Palette",
+                      field: "cv",
+                      tag_name_prefix: b"ofd:CV",
+                      tag_name: b"CV",
+                    },
+                  )?
+                }
+              };
+              cv.push(parsed_value);
+            }
+            _ => {
+              if !e_empty {
+                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
               }
             }
           }
@@ -1400,20 +2901,22 @@ impl std::str::FromStr for crate::schemas::res::CtColorSpace {
 impl crate::schemas::res::CtColorSpace {
   pub fn from_reader<R: std::io::BufRead>(reader: R) -> Result<Self, crate::common::SdkError> {
     let mut xml_reader = crate::common::from_reader_inner(reader)?;
-    Self::deserialize_inner_named(
+    let mut buf = Vec::new();
+    Self::deserialize_from_reader_named(
       &mut xml_reader,
+      &mut buf,
       None,
       b"ofd:CT_ColorSpace",
       b"CT_ColorSpace",
     )
   }
-  pub(crate) fn deserialize_inner_named<'de, R: crate::common::XmlReader<'de>>(
-    xml_reader: &mut R,
+  pub(crate) fn deserialize_inner_named<'de>(
+    xml_reader: &mut quick_xml::Reader<&'de [u8]>,
     xml_event: Option<(quick_xml::events::BytesStart<'de>, bool)>,
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (e, empty_tag) = crate::common::expect_event_start!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "CtColorSpace",
@@ -1456,7 +2959,7 @@ impl crate::schemas::res::CtColorSpace {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
         let mut e_empty = false;
-        match xml_reader.next()? {
+        match xml_reader.read_event()? {
           quick_xml::events::Event::Start(e) => {
             e_opt = Some(e);
           }
@@ -1500,6 +3003,103 @@ impl crate::schemas::res::CtColorSpace {
       palette,
     })
   }
+  pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
+    xml_reader: &mut quick_xml::Reader<R>,
+    buf: &mut Vec<u8>,
+    xml_event: Option<(quick_xml::events::BytesStart<'static>, bool)>,
+    tag_name_prefix: &[u8],
+    tag_name: &[u8],
+  ) -> Result<Self, crate::common::SdkError> {
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
+      xml_reader,
+      buf,
+      xml_event,
+      "CtColorSpace",
+      "CT_ColorSpace",
+      tag_name_prefix,
+      tag_name
+    );
+    let mut r#type = None;
+    let mut bits_per_component = None;
+    let mut profile = None;
+    let mut palette = None;
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      #[allow(clippy::single_match)]
+      match attr.key.as_ref() {
+        b"Type" => {
+          r#type = Some(if let Some(value) = crate::common::attr_raw_value(&attr) {
+            <crate::schemas::res::CtColorSpaceType>::from_bytes(value)?
+          } else {
+            crate::common::decode_attr_value(&attr, xml_reader.decoder())?
+              .parse::<crate::schemas::res::CtColorSpaceType>()?
+          });
+        }
+        b"BitsPerComponent" => {
+          bits_per_component = Some(crate::common::parse_i32_attr(
+            &attr,
+            xml_reader.decoder(),
+            "CtColorSpace",
+            "bits_per_component",
+          )?);
+        }
+        b"Profile" => {
+          profile =
+            Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
+        }
+        _ => {}
+      }
+    }
+    if !empty_tag {
+      loop {
+        let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
+        let mut e_empty = false;
+        buf.clear();
+        match xml_reader.read_event_into(buf)? {
+          quick_xml::events::Event::Start(e) => {
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::Empty(e) => {
+            e_empty = true;
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::End(e) => match e.name().as_ref() {
+            name if name == tag_name_prefix || name == tag_name => {
+              break;
+            }
+            _ => {}
+          },
+          quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("CtColorSpace"))?,
+          _ => {}
+        }
+        if let Some(e) = e_opt {
+          match e.name().as_ref() {
+            b"ofd:Palette" | b"Palette" => {
+              palette = Some(crate::schemas::res::Palette::deserialize_from_reader_named(
+                xml_reader,
+                buf,
+                Some((e, e_empty)),
+                b"ofd:Palette",
+                b"Palette",
+              )?);
+            }
+            _ => {
+              if !e_empty {
+                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
+              }
+            }
+          }
+        }
+      }
+    }
+    let r#type = r#type.ok_or_else(|| crate::common::missing_field("CtColorSpace", "type"))?;
+    Ok(Self {
+      r#type,
+      bits_per_component,
+      profile,
+      palette,
+    })
+  }
 }
 impl std::str::FromStr for crate::schemas::res::CtDrawParam {
   type Err = crate::common::SdkError;
@@ -1511,15 +3111,22 @@ impl std::str::FromStr for crate::schemas::res::CtDrawParam {
 impl crate::schemas::res::CtDrawParam {
   pub fn from_reader<R: std::io::BufRead>(reader: R) -> Result<Self, crate::common::SdkError> {
     let mut xml_reader = crate::common::from_reader_inner(reader)?;
-    Self::deserialize_inner_named(&mut xml_reader, None, b"ofd:CT_DrawParam", b"CT_DrawParam")
+    let mut buf = Vec::new();
+    Self::deserialize_from_reader_named(
+      &mut xml_reader,
+      &mut buf,
+      None,
+      b"ofd:CT_DrawParam",
+      b"CT_DrawParam",
+    )
   }
-  pub(crate) fn deserialize_inner_named<'de, R: crate::common::XmlReader<'de>>(
-    xml_reader: &mut R,
+  pub(crate) fn deserialize_inner_named<'de>(
+    xml_reader: &mut quick_xml::Reader<&'de [u8]>,
     xml_event: Option<(quick_xml::events::BytesStart<'de>, bool)>,
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (e, empty_tag) = crate::common::expect_event_start!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "CtDrawParam",
@@ -1589,7 +3196,7 @@ impl crate::schemas::res::CtDrawParam {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
         let mut e_empty = false;
-        match xml_reader.next()? {
+        match xml_reader.read_event()? {
           quick_xml::events::Event::Start(e) => {
             e_opt = Some(e);
           }
@@ -1645,6 +3252,147 @@ impl crate::schemas::res::CtDrawParam {
       stroke_color,
     })
   }
+  pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
+    xml_reader: &mut quick_xml::Reader<R>,
+    buf: &mut Vec<u8>,
+    xml_event: Option<(quick_xml::events::BytesStart<'static>, bool)>,
+    tag_name_prefix: &[u8],
+    tag_name: &[u8],
+  ) -> Result<Self, crate::common::SdkError> {
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
+      xml_reader,
+      buf,
+      xml_event,
+      "CtDrawParam",
+      "CT_DrawParam",
+      tag_name_prefix,
+      tag_name
+    );
+    let mut relative = None;
+    let mut line_width = None;
+    let mut join = None;
+    let mut cap = None;
+    let mut dash_offset = None;
+    let mut dash_pattern = None;
+    let mut miter_limit = None;
+    let mut fill_color = None;
+    let mut stroke_color = None;
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      #[allow(clippy::single_match)]
+      match attr.key.as_ref() {
+        b"Relative" => {
+          relative = Some(crate::common::parse_u32_attr(
+            &attr,
+            xml_reader.decoder(),
+            "CtDrawParam",
+            "relative",
+          )?);
+        }
+        b"LineWidth" => {
+          line_width = Some(crate::common::parse_f64_attr(
+            &attr,
+            xml_reader.decoder(),
+            "CtDrawParam",
+            "line_width",
+          )?);
+        }
+        b"Join" => {
+          join = Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
+        }
+        b"Cap" => {
+          cap = Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
+        }
+        b"DashOffset" => {
+          dash_offset = Some(crate::common::parse_f64_attr(
+            &attr,
+            xml_reader.decoder(),
+            "CtDrawParam",
+            "dash_offset",
+          )?);
+        }
+        b"DashPattern" => {
+          dash_pattern =
+            Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
+        }
+        b"MiterLimit" => {
+          miter_limit = Some(crate::common::parse_f64_attr(
+            &attr,
+            xml_reader.decoder(),
+            "CtDrawParam",
+            "miter_limit",
+          )?);
+        }
+        _ => {}
+      }
+    }
+    if !empty_tag {
+      loop {
+        let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
+        let mut e_empty = false;
+        buf.clear();
+        match xml_reader.read_event_into(buf)? {
+          quick_xml::events::Event::Start(e) => {
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::Empty(e) => {
+            e_empty = true;
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::End(e) => match e.name().as_ref() {
+            name if name == tag_name_prefix || name == tag_name => {
+              break;
+            }
+            _ => {}
+          },
+          quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("CtDrawParam"))?,
+          _ => {}
+        }
+        if let Some(e) = e_opt {
+          match e.name().as_ref() {
+            b"ofd:FillColor" | b"FillColor" => {
+              fill_color = Some(
+                crate::schemas::page::CtColor::deserialize_from_reader_named(
+                  xml_reader,
+                  buf,
+                  Some((e, e_empty)),
+                  b"ofd:FillColor",
+                  b"FillColor",
+                )?,
+              );
+            }
+            b"ofd:StrokeColor" | b"StrokeColor" => {
+              stroke_color = Some(
+                crate::schemas::page::CtColor::deserialize_from_reader_named(
+                  xml_reader,
+                  buf,
+                  Some((e, e_empty)),
+                  b"ofd:StrokeColor",
+                  b"StrokeColor",
+                )?,
+              );
+            }
+            _ => {
+              if !e_empty {
+                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
+              }
+            }
+          }
+        }
+      }
+    }
+    Ok(Self {
+      relative,
+      line_width,
+      join,
+      cap,
+      dash_offset,
+      dash_pattern,
+      miter_limit,
+      fill_color,
+      stroke_color,
+    })
+  }
 }
 impl std::str::FromStr for crate::schemas::res::CtFont {
   type Err = crate::common::SdkError;
@@ -1656,15 +3404,16 @@ impl std::str::FromStr for crate::schemas::res::CtFont {
 impl crate::schemas::res::CtFont {
   pub fn from_reader<R: std::io::BufRead>(reader: R) -> Result<Self, crate::common::SdkError> {
     let mut xml_reader = crate::common::from_reader_inner(reader)?;
-    Self::deserialize_inner_named(&mut xml_reader, None, b"ofd:CT_Font", b"CT_Font")
+    let mut buf = Vec::new();
+    Self::deserialize_from_reader_named(&mut xml_reader, &mut buf, None, b"ofd:CT_Font", b"CT_Font")
   }
-  pub(crate) fn deserialize_inner_named<'de, R: crate::common::XmlReader<'de>>(
-    xml_reader: &mut R,
+  pub(crate) fn deserialize_inner_named<'de>(
+    xml_reader: &mut quick_xml::Reader<&'de [u8]>,
     xml_event: Option<(quick_xml::events::BytesStart<'de>, bool)>,
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (e, empty_tag) = crate::common::expect_event_start!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "CtFont",
@@ -1739,7 +3488,7 @@ impl crate::schemas::res::CtFont {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
         let mut e_empty = false;
-        match xml_reader.next()? {
+        match xml_reader.read_event()? {
           quick_xml::events::Event::Start(e) => {
             e_opt = Some(e);
           }
@@ -1763,13 +3512,32 @@ impl crate::schemas::res::CtFont {
                 if e_empty {
                   String::new()
                 } else {
-                  crate::common::read_text_content(
-                    xml_reader,
-                    "CtFont",
-                    "font_file",
-                    b"ofd:FontFile",
-                    b"FontFile",
-                  )?
+                  let mut value = None;
+                  loop {
+                    match xml_reader.read_event()? {
+                      quick_xml::events::Event::Text(text) => {
+                        crate::common::push_xml_text(&mut value, text)?
+                      }
+                      quick_xml::events::Event::GeneralRef(text) => {
+                        crate::common::push_xml_general_ref(
+                          &mut value,
+                          text,
+                          "CtFont",
+                          "font_file",
+                        )?;
+                      }
+                      quick_xml::events::Event::End(end) => match end.name().as_ref() {
+                        name if name == b"ofd:FontFile" || name == b"FontFile" => {
+                          break value.unwrap_or_default();
+                        }
+                        _ => {}
+                      },
+                      quick_xml::events::Event::Eof => {
+                        Err(crate::common::unexpected_eof("CtFont"))?
+                      }
+                      _ => {}
+                    }
+                  }
                 }
               };
               font_file = Some(parsed_value);
@@ -1777,6 +3545,149 @@ impl crate::schemas::res::CtFont {
             _ => {
               if !e_empty {
                 xml_reader.read_to_end(e.to_end().name())?;
+              }
+            }
+          }
+        }
+      }
+    }
+    let font_name = font_name.ok_or_else(|| crate::common::missing_field("CtFont", "font_name"))?;
+    Ok(Self {
+      font_name,
+      family_name,
+      charset,
+      italic,
+      bold,
+      serif,
+      fixed_width,
+      font_file,
+    })
+  }
+  pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
+    xml_reader: &mut quick_xml::Reader<R>,
+    buf: &mut Vec<u8>,
+    xml_event: Option<(quick_xml::events::BytesStart<'static>, bool)>,
+    tag_name_prefix: &[u8],
+    tag_name: &[u8],
+  ) -> Result<Self, crate::common::SdkError> {
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
+      xml_reader,
+      buf,
+      xml_event,
+      "CtFont",
+      "CT_Font",
+      tag_name_prefix,
+      tag_name
+    );
+    let mut font_name = None;
+    let mut family_name = None;
+    let mut charset = None;
+    let mut italic = None;
+    let mut bold = None;
+    let mut serif = None;
+    let mut fixed_width = None;
+    let mut font_file = None;
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      #[allow(clippy::single_match)]
+      match attr.key.as_ref() {
+        b"FontName" => {
+          font_name =
+            Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
+        }
+        b"FamilyName" => {
+          family_name =
+            Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
+        }
+        b"Charset" => {
+          charset = Some(if let Some(value) = crate::common::attr_raw_value(&attr) {
+            <crate::schemas::res::CtFontCharset>::from_bytes(value)?
+          } else {
+            crate::common::decode_attr_value(&attr, xml_reader.decoder())?
+              .parse::<crate::schemas::res::CtFontCharset>()?
+          });
+        }
+        b"Italic" => {
+          italic = Some(crate::common::parse_bool_attr(
+            &attr,
+            xml_reader.decoder(),
+            "CtFont",
+            "italic",
+          )?);
+        }
+        b"Bold" => {
+          bold = Some(crate::common::parse_bool_attr(
+            &attr,
+            xml_reader.decoder(),
+            "CtFont",
+            "bold",
+          )?);
+        }
+        b"Serif" => {
+          serif = Some(crate::common::parse_bool_attr(
+            &attr,
+            xml_reader.decoder(),
+            "CtFont",
+            "serif",
+          )?);
+        }
+        b"FixedWidth" => {
+          fixed_width = Some(crate::common::parse_bool_attr(
+            &attr,
+            xml_reader.decoder(),
+            "CtFont",
+            "fixed_width",
+          )?);
+        }
+        _ => {}
+      }
+    }
+    if !empty_tag {
+      loop {
+        let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
+        let mut e_empty = false;
+        buf.clear();
+        match xml_reader.read_event_into(buf)? {
+          quick_xml::events::Event::Start(e) => {
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::Empty(e) => {
+            e_empty = true;
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::End(e) => match e.name().as_ref() {
+            name if name == tag_name_prefix || name == tag_name => {
+              break;
+            }
+            _ => {}
+          },
+          quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("CtFont"))?,
+          _ => {}
+        }
+        if let Some(e) = e_opt {
+          match e.name().as_ref() {
+            b"ofd:FontFile" | b"FontFile" => {
+              let parsed_value = {
+                if e_empty {
+                  String::new()
+                } else {
+                  crate::common::read_text_content_io(
+                    xml_reader,
+                    buf,
+                    crate::common::TextReadSpec {
+                      ty: "CtFont",
+                      field: "font_file",
+                      tag_name_prefix: b"ofd:FontFile",
+                      tag_name: b"FontFile",
+                    },
+                  )?
+                }
+              };
+              font_file = Some(parsed_value);
+            }
+            _ => {
+              if !e_empty {
+                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
               }
             }
           }
@@ -1811,20 +3722,22 @@ impl std::str::FromStr for crate::schemas::res::CtMultiMedia {
 impl crate::schemas::res::CtMultiMedia {
   pub fn from_reader<R: std::io::BufRead>(reader: R) -> Result<Self, crate::common::SdkError> {
     let mut xml_reader = crate::common::from_reader_inner(reader)?;
-    Self::deserialize_inner_named(
+    let mut buf = Vec::new();
+    Self::deserialize_from_reader_named(
       &mut xml_reader,
+      &mut buf,
       None,
       b"ofd:CT_MultiMedia",
       b"CT_MultiMedia",
     )
   }
-  pub(crate) fn deserialize_inner_named<'de, R: crate::common::XmlReader<'de>>(
-    xml_reader: &mut R,
+  pub(crate) fn deserialize_inner_named<'de>(
+    xml_reader: &mut quick_xml::Reader<&'de [u8]>,
     xml_event: Option<(quick_xml::events::BytesStart<'de>, bool)>,
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (e, empty_tag) = crate::common::expect_event_start!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "CtMultiMedia",
@@ -1858,7 +3771,7 @@ impl crate::schemas::res::CtMultiMedia {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
         let mut e_empty = false;
-        match xml_reader.next()? {
+        match xml_reader.read_event()? {
           quick_xml::events::Event::Start(e) => {
             e_opt = Some(e);
           }
@@ -1882,13 +3795,32 @@ impl crate::schemas::res::CtMultiMedia {
                 if e_empty {
                   String::new()
                 } else {
-                  crate::common::read_text_content(
-                    xml_reader,
-                    "CtMultiMedia",
-                    "media_file",
-                    b"ofd:MediaFile",
-                    b"MediaFile",
-                  )?
+                  let mut value = None;
+                  loop {
+                    match xml_reader.read_event()? {
+                      quick_xml::events::Event::Text(text) => {
+                        crate::common::push_xml_text(&mut value, text)?
+                      }
+                      quick_xml::events::Event::GeneralRef(text) => {
+                        crate::common::push_xml_general_ref(
+                          &mut value,
+                          text,
+                          "CtMultiMedia",
+                          "media_file",
+                        )?;
+                      }
+                      quick_xml::events::Event::End(end) => match end.name().as_ref() {
+                        name if name == b"ofd:MediaFile" || name == b"MediaFile" => {
+                          break value.unwrap_or_default();
+                        }
+                        _ => {}
+                      },
+                      quick_xml::events::Event::Eof => {
+                        Err(crate::common::unexpected_eof("CtMultiMedia"))?
+                      }
+                      _ => {}
+                    }
+                  }
                 }
               };
               media_file = Some(parsed_value);
@@ -1896,6 +3828,105 @@ impl crate::schemas::res::CtMultiMedia {
             _ => {
               if !e_empty {
                 xml_reader.read_to_end(e.to_end().name())?;
+              }
+            }
+          }
+        }
+      }
+    }
+    let r#type = r#type.ok_or_else(|| crate::common::missing_field("CtMultiMedia", "type"))?;
+    let media_file =
+      media_file.ok_or_else(|| crate::common::missing_field("CtMultiMedia", "media_file"))?;
+    Ok(Self {
+      r#type,
+      format,
+      media_file,
+    })
+  }
+  pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
+    xml_reader: &mut quick_xml::Reader<R>,
+    buf: &mut Vec<u8>,
+    xml_event: Option<(quick_xml::events::BytesStart<'static>, bool)>,
+    tag_name_prefix: &[u8],
+    tag_name: &[u8],
+  ) -> Result<Self, crate::common::SdkError> {
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
+      xml_reader,
+      buf,
+      xml_event,
+      "CtMultiMedia",
+      "CT_MultiMedia",
+      tag_name_prefix,
+      tag_name
+    );
+    let mut r#type = None;
+    let mut format = None;
+    let mut media_file = None;
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      #[allow(clippy::single_match)]
+      match attr.key.as_ref() {
+        b"Type" => {
+          r#type = Some(if let Some(value) = crate::common::attr_raw_value(&attr) {
+            <crate::schemas::res::CtMultiMediaType>::from_bytes(value)?
+          } else {
+            crate::common::decode_attr_value(&attr, xml_reader.decoder())?
+              .parse::<crate::schemas::res::CtMultiMediaType>()?
+          });
+        }
+        b"Format" => {
+          format =
+            Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
+        }
+        _ => {}
+      }
+    }
+    if !empty_tag {
+      loop {
+        let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
+        let mut e_empty = false;
+        buf.clear();
+        match xml_reader.read_event_into(buf)? {
+          quick_xml::events::Event::Start(e) => {
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::Empty(e) => {
+            e_empty = true;
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::End(e) => match e.name().as_ref() {
+            name if name == tag_name_prefix || name == tag_name => {
+              break;
+            }
+            _ => {}
+          },
+          quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("CtMultiMedia"))?,
+          _ => {}
+        }
+        if let Some(e) = e_opt {
+          match e.name().as_ref() {
+            b"ofd:MediaFile" | b"MediaFile" => {
+              let parsed_value = {
+                if e_empty {
+                  String::new()
+                } else {
+                  crate::common::read_text_content_io(
+                    xml_reader,
+                    buf,
+                    crate::common::TextReadSpec {
+                      ty: "CtMultiMedia",
+                      field: "media_file",
+                      tag_name_prefix: b"ofd:MediaFile",
+                      tag_name: b"MediaFile",
+                    },
+                  )?
+                }
+              };
+              media_file = Some(parsed_value);
+            }
+            _ => {
+              if !e_empty {
+                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
               }
             }
           }
@@ -1922,15 +3953,22 @@ impl std::str::FromStr for crate::schemas::res::CtVectorG {
 impl crate::schemas::res::CtVectorG {
   pub fn from_reader<R: std::io::BufRead>(reader: R) -> Result<Self, crate::common::SdkError> {
     let mut xml_reader = crate::common::from_reader_inner(reader)?;
-    Self::deserialize_inner_named(&mut xml_reader, None, b"ofd:CT_VectorG", b"CT_VectorG")
+    let mut buf = Vec::new();
+    Self::deserialize_from_reader_named(
+      &mut xml_reader,
+      &mut buf,
+      None,
+      b"ofd:CT_VectorG",
+      b"CT_VectorG",
+    )
   }
-  pub(crate) fn deserialize_inner_named<'de, R: crate::common::XmlReader<'de>>(
-    xml_reader: &mut R,
+  pub(crate) fn deserialize_inner_named<'de>(
+    xml_reader: &mut quick_xml::Reader<&'de [u8]>,
     xml_event: Option<(quick_xml::events::BytesStart<'de>, bool)>,
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (e, empty_tag) = crate::common::expect_event_start!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "CtVectorG",
@@ -1970,7 +4008,7 @@ impl crate::schemas::res::CtVectorG {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
         let mut e_empty = false;
-        match xml_reader.next()? {
+        match xml_reader.read_event()? {
           quick_xml::events::Event::Start(e) => {
             e_opt = Some(e);
           }
@@ -1991,42 +4029,182 @@ impl crate::schemas::res::CtVectorG {
           match e.name().as_ref() {
             b"ofd:Thumbnail" | b"Thumbnail" => {
               let parsed_value = {
-                let value = if e_empty {
-                  String::new()
+                if e_empty {
+                  let value = String::new();
+                  {
+                    value.parse::<u32>().map_err(|_| {
+                      crate::common::invalid_field_value("CtVectorG", "thumbnail", value.clone())
+                    })?
+                  }
                 } else {
-                  crate::common::read_text_content(
-                    xml_reader,
-                    "CtVectorG",
-                    "thumbnail",
-                    b"ofd:Thumbnail",
-                    b"Thumbnail",
-                  )?
-                };
-                {
-                  value.parse::<u32>().map_err(|_| {
-                    crate::common::invalid_field_value("CtVectorG", "thumbnail", value.clone())
-                  })?
+                  let parse_bytes = |value: &[u8]| {
+                    std::str::from_utf8(value)
+                      .ok()
+                      .and_then(|value| value.parse::<u32>().ok())
+                      .ok_or_else(|| {
+                        crate::common::invalid_field_value(
+                          "CtVectorG",
+                          "thumbnail",
+                          String::from_utf8_lossy(value).into_owned(),
+                        )
+                      })
+                  };
+                  let mut first_text = None;
+                  let mut value = None;
+                  loop {
+                    match xml_reader.read_event()? {
+                      quick_xml::events::Event::Text(text) => {
+                        if let Some(first) = first_text.take() {
+                          crate::common::push_xml_text(&mut value, first)?;
+                          crate::common::push_xml_text(&mut value, text)?;
+                        } else if value.is_some() {
+                          crate::common::push_xml_text(&mut value, text)?;
+                        } else {
+                          first_text = Some(text);
+                        }
+                      }
+                      quick_xml::events::Event::GeneralRef(text) => {
+                        if let Some(first) = first_text.take() {
+                          crate::common::push_xml_text(&mut value, first)?;
+                        }
+                        crate::common::push_xml_general_ref(
+                          &mut value,
+                          text,
+                          "CtVectorG",
+                          "thumbnail",
+                        )?;
+                      }
+                      quick_xml::events::Event::End(end) => match end.name().as_ref() {
+                        name if name == b"ofd:Thumbnail" || name == b"Thumbnail" => {
+                          break if let Some(first) = first_text {
+                            match parse_bytes(first.as_ref()) {
+                              Ok(value) => value,
+                              Err(_) => {
+                                let value = first.xml10_content()?.into_owned();
+                                {
+                                  value.parse::<u32>().map_err(|_| {
+                                    crate::common::invalid_field_value(
+                                      "CtVectorG",
+                                      "thumbnail",
+                                      value.clone(),
+                                    )
+                                  })?
+                                }
+                              }
+                            }
+                          } else {
+                            let value = value.unwrap_or_default();
+                            match parse_bytes(value.as_bytes()) {
+                              Ok(value) => value,
+                              Err(_) => value.parse::<u32>().map_err(|_| {
+                                crate::common::invalid_field_value(
+                                  "CtVectorG",
+                                  "thumbnail",
+                                  value.clone(),
+                                )
+                              })?,
+                            }
+                          };
+                        }
+                        _ => {}
+                      },
+                      quick_xml::events::Event::Eof => {
+                        Err(crate::common::unexpected_eof("CtVectorG"))?
+                      }
+                      _ => {}
+                    }
+                  }
                 }
               };
               thumbnail = Some(parsed_value);
             }
             b"ofd:Substitution" | b"Substitution" => {
               let parsed_value = {
-                let value = if e_empty {
-                  String::new()
+                if e_empty {
+                  let value = String::new();
+                  {
+                    value.parse::<u32>().map_err(|_| {
+                      crate::common::invalid_field_value("CtVectorG", "substitution", value.clone())
+                    })?
+                  }
                 } else {
-                  crate::common::read_text_content(
-                    xml_reader,
-                    "CtVectorG",
-                    "substitution",
-                    b"ofd:Substitution",
-                    b"Substitution",
-                  )?
-                };
-                {
-                  value.parse::<u32>().map_err(|_| {
-                    crate::common::invalid_field_value("CtVectorG", "substitution", value.clone())
-                  })?
+                  let parse_bytes = |value: &[u8]| {
+                    std::str::from_utf8(value)
+                      .ok()
+                      .and_then(|value| value.parse::<u32>().ok())
+                      .ok_or_else(|| {
+                        crate::common::invalid_field_value(
+                          "CtVectorG",
+                          "substitution",
+                          String::from_utf8_lossy(value).into_owned(),
+                        )
+                      })
+                  };
+                  let mut first_text = None;
+                  let mut value = None;
+                  loop {
+                    match xml_reader.read_event()? {
+                      quick_xml::events::Event::Text(text) => {
+                        if let Some(first) = first_text.take() {
+                          crate::common::push_xml_text(&mut value, first)?;
+                          crate::common::push_xml_text(&mut value, text)?;
+                        } else if value.is_some() {
+                          crate::common::push_xml_text(&mut value, text)?;
+                        } else {
+                          first_text = Some(text);
+                        }
+                      }
+                      quick_xml::events::Event::GeneralRef(text) => {
+                        if let Some(first) = first_text.take() {
+                          crate::common::push_xml_text(&mut value, first)?;
+                        }
+                        crate::common::push_xml_general_ref(
+                          &mut value,
+                          text,
+                          "CtVectorG",
+                          "substitution",
+                        )?;
+                      }
+                      quick_xml::events::Event::End(end) => match end.name().as_ref() {
+                        name if name == b"ofd:Substitution" || name == b"Substitution" => {
+                          break if let Some(first) = first_text {
+                            match parse_bytes(first.as_ref()) {
+                              Ok(value) => value,
+                              Err(_) => {
+                                let value = first.xml10_content()?.into_owned();
+                                {
+                                  value.parse::<u32>().map_err(|_| {
+                                    crate::common::invalid_field_value(
+                                      "CtVectorG",
+                                      "substitution",
+                                      value.clone(),
+                                    )
+                                  })?
+                                }
+                              }
+                            }
+                          } else {
+                            let value = value.unwrap_or_default();
+                            match parse_bytes(value.as_bytes()) {
+                              Ok(value) => value,
+                              Err(_) => value.parse::<u32>().map_err(|_| {
+                                crate::common::invalid_field_value(
+                                  "CtVectorG",
+                                  "substitution",
+                                  value.clone(),
+                                )
+                              })?,
+                            }
+                          };
+                        }
+                        _ => {}
+                      },
+                      quick_xml::events::Event::Eof => {
+                        Err(crate::common::unexpected_eof("CtVectorG"))?
+                      }
+                      _ => {}
+                    }
+                  }
                 }
               };
               substitution = Some(parsed_value);
@@ -2059,6 +4237,201 @@ impl crate::schemas::res::CtVectorG {
       content,
     })
   }
+  pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
+    xml_reader: &mut quick_xml::Reader<R>,
+    buf: &mut Vec<u8>,
+    xml_event: Option<(quick_xml::events::BytesStart<'static>, bool)>,
+    tag_name_prefix: &[u8],
+    tag_name: &[u8],
+  ) -> Result<Self, crate::common::SdkError> {
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
+      xml_reader,
+      buf,
+      xml_event,
+      "CtVectorG",
+      "CT_VectorG",
+      tag_name_prefix,
+      tag_name
+    );
+    let mut width = None;
+    let mut height = None;
+    let mut thumbnail = None;
+    let mut substitution = None;
+    let mut content = None;
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      #[allow(clippy::single_match)]
+      match attr.key.as_ref() {
+        b"Width" => {
+          width = Some(crate::common::parse_f64_attr(
+            &attr,
+            xml_reader.decoder(),
+            "CtVectorG",
+            "width",
+          )?);
+        }
+        b"Height" => {
+          height = Some(crate::common::parse_f64_attr(
+            &attr,
+            xml_reader.decoder(),
+            "CtVectorG",
+            "height",
+          )?);
+        }
+        _ => {}
+      }
+    }
+    if !empty_tag {
+      loop {
+        let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
+        let mut e_empty = false;
+        buf.clear();
+        match xml_reader.read_event_into(buf)? {
+          quick_xml::events::Event::Start(e) => {
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::Empty(e) => {
+            e_empty = true;
+            e_opt = Some(e.into_owned());
+          }
+          quick_xml::events::Event::End(e) => match e.name().as_ref() {
+            name if name == tag_name_prefix || name == tag_name => {
+              break;
+            }
+            _ => {}
+          },
+          quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("CtVectorG"))?,
+          _ => {}
+        }
+        if let Some(e) = e_opt {
+          match e.name().as_ref() {
+            b"ofd:Thumbnail" | b"Thumbnail" => {
+              let parsed_value = {
+                if e_empty {
+                  let value = String::new();
+                  {
+                    value.parse::<u32>().map_err(|_| {
+                      crate::common::invalid_field_value("CtVectorG", "thumbnail", value.clone())
+                    })?
+                  }
+                } else {
+                  crate::common::read_text_parsed_content_io(
+                    xml_reader,
+                    buf,
+                    crate::common::TextReadSpec {
+                      ty: "CtVectorG",
+                      field: "thumbnail",
+                      tag_name_prefix: b"ofd:Thumbnail",
+                      tag_name: b"Thumbnail",
+                    },
+                    |value| {
+                      std::str::from_utf8(value)
+                        .ok()
+                        .and_then(|value| value.parse::<u32>().ok())
+                        .ok_or_else(|| {
+                          crate::common::invalid_field_value(
+                            "CtVectorG",
+                            "thumbnail",
+                            String::from_utf8_lossy(value).into_owned(),
+                          )
+                        })
+                    },
+                    |value| {
+                      let value = value.to_string();
+                      Ok({
+                        value.parse::<u32>().map_err(|_| {
+                          crate::common::invalid_field_value(
+                            "CtVectorG",
+                            "thumbnail",
+                            value.clone(),
+                          )
+                        })?
+                      })
+                    },
+                  )?
+                }
+              };
+              thumbnail = Some(parsed_value);
+            }
+            b"ofd:Substitution" | b"Substitution" => {
+              let parsed_value = {
+                if e_empty {
+                  let value = String::new();
+                  {
+                    value.parse::<u32>().map_err(|_| {
+                      crate::common::invalid_field_value("CtVectorG", "substitution", value.clone())
+                    })?
+                  }
+                } else {
+                  crate::common::read_text_parsed_content_io(
+                    xml_reader,
+                    buf,
+                    crate::common::TextReadSpec {
+                      ty: "CtVectorG",
+                      field: "substitution",
+                      tag_name_prefix: b"ofd:Substitution",
+                      tag_name: b"Substitution",
+                    },
+                    |value| {
+                      std::str::from_utf8(value)
+                        .ok()
+                        .and_then(|value| value.parse::<u32>().ok())
+                        .ok_or_else(|| {
+                          crate::common::invalid_field_value(
+                            "CtVectorG",
+                            "substitution",
+                            String::from_utf8_lossy(value).into_owned(),
+                          )
+                        })
+                    },
+                    |value| {
+                      let value = value.to_string();
+                      Ok({
+                        value.parse::<u32>().map_err(|_| {
+                          crate::common::invalid_field_value(
+                            "CtVectorG",
+                            "substitution",
+                            value.clone(),
+                          )
+                        })?
+                      })
+                    },
+                  )?
+                }
+              };
+              substitution = Some(parsed_value);
+            }
+            b"ofd:Content" | b"Content" => {
+              content = Some(
+                crate::schemas::page::CtPageBlock::deserialize_from_reader_named(
+                  xml_reader,
+                  buf,
+                  Some((e, e_empty)),
+                  b"ofd:Content",
+                  b"Content",
+                )?,
+              );
+            }
+            _ => {
+              if !e_empty {
+                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
+              }
+            }
+          }
+        }
+      }
+    }
+    let width = width.ok_or_else(|| crate::common::missing_field("CtVectorG", "width"))?;
+    let height = height.ok_or_else(|| crate::common::missing_field("CtVectorG", "height"))?;
+    let content = content.ok_or_else(|| crate::common::missing_field("CtVectorG", "content"))?;
+    Ok(Self {
+      width,
+      height,
+      thumbnail,
+      substitution,
+      content,
+    })
+  }
 }
 impl std::str::FromStr for crate::schemas::res::FillColor {
   type Err = crate::common::SdkError;
@@ -2070,10 +4443,17 @@ impl std::str::FromStr for crate::schemas::res::FillColor {
 impl crate::schemas::res::FillColor {
   pub fn from_reader<R: std::io::BufRead>(reader: R) -> Result<Self, crate::common::SdkError> {
     let mut xml_reader = crate::common::from_reader_inner(reader)?;
-    Self::deserialize_inner_named(&mut xml_reader, None, b"ofd:FillColor", b"FillColor")
+    let mut buf = Vec::new();
+    Self::deserialize_from_reader_named(
+      &mut xml_reader,
+      &mut buf,
+      None,
+      b"ofd:FillColor",
+      b"FillColor",
+    )
   }
-  pub(crate) fn deserialize_inner_named<'de, R: crate::common::XmlReader<'de>>(
-    xml_reader: &mut R,
+  pub(crate) fn deserialize_inner_named<'de>(
+    xml_reader: &mut quick_xml::Reader<&'de [u8]>,
     xml_event: Option<(quick_xml::events::BytesStart<'de>, bool)>,
     tag_name_prefix: &[u8],
     tag_name: &[u8],
@@ -2081,6 +4461,23 @@ impl crate::schemas::res::FillColor {
     Ok(Self(
       <crate::schemas::page::CtColor>::deserialize_inner_named(
         xml_reader,
+        xml_event,
+        tag_name_prefix,
+        tag_name,
+      )?,
+    ))
+  }
+  pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
+    xml_reader: &mut quick_xml::Reader<R>,
+    buf: &mut Vec<u8>,
+    xml_event: Option<(quick_xml::events::BytesStart<'static>, bool)>,
+    tag_name_prefix: &[u8],
+    tag_name: &[u8],
+  ) -> Result<Self, crate::common::SdkError> {
+    Ok(Self(
+      <crate::schemas::page::CtColor>::deserialize_from_reader_named(
+        xml_reader,
+        buf,
         xml_event,
         tag_name_prefix,
         tag_name,
@@ -2098,10 +4495,17 @@ impl std::str::FromStr for crate::schemas::res::StrokeColor {
 impl crate::schemas::res::StrokeColor {
   pub fn from_reader<R: std::io::BufRead>(reader: R) -> Result<Self, crate::common::SdkError> {
     let mut xml_reader = crate::common::from_reader_inner(reader)?;
-    Self::deserialize_inner_named(&mut xml_reader, None, b"ofd:StrokeColor", b"StrokeColor")
+    let mut buf = Vec::new();
+    Self::deserialize_from_reader_named(
+      &mut xml_reader,
+      &mut buf,
+      None,
+      b"ofd:StrokeColor",
+      b"StrokeColor",
+    )
   }
-  pub(crate) fn deserialize_inner_named<'de, R: crate::common::XmlReader<'de>>(
-    xml_reader: &mut R,
+  pub(crate) fn deserialize_inner_named<'de>(
+    xml_reader: &mut quick_xml::Reader<&'de [u8]>,
     xml_event: Option<(quick_xml::events::BytesStart<'de>, bool)>,
     tag_name_prefix: &[u8],
     tag_name: &[u8],
@@ -2109,6 +4513,23 @@ impl crate::schemas::res::StrokeColor {
     Ok(Self(
       <crate::schemas::page::CtColor>::deserialize_inner_named(
         xml_reader,
+        xml_event,
+        tag_name_prefix,
+        tag_name,
+      )?,
+    ))
+  }
+  pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
+    xml_reader: &mut quick_xml::Reader<R>,
+    buf: &mut Vec<u8>,
+    xml_event: Option<(quick_xml::events::BytesStart<'static>, bool)>,
+    tag_name_prefix: &[u8],
+    tag_name: &[u8],
+  ) -> Result<Self, crate::common::SdkError> {
+    Ok(Self(
+      <crate::schemas::page::CtColor>::deserialize_from_reader_named(
+        xml_reader,
+        buf,
         xml_event,
         tag_name_prefix,
         tag_name,
@@ -2126,10 +4547,11 @@ impl std::str::FromStr for crate::schemas::res::Content {
 impl crate::schemas::res::Content {
   pub fn from_reader<R: std::io::BufRead>(reader: R) -> Result<Self, crate::common::SdkError> {
     let mut xml_reader = crate::common::from_reader_inner(reader)?;
-    Self::deserialize_inner_named(&mut xml_reader, None, b"ofd:Content", b"Content")
+    let mut buf = Vec::new();
+    Self::deserialize_from_reader_named(&mut xml_reader, &mut buf, None, b"ofd:Content", b"Content")
   }
-  pub(crate) fn deserialize_inner_named<'de, R: crate::common::XmlReader<'de>>(
-    xml_reader: &mut R,
+  pub(crate) fn deserialize_inner_named<'de>(
+    xml_reader: &mut quick_xml::Reader<&'de [u8]>,
     xml_event: Option<(quick_xml::events::BytesStart<'de>, bool)>,
     tag_name_prefix: &[u8],
     tag_name: &[u8],
@@ -2137,6 +4559,23 @@ impl crate::schemas::res::Content {
     Ok(Self(
       <crate::schemas::page::CtPageBlock>::deserialize_inner_named(
         xml_reader,
+        xml_event,
+        tag_name_prefix,
+        tag_name,
+      )?,
+    ))
+  }
+  pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
+    xml_reader: &mut quick_xml::Reader<R>,
+    buf: &mut Vec<u8>,
+    xml_event: Option<(quick_xml::events::BytesStart<'static>, bool)>,
+    tag_name_prefix: &[u8],
+    tag_name: &[u8],
+  ) -> Result<Self, crate::common::SdkError> {
+    Ok(Self(
+      <crate::schemas::page::CtPageBlock>::deserialize_from_reader_named(
+        xml_reader,
+        buf,
         xml_event,
         tag_name_prefix,
         tag_name,

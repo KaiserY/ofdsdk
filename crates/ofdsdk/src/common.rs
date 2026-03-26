@@ -1,5 +1,6 @@
 use quick_xml::events::attributes::Attribute;
 use quick_xml::{Decoder, events::Event};
+use std::io::BufRead;
 
 mod error;
 mod xml;
@@ -9,7 +10,6 @@ pub use error::{
   SdkError, invalid_enum_value, invalid_field_value, missing_field, unexpected_eof, unexpected_tag,
   xml_entity_error,
 };
-pub use xml::{IoReader, SliceReader, XmlReader};
 pub(crate) use xml::{attr_raw_value, decode_attr_value, from_reader_inner, from_str_inner};
 #[cfg(feature = "parts")]
 pub use zip::{
@@ -19,7 +19,14 @@ pub use zip::{
 };
 pub use zip::{resolve_zip_child_path, resolve_zip_file_path, zip_parent_dir};
 
-#[inline]
+pub(crate) struct TextReadSpec<'a> {
+  pub ty: &'static str,
+  pub field: &'static str,
+  pub tag_name_prefix: &'a [u8],
+  pub tag_name: &'a [u8],
+}
+
+#[inline(always)]
 pub(crate) fn parse_bool_attr(
   attr: &Attribute<'_>,
   decoder: Decoder,
@@ -36,7 +43,7 @@ pub(crate) fn parse_bool_attr(
   parse_bool_bytes(value.as_bytes()).map_err(|_| invalid_field_value(ty, field, value.to_string()))
 }
 
-#[inline]
+#[inline(always)]
 pub(crate) fn parse_f64_attr(
   attr: &Attribute<'_>,
   decoder: Decoder,
@@ -56,7 +63,7 @@ pub(crate) fn parse_f64_attr(
     .map_err(|_| invalid_field_value(ty, field, value.to_string()))
 }
 
-#[inline]
+#[inline(always)]
 pub(crate) fn parse_i32_attr(
   attr: &Attribute<'_>,
   decoder: Decoder,
@@ -76,7 +83,7 @@ pub(crate) fn parse_i32_attr(
     .map_err(|_| invalid_field_value(ty, field, value.to_string()))
 }
 
-#[inline]
+#[inline(always)]
 pub(crate) fn parse_u32_attr(
   attr: &Attribute<'_>,
   decoder: Decoder,
@@ -96,7 +103,7 @@ pub(crate) fn parse_u32_attr(
     .map_err(|_| invalid_field_value(ty, field, value.to_string()))
 }
 
-#[inline]
+#[inline(always)]
 pub(crate) fn push_xml_text(
   value: &mut Option<String>,
   text: quick_xml::events::BytesText<'_>,
@@ -111,7 +118,7 @@ pub(crate) fn push_xml_text(
   Ok(())
 }
 
-#[inline]
+#[inline(always)]
 pub(crate) fn push_xml_general_ref(
   value: &mut Option<String>,
   text: quick_xml::events::BytesRef<'_>,
@@ -131,24 +138,24 @@ pub(crate) fn push_xml_general_ref(
   Ok(())
 }
 
-pub(crate) fn read_text_content<'de, R: XmlReader<'de>>(
-  xml_reader: &mut R,
-  ty: &'static str,
-  field: &'static str,
-  tag_name_prefix: &[u8],
-  tag_name: &[u8],
+#[inline(always)]
+pub(crate) fn read_text_content_io<R: BufRead>(
+  xml_reader: &mut quick_xml::Reader<R>,
+  buf: &mut Vec<u8>,
+  spec: TextReadSpec<'_>,
 ) -> Result<String, SdkError> {
   let mut value = None;
 
   loop {
-    match xml_reader.next()? {
+    buf.clear();
+    match xml_reader.read_event_into(buf)? {
       Event::Text(text) => push_xml_text(&mut value, text)?,
-      Event::GeneralRef(text) => push_xml_general_ref(&mut value, text, ty, field)?,
+      Event::GeneralRef(text) => push_xml_general_ref(&mut value, text, spec.ty, spec.field)?,
       Event::End(end) => match end.name().as_ref() {
-        name if name == tag_name_prefix || name == tag_name => break,
+        name if name == spec.tag_name_prefix || name == spec.tag_name => break,
         _ => {}
       },
-      Event::Eof => Err(unexpected_eof(ty))?,
+      Event::Eof => Err(unexpected_eof(spec.ty))?,
       _ => {}
     }
   }
@@ -156,24 +163,24 @@ pub(crate) fn read_text_content<'de, R: XmlReader<'de>>(
   Ok(value.unwrap_or_default())
 }
 
-pub(crate) fn read_text_enum_content<'de, R, T, F>(
-  xml_reader: &mut R,
-  ty: &'static str,
-  field: &'static str,
-  tag_name_prefix: &[u8],
-  tag_name: &[u8],
-  parse_bytes: F,
+#[inline(always)]
+pub(crate) fn read_text_parsed_content_io<R: BufRead, T, FB, FS>(
+  xml_reader: &mut quick_xml::Reader<R>,
+  buf: &mut Vec<u8>,
+  spec: TextReadSpec<'_>,
+  parse_bytes: FB,
+  parse_str: FS,
 ) -> Result<T, SdkError>
 where
-  R: XmlReader<'de>,
-  T: std::str::FromStr<Err = SdkError>,
-  F: Fn(&[u8]) -> Result<T, SdkError>,
+  FB: Fn(&[u8]) -> Result<T, SdkError>,
+  FS: Fn(&str) -> Result<T, SdkError>,
 {
   let mut first_text = None;
   let mut value = None;
 
   loop {
-    match xml_reader.next()? {
+    buf.clear();
+    match xml_reader.read_event_into(buf)? {
       Event::Text(text) => {
         if let Some(first) = first_text.take() {
           push_xml_text(&mut value, first)?;
@@ -181,35 +188,58 @@ where
         } else if value.is_some() {
           push_xml_text(&mut value, text)?;
         } else {
-          first_text = Some(text);
+          first_text = Some(text.into_owned());
         }
       }
       Event::GeneralRef(text) => {
         if let Some(first) = first_text.take() {
           push_xml_text(&mut value, first)?;
         }
-        push_xml_general_ref(&mut value, text, ty, field)?;
+        push_xml_general_ref(&mut value, text, spec.ty, spec.field)?;
       }
       Event::End(end) => match end.name().as_ref() {
-        name if name == tag_name_prefix || name == tag_name => {
+        name if name == spec.tag_name_prefix || name == spec.tag_name => {
           if let Some(first) = first_text {
             return match parse_bytes(first.as_ref()) {
               Ok(value) => Ok(value),
-              Err(_) => first.xml10_content()?.parse::<T>(),
+              Err(_) => {
+                let content = first.xml10_content()?;
+                parse_str(content.as_ref())
+              }
             };
           }
 
-          return value.unwrap_or_default().parse::<T>();
+          let value = value.unwrap_or_default();
+          return match parse_bytes(value.as_bytes()) {
+            Ok(value) => Ok(value),
+            Err(_) => parse_str(value.as_str()),
+          };
         }
         _ => {}
       },
-      Event::Eof => Err(unexpected_eof(ty))?,
+      Event::Eof => Err(unexpected_eof(spec.ty))?,
       _ => {}
     }
   }
 }
 
-#[inline]
+#[inline(always)]
+pub(crate) fn read_text_enum_content_io<R: BufRead, T, F>(
+  xml_reader: &mut quick_xml::Reader<R>,
+  buf: &mut Vec<u8>,
+  spec: TextReadSpec<'_>,
+  parse_bytes: F,
+) -> Result<T, SdkError>
+where
+  T: std::str::FromStr<Err = SdkError>,
+  F: Fn(&[u8]) -> Result<T, SdkError>,
+{
+  read_text_parsed_content_io(xml_reader, buf, spec, parse_bytes, |value| {
+    value.parse::<T>()
+  })
+}
+
+#[inline(always)]
 pub fn parse_bool_bytes(b: &[u8]) -> Result<bool, SdkError> {
   match b {
     b"true" | b"1" | b"True" | b"TRUE" | b"t" | b"Yes" | b"YES" | b"yes" | b"y" => Ok(true),
@@ -222,13 +252,13 @@ pub fn parse_bool_bytes(b: &[u8]) -> Result<bool, SdkError> {
   }
 }
 
-macro_rules! expect_event_start {
+macro_rules! expect_event_start_slice {
   ($xml_reader:expr, $xml_event:expr, $context:expr, $expected:expr, $tag_prefix:expr, $tag:expr) => {{
     if let Some((e, empty_tag)) = $xml_event {
       (e, empty_tag)
     } else {
       let (e, empty_tag) = loop {
-        match $xml_reader.next()? {
+        match $xml_reader.read_event()? {
           quick_xml::events::Event::Start(b) => break (b, false),
           quick_xml::events::Event::Empty(b) => break (b, true),
           quick_xml::events::Event::Eof => {
@@ -254,4 +284,38 @@ macro_rules! expect_event_start {
   }};
 }
 
-pub(crate) use expect_event_start;
+macro_rules! expect_event_start_io {
+  ($xml_reader:expr, $buf:expr, $xml_event:expr, $context:expr, $expected:expr, $tag_prefix:expr, $tag:expr) => {{
+    if let Some((e, empty_tag)) = $xml_event {
+      (e, empty_tag)
+    } else {
+      let (e, empty_tag) = loop {
+        $buf.clear();
+        match $xml_reader.read_event_into($buf)? {
+          quick_xml::events::Event::Start(b) => break (b.into_owned(), false),
+          quick_xml::events::Event::Empty(b) => break (b.into_owned(), true),
+          quick_xml::events::Event::Eof => {
+            return Err(super::super::common::unexpected_eof($context));
+          }
+          _ => continue,
+        }
+      };
+
+      match e.name().as_ref() {
+        name if name == $tag_prefix || name == $tag => (),
+        _ => {
+          Err(super::super::common::unexpected_tag(
+            $context,
+            $expected,
+            e.name().as_ref(),
+          ))?;
+        }
+      }
+
+      (e, empty_tag)
+    }
+  }};
+}
+
+pub(crate) use expect_event_start_io;
+pub(crate) use expect_event_start_slice;
