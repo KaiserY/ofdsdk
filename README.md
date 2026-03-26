@@ -3,54 +3,54 @@
 [![crates.io](https://img.shields.io/crates/v/ofdsdk.svg)](https://crates.io/crates/ofdsdk)
 [![docs](https://docs.rs/ofdsdk/badge.svg)](https://docs.rs/ofdsdk)
 
-`ofdsdk` 是一个面向 Rust 的 OFD SDK。
+`ofdsdk` is a Rust SDK for OFD documents.
 
-项目目标：
+Chinese version: [README_cn.md](README_cn.md)
 
-- 基于 OFD XSD 生成强类型 Rust 结构
-- 提供稳定的 XML 反序列化与序列化能力
-- 在启用 `parts` 特性后，提供 OFD 包级别的读取与保存能力
-- 将现实世界中的兼容性差异收敛到生成数据，而不是在运行时散落特判
+## Goals
 
-当前版本为 `0.1.0`。
+- Generate strongly typed Rust structures from OFD XSD files.
+- Provide stable XML deserialization and serialization.
+- Provide OFD package reading and saving when the `parts` feature is enabled.
+- Keep real-world compatibility differences in generated data, not scattered runtime special cases.
 
-## 当前能力
+Current version: `0.1.1`.
 
-已提供：
+## Capabilities
 
-- 基于 `schemas/` 生成的 Rust schema 类型
-- XML 字符串与 Reader 的反序列化
-- XML 序列化输出
-- `parts` 特性下的 OFD 压缩包读取与保存
-- 基于样例文件的 OFD 包级测试覆盖
+- Rust schema types generated from `schemas/`
+- XML deserialization from strings and readers
+- XML serialization
+- OFD package reading and saving with the `parts` feature
+- Sample-based integration coverage for OFD packages
 
-当前仓库包含三个 crate：
+This repository contains three crates:
 
-- `crates/ofdsdk`：运行时库，对外使用
-- `crates/ofdsdk-build`：代码生成器
-- `crates/ofdsdk-test`：集成测试与样例验证
+- `crates/ofdsdk`: runtime library for consumers
+- `crates/ofdsdk-build`: code generator
+- `crates/ofdsdk-test`: integration tests and sample validation
 
-## 安装
+## Installation
 
-如果只需要 XML schema 类型：
-
-```toml
-[dependencies]
-ofdsdk = "0.1.0"
-```
-
-如果还需要读取 `.ofd` 压缩包：
+If you only need XML schema types:
 
 ```toml
 [dependencies]
-ofdsdk = { version = "0.1.0", features = ["parts"] }
+ofdsdk = "0.1.1"
 ```
 
-当前最低 Rust 版本为 `1.88`。
+If you also need to read `.ofd` archives:
 
-## 快速开始
+```toml
+[dependencies]
+ofdsdk = { version = "0.1.1", features = ["parts"] }
+```
 
-### 1. 解析和写回 OFD XML
+The current minimum supported Rust version is `1.88`.
+
+## Quick Start
+
+### 1. Parse and write OFD XML
 
 ```rust
 use ofdsdk::schemas::ofd::Ofd;
@@ -73,7 +73,7 @@ fn main() -> Result<(), ofdsdk::common::SdkError> {
 }
 ```
 
-### 2. 读取 OFD 包
+### 2. Read an OFD package
 
 ```rust
 use ofdsdk::parts::ofd_package::OfdPackage;
@@ -91,69 +91,69 @@ fn main() -> Result<(), ofdsdk::common::SdkError> {
 }
 ```
 
-## API 概览
+## API Overview
 
-常用入口：
+Common entry points:
 
 - `ofdsdk::schemas::*`
 - `ofdsdk::deserializers::*`
 - `ofdsdk::serializers::*`
-- `ofdsdk::parts::*`（需要启用 `parts`）
+- `ofdsdk::parts::*` when `parts` is enabled
 
-其中：
+In short:
 
-- `schemas` 提供生成出的结构定义
-- `deserializers` 提供 XML 读入逻辑
-- `serializers` 提供 XML 输出逻辑
-- `parts` 提供 OFD 包内部部件的装配读取
+- `schemas` contains the generated data types
+- `deserializers` contains XML input logic
+- `serializers` contains XML output logic
+- `parts` contains OFD package assembly and loading logic
 
-## 设计说明
+## Design Notes
 
-### 1. `schemas/` 是真源
+### 1. `schemas/` is the source of truth
 
-仓库中的 `schemas/*.xsd` 是模型来源。
+The OFD models are derived from the XSD files under `schemas/`.
 
-生成流程大致为：
+The generation flow is:
 
-1. 读取 XSD
-2. 生成 `sdk_data/schemas/*.json`
-3. 生成 `crates/ofdsdk/src/schemas/`
-4. 生成对应的反序列化、序列化和 parts 代码
+1. Read the XSD files.
+2. Generate `sdk_data/schemas/*.json`.
+3. Generate `crates/ofdsdk/src/schemas/`.
+4. Generate the matching deserializers, serializers, and parts code.
 
-### 2. compatibility 不是运行时特判集合
+### 2. Compatibility is data, not ad hoc runtime branching
 
-兼容策略集中放在：
+Compatibility rules live in:
 
 - `sdk_data/compatibility.json`
 
-它的目标不是无限制放宽输入，而是将已确认的现实差异显式记录，并在生成阶段统一吸收。
+The goal is not to accept everything blindly. The goal is to record known real-world differences explicitly and absorb them during generation.
 
-### 3. `parts` 是包装配模型
+### 3. `parts` describes package assembly
 
-`parts` 相关定义位于：
+The `parts` metadata lives in:
 
 - `sdk_data/parts/*.json`
 
-它描述的是：
+It describes:
 
-- 一个 part 的根类型是什么
-- 路径如何取得
-- 子 part 如何递归装配
-- 哪些 part 之间存在上下文关联
+- the root type of each part
+- how paths are resolved
+- how child parts are assembled recursively
+- which parts depend on surrounding context
 
-## 当前状态
+## Current Status
 
-`0.1.0` 已经可以用于：
+`0.1.1` is suitable for:
 
-- OFD schema 结构映射
-- XML round-trip
-- 一批真实样例的 OFD 包读取验证
+- OFD schema mapping
+- XML round-trip testing
+- validation against a set of real sample packages
 
-但仍然建议把它看作一个偏底层、偏工程化的 SDK，而不是“拿来即读一切 OFD”的通用阅读器。
+It is still best treated as a low-level, engineering-focused SDK rather than a generic OFD reader that promises to handle everything.
 
-## 开发
+## Development
 
-常用命令：
+Common commands:
 
 ```bash
 cargo test -p ofdsdk-build test_gen -- --ignored --nocapture
@@ -163,20 +163,20 @@ cargo test -p ofdsdk-test
 cargo test --workspace
 ```
 
-如果修改了：
+If you modify any of the following:
 
 - `schemas/*.xsd`
 - `sdk_data/compatibility.json`
 - `sdk_data/parts/*.json`
 - `crates/ofdsdk-build`
 
-建议重新执行生成测试并检查生成结果。
+regenerate the code and review the generated diff.
 
-## 许可证
+## License
 
-本项目使用双许可证：
+This project is dual-licensed under:
 
 - MIT
 - Apache-2.0
 
-你可以任选其一使用。
+You may use it under either license.

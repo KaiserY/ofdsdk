@@ -26,6 +26,25 @@ const DOCUMENT_XML: &str = r#"<ofd:Document xmlns:ofd="http://www.ofdspec.org/20
 <ofd:CustomTags>Tags/CustomTags.xml</ofd:CustomTags>
 </ofd:Document>"#;
 
+const DOCUMENT_VPREFERENCES_XML: &str = r#"<ofd:Document xmlns:ofd="http://www.ofdspec.org/2016">
+<ofd:CommonData>
+<ofd:MaxUnitID>10</ofd:MaxUnitID>
+<ofd:PageArea>
+<ofd:PhysicalBox>0 0 210 140</ofd:PhysicalBox>
+</ofd:PageArea>
+</ofd:CommonData>
+<ofd:Pages>
+<ofd:Page ID="1" BaseLoc="Pages/Page_0/Content.xml"/>
+</ofd:Pages>
+<ofd:VPreferences>
+<ofd:PageMode>UseThumbs</ofd:PageMode>
+<ofd:PageLayout>OneColumn</ofd:PageLayout>
+<ofd:TabDisplay>DocTitle</ofd:TabDisplay>
+<ofd:ZoomMode>FitWidth</ofd:ZoomMode>
+<ofd:Zoom>3.5</ofd:Zoom>
+</ofd:VPreferences>
+</ofd:Document>"#;
+
 #[test]
 fn document_round_trip() {
   let document: Document = DOCUMENT_XML.parse().unwrap();
@@ -68,4 +87,53 @@ fn document_round_trip() {
     reparsed.common_data.template_page[2].base_loc,
     "Tpls/Tpl_2/Content.xml"
   );
+}
+
+#[test]
+fn document_vpreferences_round_trip() {
+  let document: Document = DOCUMENT_VPREFERENCES_XML.parse().unwrap();
+
+  let v_preferences = document.v_preferences.as_ref().unwrap();
+  assert!(matches!(
+    v_preferences.page_mode,
+    Some(ofdsdk::schemas::document::PageMode::UseThumbs)
+  ));
+  assert!(matches!(
+    v_preferences.page_layout,
+    Some(ofdsdk::schemas::document::PageLayout::OneColumn)
+  ));
+  assert!(matches!(
+    v_preferences.tab_display,
+    Some(ofdsdk::schemas::document::TabDisplay::DocTitle)
+  ));
+  assert_eq!(v_preferences.xml_children.len(), 2);
+
+  match &v_preferences.xml_children[0] {
+    ofdsdk::schemas::document::CtVPreferencesContentChoice::ZoomMode(mode) => {
+      assert!(matches!(
+        **mode,
+        ofdsdk::schemas::document::ZoomMode::FitWidth
+      ));
+    }
+    other => panic!("unexpected vpreferences child: {other:?}"),
+  }
+
+  match &v_preferences.xml_children[1] {
+    ofdsdk::schemas::document::CtVPreferencesContentChoice::Zoom(value) => {
+      assert_eq!(**value, 3.5);
+    }
+    other => panic!("unexpected vpreferences child: {other:?}"),
+  }
+
+  let serialized = document.to_xml().unwrap();
+  let reparsed: Document = serialized.parse().unwrap();
+
+  let reparsed_v_preferences = reparsed.v_preferences.as_ref().unwrap();
+  assert_eq!(reparsed_v_preferences.xml_children.len(), 2);
+  match &reparsed_v_preferences.xml_children[1] {
+    ofdsdk::schemas::document::CtVPreferencesContentChoice::Zoom(value) => {
+      assert_eq!(**value, 3.5);
+    }
+    other => panic!("unexpected reparsed vpreferences child: {other:?}"),
+  }
 }

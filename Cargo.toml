@@ -16,8 +16,8 @@ categories = ["parser-implementations"]
 readme = "README.md"
 
 [workspace.dependencies]
-ofdsdk = { version = "0.1.0", path = "crates/ofdsdk" }
-ofdsdk-build = { version = "0.1.0", path = "crates/ofdsdk-build" }
+ofdsdk = { version = "0.1.1", path = "crates/ofdsdk" }
+ofdsdk-build = { version = "0.1.1", path = "crates/ofdsdk-build" }
 quick-xml = { version = "0.39.2", features = ["serialize"] }
 serde = { version = "1.0.228", features = ["derive"] }
 serde_derive = "1.0.228"
