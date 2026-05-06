@@ -1,5 +1,27 @@
 # Change Log
 
+## 0.2.0
+
+### 新增
+
+- 增加 OFD 样例包 round-trip 测试，覆盖读取、内存写回、再次读取与 ZIP entry 对比
+- 为生成的 schema 类型保留未建模 XML 属性和未建模 XML 子节点
+- 为 `parts` 包级读写保留未建模 ZIP entry，减少保存后丢失原包内容的风险
+- 增加兼容性规则，支持将已知现实样例中缺失的属性或子节点生成成 `Option`
+
+### 兼容性
+
+- `Annot.Creator`、`Annot.LastModDate`、`CustomTag.NameSpace` 现在按可选属性处理
+- `Annot.Appearance` 现在按可选子节点处理，用于兼容缺失批注外观定义的样例
+- XML round-trip 对比放宽了部分数值 lexical 表达差异，例如 `3.0` 与 `3`
+- 对已知现实样例中与 XSD canonical 顺序不一致的子节点顺序进行测试侧兼容
+
+### 说明
+
+- 本版本重点提升真实 OFD 样例的读写保真度
+- 未建模 XML 内容会尽量保留并按原 slot 写回，但 schema 已建模 child 的 canonical 写回顺序仍以生成模型为准
+- 未建模 ZIP entry 会随包级保存写回，root-level preservation 的 API 位置后续仍可能继续整理
+
 ## 0.1.1
 
 ### 新增

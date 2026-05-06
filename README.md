@@ -14,7 +14,7 @@ Chinese version: [README_cn.md](README_cn.md)
 - Provide OFD package reading and saving when the `parts` feature is enabled.
 - Keep real-world compatibility differences in generated data, not scattered runtime special cases.
 
-Current version: `0.1.1`.
+Current version: `0.2.0`.
 
 ## Capabilities
 
@@ -23,6 +23,7 @@ Current version: `0.1.1`.
 - XML serialization
 - OFD package reading and saving with the `parts` feature
 - Sample-based integration coverage for OFD packages
+- Round-trip preservation for unknown XML attributes, unknown XML children, and unmodeled ZIP entries
 
 This repository contains three crates:
 
@@ -36,14 +37,14 @@ If you only need XML schema types:
 
 ```toml
 [dependencies]
-ofdsdk = "0.1.1"
+ofdsdk = "0.2.0"
 ```
 
 If you also need to read `.ofd` archives:
 
 ```toml
 [dependencies]
-ofdsdk = { version = "0.1.1", features = ["parts"] }
+ofdsdk = { version = "0.2.0", features = ["parts"] }
 ```
 
 The current minimum supported Rust version is `1.88`.
@@ -143,11 +144,12 @@ It describes:
 
 ## Current Status
 
-`0.1.1` is suitable for:
+`0.2.0` is suitable for:
 
 - OFD schema mapping
 - XML round-trip testing
 - validation against a set of real sample packages
+- package save paths that should retain unmodeled XML and ZIP content
 
 It is still best treated as a low-level, engineering-focused SDK rather than a generic OFD reader that promises to handle everything.
 

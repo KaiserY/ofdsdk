@@ -14,7 +14,7 @@
 - 在启用 `parts` 特性后，提供 OFD 包级别的读取与保存能力
 - 将现实世界中的兼容性差异收敛到生成数据，而不是在运行时散落特判
 
-当前版本为 `0.1.1`。
+当前版本为 `0.2.0`。
 
 ## 当前能力
 
@@ -23,6 +23,7 @@
 - XML 序列化输出
 - `parts` 特性下的 OFD 压缩包读取与保存
 - 基于样例文件的 OFD 包级别测试覆盖
+- 未知 XML 属性、未知 XML 子节点和未建模 ZIP entry 的 round-trip 保留
 
 仓库包含三个 crate：
 
@@ -36,14 +37,14 @@
 
 ```toml
 [dependencies]
-ofdsdk = "0.1.1"
+ofdsdk = "0.2.0"
 ```
 
 如果还需要读取 `.ofd` 压缩包：
 
 ```toml
 [dependencies]
-ofdsdk = { version = "0.1.1", features = ["parts"] }
+ofdsdk = { version = "0.2.0", features = ["parts"] }
 ```
 
 当前最低 Rust 版本为 `1.88`。
@@ -143,11 +144,12 @@ fn main() -> Result<(), ofdsdk::common::SdkError> {
 
 ## 当前状态
 
-`0.1.1` 已经可以用于：
+`0.2.0` 已经可以用于：
 
 - OFD schema 结构映射
 - XML round-trip
 - 一批真实样例的 OFD 包读取验证
+- 需要保留未建模 XML 和 ZIP 内容的包级保存流程
 
 但它仍然更适合作为一个偏底层、偏工程化的 SDK，而不是“拿来即读一切 OFD”的通用阅读器。
 
