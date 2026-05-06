@@ -81,4 +81,13 @@ impl CustomTags {
     )?;
     Ok(())
   }
+  pub(crate) fn collect_zip_entries(&self, entry_set: &mut std::collections::HashSet<String>) {
+    entry_set.insert(crate::common::resolve_zip_file_path(&self.inner_path));
+    for child in &self.custom_tag_files {
+      child.collect_zip_entries(entry_set);
+    }
+    for child in &self.custom_tag_schemas {
+      child.collect_zip_entries(entry_set);
+    }
+  }
 }

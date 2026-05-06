@@ -13,9 +13,10 @@ pub use error::{
 pub(crate) use xml::{attr_raw_value, decode_attr_value, from_reader_inner, from_str_inner};
 #[cfg(feature = "parts")]
 pub use zip::{
-  load_optional_zip_part, load_optional_zip_part_with_context, load_required_zip_part,
-  load_required_zip_part_with_context, load_zip_parts, load_zip_parts_with_context, read_zip_data,
-  save_optional_zip_part, save_required_zip_part, save_zip_data, save_zip_parts, zip_parent_dirs,
+  OtherPart, load_optional_zip_part, load_optional_zip_part_with_context, load_required_zip_part,
+  load_required_zip_part_with_context, load_zip_parts, load_zip_parts_with_context,
+  read_other_zip_parts, read_zip_data, save_optional_zip_part, save_other_zip_parts,
+  save_required_zip_part, save_zip_data, save_zip_parts, zip_parent_dirs,
 };
 pub use zip::{resolve_zip_child_path, resolve_zip_file_path, zip_parent_dir};
 
@@ -237,6 +238,116 @@ where
   read_text_parsed_content_io(xml_reader, buf, spec, parse_bytes, |value| {
     value.parse::<T>()
   })
+}
+
+#[inline(always)]
+pub(crate) fn is_xmlns_attr(name: &[u8]) -> bool {
+  name == b"xmlns" || name.starts_with(b"xmlns:")
+}
+
+#[inline(always)]
+pub(crate) fn push_xml_other_attr(
+  xml_other_attrs: &mut Vec<(Box<str>, Box<str>)>,
+  attr: &Attribute<'_>,
+  decoder: Decoder,
+) -> Result<(), SdkError> {
+  if is_xmlns_attr(attr.key.as_ref()) {
+    return Ok(());
+  }
+
+  let name = String::from_utf8_lossy(attr.key.as_ref()).into_owned();
+  let value = decode_attr_value(attr, decoder)?.into_owned();
+  xml_other_attrs.push((name.into_boxed_str(), value.into_boxed_str()));
+
+  Ok(())
+}
+
+#[inline(always)]
+pub(crate) fn read_xml_other_child_slice<'de>(
+  xml_reader: &mut quick_xml::Reader<&'de [u8]>,
+  start: quick_xml::events::BytesStart<'de>,
+  empty: bool,
+) -> Result<Box<str>, SdkError> {
+  let mut bytes = Vec::new();
+  let mut writer = quick_xml::Writer::new(&mut bytes);
+
+  if empty {
+    writer.write_event(Event::Empty(start))?;
+  } else {
+    writer.write_event(Event::Start(start))?;
+    let mut depth = 1usize;
+
+    while depth > 0 {
+      match xml_reader.read_event()? {
+        Event::Start(e) => {
+          depth += 1;
+          writer.write_event(Event::Start(e))?;
+        }
+        Event::Empty(e) => {
+          writer.write_event(Event::Empty(e))?;
+        }
+        Event::End(e) => {
+          depth -= 1;
+          writer.write_event(Event::End(e))?;
+        }
+        Event::Eof => Err(unexpected_eof("xml_other_children"))?,
+        event => {
+          writer.write_event(event)?;
+        }
+      }
+    }
+  }
+
+  Ok(
+    String::from_utf8_lossy(&bytes)
+      .into_owned()
+      .into_boxed_str(),
+  )
+}
+
+#[inline(always)]
+pub(crate) fn read_xml_other_child_io<R: BufRead>(
+  xml_reader: &mut quick_xml::Reader<R>,
+  buf: &mut Vec<u8>,
+  start: quick_xml::events::BytesStart<'static>,
+  empty: bool,
+) -> Result<Box<str>, SdkError> {
+  let mut bytes = Vec::new();
+  let mut writer = quick_xml::Writer::new(&mut bytes);
+
+  if empty {
+    writer.write_event(Event::Empty(start))?;
+  } else {
+    writer.write_event(Event::Start(start))?;
+    let mut depth = 1usize;
+
+    while depth > 0 {
+      buf.clear();
+      match xml_reader.read_event_into(buf)? {
+        Event::Start(e) => {
+          depth += 1;
+          writer.write_event(Event::Start(e.into_owned()))?;
+        }
+        Event::Empty(e) => {
+          writer.write_event(Event::Empty(e.into_owned()))?;
+        }
+        Event::End(e) => {
+          depth -= 1;
+          writer.write_event(Event::End(e.into_owned()))?;
+        }
+        Event::Eof => Err(unexpected_eof("xml_other_children"))?,
+        event => {
+          writer.write_event(event.into_owned())?;
+        }
+      }
+    }
+  }
+
+  Ok(
+    String::from_utf8_lossy(&bytes)
+      .into_owned()
+      .into_boxed_str(),
+  )
 }
 
 #[inline(always)]

@@ -94,6 +94,14 @@ pub fn gen_schema(
       });
     }
 
+    attrs.push(Field::parse_named.parse2(quote! {
+      pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>
+    })?);
+
+    attrs.push(Field::parse_named.parse2(quote! {
+      pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>
+    })?);
+
     token_stream_list.push(quote! {
       #( #struct_doc_attrs )*
       #[derive(Clone, Debug, Default)]

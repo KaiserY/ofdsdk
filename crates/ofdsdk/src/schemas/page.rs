@@ -11,6 +11,8 @@ pub struct Template {
   pub template_id: crate::schemas::definitions::StRefId,
   ///控制模板在页面中的呈现顺序，其类型描述和呈现顺序与 Layer 中 Type 的描述和处理一致。如果多个图层的此属性相同，则应根据其出现的顺序来显示，先出现者先绘制。默认值为 Background。
   pub z_order: Option<TemplateZOrder>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug)]
 pub enum LayerContentChoice {
@@ -29,16 +31,22 @@ pub struct Layer {
   pub draw_param: Option<crate::schemas::definitions::StRefId>,
   pub id: crate::schemas::definitions::StId,
   pub xml_children: Vec<LayerContentChoice>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///页面内容描述。
 #[derive(Clone, Debug, Default)]
 pub struct Content {
   ///层节点，一页可包含一个或多个层。
   pub layer: Vec<Layer>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug, Default)]
 pub struct Actions {
   pub action: Vec<crate::schemas::definitions::CtAction>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///页对象。
 #[derive(Clone, Debug, Default)]
@@ -53,6 +61,8 @@ pub struct Page {
   pub content: Option<Content>,
   ///与页面关联的动作序列。当存在多个 Action 对象时，所有动作依次执行。
   pub actions: Option<Actions>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug)]
 pub enum AreaContentChoice {
@@ -64,10 +74,14 @@ pub struct Area {
   pub draw_param: Option<crate::schemas::definitions::StRefId>,
   pub ctm: Option<crate::schemas::definitions::StArray>,
   pub xml_children: Vec<AreaContentChoice>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug, Default)]
 pub struct CtClip {
   pub area: Vec<Area>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///文字对象属性，见 11.2。
 #[derive(Clone, Debug, Default)]
@@ -113,6 +127,8 @@ pub struct TextObject {
   pub cg_transform: Vec<CtCgTransform>,
   ///文字内容，也就是一段字符编码串。如果字符编码不在 XML 编码方式的字符范围之内，应采用“\”加四位十六进制数的格式转义；文字内容中出现的空格也需要转义。若 TextCode 作为占位符使用时，一律采用“¤”(u00A4) 占位。
   pub text_code: Vec<TextCode>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///图形对象属性，见 9.1。
 #[derive(Clone, Debug, Default)]
@@ -144,6 +160,8 @@ pub struct PathObject {
   pub fill_color: Option<CtColor>,
   ///图形轮廓数据，由一系列紧缩的操作符和操作数构成。
   pub abbreviated_data: String,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///图像对象，见第 10 章。带有播放视频动作时，见第 12 章。
 #[derive(Clone, Debug, Default)]
@@ -171,6 +189,8 @@ pub struct ImageObject {
   pub clips: Option<Clips>,
   ///图像边框设置。
   pub border: Option<Border>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///复合对象，见第 13 章。
 #[derive(Clone, Debug, Default)]
@@ -192,6 +212,8 @@ pub struct CompositeObject {
   pub id: crate::schemas::definitions::StId,
   pub actions: Option<Actions>,
   pub clips: Option<Clips>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug)]
 pub enum CtPageBlockContentChoice {
@@ -205,6 +227,8 @@ pub enum CtPageBlockContentChoice {
 #[derive(Clone, Debug, Default)]
 pub struct CtPageBlock {
   pub xml_children: Vec<CtPageBlockContentChoice>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug)]
 pub enum PageBlockContentChoice {
@@ -219,6 +243,8 @@ pub enum PageBlockContentChoice {
 pub struct PageBlock {
   pub id: crate::schemas::definitions::StId,
   pub xml_children: Vec<PageBlockContentChoice>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug)]
 pub enum CtLayerContentChoice {
@@ -234,10 +260,14 @@ pub struct CtLayer {
   pub r#type: Option<CtLayerType>,
   pub draw_param: Option<crate::schemas::definitions::StRefId>,
   pub xml_children: Vec<CtLayerContentChoice>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug, Default)]
 pub struct Clips {
   pub clip: Vec<CtClip>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug, Default)]
 pub struct CtGraphicUnit {
@@ -255,6 +285,8 @@ pub struct CtGraphicUnit {
   pub alpha: Option<i32>,
   pub actions: Option<Actions>,
   pub clips: Option<Clips>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///文字内容，也就是一段字符编码串。
 #[derive(Clone, Debug, Default)]
@@ -268,6 +300,8 @@ pub struct TextCode {
   ///double 型数值队列，队列中的每个值代表后一个文字与前一个文字之间在 Y 方向的偏移值。DeltaY 不出现时，表示文字的绘制点在 Y 方向不做偏移。
   pub delta_y: Option<crate::schemas::definitions::StArray>,
   pub xml_value: String,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug, Default)]
 pub struct CtText {
@@ -298,6 +332,8 @@ pub struct CtText {
   pub stroke_color: Option<CtColor>,
   pub cg_transform: Vec<CtCgTransform>,
   pub text_code: Vec<TextCode>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///指定字符编码到字符索引之间的变换关系，描述见 11.4 字符变换。
 #[derive(Clone, Debug, Default)]
@@ -310,6 +346,8 @@ pub struct CtCgTransform {
   pub glyph_count: Option<i32>,
   ///变换后的字形索引列表。
   pub glyphs: Option<crate::schemas::definitions::StArray>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///图像边框设置。
 #[derive(Clone, Debug, Default)]
@@ -325,6 +363,8 @@ pub struct Border {
   pub dash_pattern: Option<crate::schemas::definitions::StArray>,
   ///边框颜色，有关边框颜色描述见 8.3.2 基本颜色。默认为黑色。
   pub border_color: Option<CtColor>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug, Default)]
 pub struct CtImage {
@@ -346,6 +386,8 @@ pub struct CtImage {
   pub actions: Option<Actions>,
   pub clips: Option<Clips>,
   pub border: Option<Border>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug, Default)]
 pub struct CtComposite {
@@ -364,6 +406,8 @@ pub struct CtComposite {
   pub resource_id: crate::schemas::definitions::StRefId,
   pub actions: Option<Actions>,
   pub clips: Option<Clips>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug, Default)]
 pub struct CtPath {
@@ -387,6 +431,8 @@ pub struct CtPath {
   pub stroke_color: Option<CtColor>,
   pub fill_color: Option<CtColor>,
   pub abbreviated_data: String,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug)]
 pub enum CellContentContentChoice {
@@ -402,6 +448,8 @@ pub struct CellContent {
   ///引用资源文件中缩略图图像的标识。
   pub thumbnail: Option<crate::schemas::definitions::StRefId>,
   pub xml_children: Vec<CellContentContentChoice>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///底纹属性。
 #[derive(Clone, Debug, Default)]
@@ -421,6 +469,8 @@ pub struct CtPattern {
   ///底纹单元的变换矩阵，用于某些需要对底纹单元进行平移旋转变换的场合，默认为单位矩阵。底纹呈现时先做 XStep、YStep 排列，然后一起做 CTM 处理。
   pub ctm: Option<crate::schemas::definitions::StArray>,
   pub cell_content: CellContent,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///颜色段。
 #[derive(Clone, Debug, Default)]
@@ -429,6 +479,8 @@ pub struct Segment {
   pub position: Option<f64>,
   ///该段的颜色，应是基本颜色。
   pub color: CtColor,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///轴向渐变属性。
 #[derive(Clone, Debug, Default)]
@@ -445,6 +497,8 @@ pub struct CtAxialShd {
   pub end_point: crate::schemas::definitions::StPos,
   ///颜色段，至少出现两个。
   pub segment: Vec<Segment>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///径向渐变属性。
 #[derive(Clone, Debug, Default)]
@@ -469,6 +523,8 @@ pub struct CtRadialShd {
   pub extend: Option<i32>,
   ///颜色段，至少出现两个。
   pub segment: Vec<Segment>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///高洛德渐变控制点。
 #[derive(Clone, Debug, Default)]
@@ -481,6 +537,8 @@ pub struct Point {
   pub edge_flag: Option<PointEdgeFlag>,
   ///控制点颜色。
   pub color: CtColor,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///高洛德渐变属性。
 #[derive(Clone, Debug, Default)]
@@ -491,6 +549,8 @@ pub struct CtGouraudShd {
   pub point: Vec<Point>,
   ///背景颜色。
   pub back_color: Option<CtColor>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///格构高洛德渐变控制点。
 #[derive(Clone, Debug, Default)]
@@ -501,6 +561,8 @@ pub struct CtLaGouraudShdPoint {
   pub y: Option<f64>,
   ///控制点颜色。
   pub color: CtColor,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///格构高洛德渐变属性。
 #[derive(Clone, Debug, Default)]
@@ -513,6 +575,8 @@ pub struct CtLaGouraudShd {
   pub point: Vec<CtLaGouraudShdPoint>,
   ///背景颜色。
   pub back_color: Option<CtColor>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug)]
 pub enum CtColorContentChoice {
@@ -534,6 +598,8 @@ pub struct CtColor {
   ///颜色透明度，在 0~255 之间取值。默认为 255，表示完全不透明。
   pub alpha: Option<i32>,
   pub xml_children: Vec<CtColorContentChoice>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug, Default)]
 pub struct Action(pub crate::schemas::definitions::CtAction);

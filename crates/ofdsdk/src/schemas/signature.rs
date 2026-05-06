@@ -13,6 +13,8 @@ pub struct Provider {
   pub version: Option<String>,
   ///创建签名时所用的签章组件的制造商。
   pub company: Option<String>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///针对一个文件的摘要节点。
 #[derive(Clone, Debug, Default)]
@@ -21,6 +23,8 @@ pub struct Reference {
   pub file_ref: crate::schemas::definitions::StLoc,
   ///对包内文件进行摘要计算，对所得的二进制摘要值进行 base64 编码所得结果。
   pub check_value: String,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///包内文件计算所得的摘要记录列表。
 #[derive(Clone, Debug, Default)]
@@ -29,6 +33,8 @@ pub struct References {
   pub check_method: String,
   ///针对一个文件的摘要节点。
   pub reference: Vec<Reference>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///签名外观节点属性。
 #[derive(Clone, Debug, Default)]
@@ -41,12 +47,16 @@ pub struct StampAnnot {
   pub boundary: crate::schemas::definitions::StBox,
   ///签章注释的外观裁剪设置。
   pub clip: Option<crate::schemas::definitions::StBox>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///电子印章信息。
 #[derive(Clone, Debug, Default)]
 pub struct Seal {
   ///指向包内的安全电子印章文件，遵循密码领域的相关规范。
   pub base_loc: crate::schemas::definitions::StLoc,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///签名要保护的原文及本次签名相关的信息。
 #[derive(Clone, Debug, Default)]
@@ -63,6 +73,8 @@ pub struct SignedInfo {
   pub stamp_annot: Vec<StampAnnot>,
   ///电子印章信息。
   pub seal: Option<Seal>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///签名描述文件的根节点。
 #[derive(Clone, Debug, Default)]
@@ -71,6 +83,8 @@ pub struct Signature {
   pub signed_info: SignedInfo,
   ///指向安全签名提供者所返回的针对签名描述文件计算所得的签名值文件。
   pub signed_value: crate::schemas::definitions::StLoc,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///摘要方法，视应用场景的不同使用不同的摘要方法。
 #[derive(Clone, Debug, Default)]

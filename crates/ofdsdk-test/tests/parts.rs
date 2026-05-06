@@ -1,3 +1,4 @@
+use std::io::Read;
 use std::path::Path;
 use std::time::{SystemTime, UNIX_EPOCH};
 
@@ -85,6 +86,7 @@ fn ofd_package_save_minimal_constructed_package() {
 
   let package = ofdsdk::parts::ofd_package::OfdPackage {
     inner_path: "OFD.xml".to_string(),
+    other_parts: vec![],
     root_element,
     documents: vec![ofdsdk::parts::document::Document {
       inner_path: "Doc_0/Document.xml".to_string(),
@@ -167,6 +169,26 @@ fn ofd_package_from_windows_encoded_resource_sample_file() {
   assert!(document.annotations.is_none());
   assert!(document.signatures.is_none());
   assert!(document.versions.is_empty());
+  assert_eq!(package.other_parts.len(), 1);
+
+  let other_part = &package.other_parts[0];
+  assert!(other_part.inner_path.starts_with("Doc_0/Res/"));
+  assert!(other_part.inner_path.ends_with(".txt"));
+  assert!(!other_part.part_content.is_empty());
+
+  let save_path = save_path("chinese_dir_windows.ofd");
+  package.save_to_file(&save_path).unwrap();
+
+  let mut archive = zip::ZipArchive::new(std::fs::File::open(&save_path).unwrap()).unwrap();
+  let mut saved_content = Vec::new();
+  archive
+    .by_name(&other_part.inner_path)
+    .unwrap()
+    .read_to_end(&mut saved_content)
+    .unwrap();
+  assert_eq!(saved_content, other_part.part_content.as_ref());
+
+  std::fs::remove_file(save_path).unwrap();
 }
 
 #[test]
@@ -211,11 +233,14 @@ fn ofd_package_from_999_sample_file() {
   let annotations = document.annotations.as_ref().unwrap();
   assert_eq!(annotations.annotations.len(), 1);
   assert_eq!(annotations.annotations[0].root_element.annot.len(), 1);
-  assert_eq!(annotations.annotations[0].root_element.annot[0].creator, "");
+  assert_eq!(
+    annotations.annotations[0].root_element.annot[0].creator,
+    None
+  );
 
   let custom_tags = document.custom_tags.as_ref().unwrap();
   assert_eq!(custom_tags.root_element.custom_tag.len(), 1);
-  assert_eq!(custom_tags.root_element.custom_tag[0].name_space, "");
+  assert_eq!(custom_tags.root_element.custom_tag[0].name_space, None);
 }
 
 #[test]

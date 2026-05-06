@@ -104,9 +104,30 @@ impl crate::schemas::res::ColorSpace {
       write!(writer, "{}", self.id)?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(palette) = &self.palette {
       palette.write_xml_named(writer, false, "Palette")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -144,9 +165,30 @@ impl crate::schemas::res::ColorSpaces {
     if with_xmlns {
       writer.write_str(r#" xmlns:ofd="http://www.ofdspec.org/2016""#)?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.color_space {
       child.write_xml_named(writer, false, "ColorSpace")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -224,12 +266,40 @@ impl crate::schemas::res::DrawParam {
       write!(writer, "{}", self.id)?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(fill_color) = &self.fill_color {
       fill_color.write_xml_named(writer, false, "FillColor")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(stroke_color) = &self.stroke_color {
       stroke_color.write_xml_named(writer, false, "StrokeColor")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 2usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -267,9 +337,30 @@ impl crate::schemas::res::DrawParams {
     if with_xmlns {
       writer.write_str(r#" xmlns:ofd="http://www.ofdspec.org/2016""#)?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.draw_param {
       child.write_xml_named(writer, false, "DrawParam")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -347,13 +438,34 @@ impl crate::schemas::res::Font {
       write!(writer, "{}", self.id)?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(font_file) = &self.font_file {
       writer.write_char('<')?;
       writer.write_str("ofd:FontFile")?;
       writer.write_char('>')?;
       writer.write_str(&quick_xml::escape::escape(font_file.as_str()))?;
       writer.write_str("</ofd:FontFile>")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -391,9 +503,30 @@ impl crate::schemas::res::Fonts {
     if with_xmlns {
       writer.write_str(r#" xmlns:ofd="http://www.ofdspec.org/2016""#)?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.font {
       child.write_xml_named(writer, false, "Font")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -446,13 +579,34 @@ impl crate::schemas::res::MultiMedia {
       write!(writer, "{}", self.id)?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     {
       writer.write_char('<')?;
       writer.write_str("ofd:MediaFile")?;
       writer.write_char('>')?;
       writer.write_str(&quick_xml::escape::escape(self.media_file.as_str()))?;
       writer.write_str("</ofd:MediaFile>")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -490,9 +644,30 @@ impl crate::schemas::res::MultiMedias {
     if with_xmlns {
       writer.write_str(r#" xmlns:ofd="http://www.ofdspec.org/2016""#)?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.multi_media {
       child.write_xml_named(writer, false, "MultiMedia")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -545,13 +720,34 @@ impl crate::schemas::res::CompositeGraphicUnit {
       write!(writer, "{}", self.id)?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(thumbnail) = &self.thumbnail {
       writer.write_char('<')?;
       writer.write_str("ofd:Thumbnail")?;
       writer.write_char('>')?;
       write!(writer, "{}", thumbnail)?;
       writer.write_str("</ofd:Thumbnail>")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     if let Some(substitution) = &self.substitution {
       writer.write_char('<')?;
@@ -560,7 +756,21 @@ impl crate::schemas::res::CompositeGraphicUnit {
       write!(writer, "{}", substitution)?;
       writer.write_str("</ofd:Substitution>")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 2usize)
+    {
+      writer.write_str(child)?;
+    }
     self.content.write_xml_named(writer, false, "Content")?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 3usize)
+    {
+      writer.write_str(child)?;
+    }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
     writer.write_char('>')?;
@@ -597,9 +807,30 @@ impl crate::schemas::res::CompositeGraphicUnits {
     if with_xmlns {
       writer.write_str(r#" xmlns:ofd="http://www.ofdspec.org/2016""#)?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.composite_graphic_unit {
       child.write_xml_named(writer, false, "CompositeGraphicUnit")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -642,7 +873,21 @@ impl crate::schemas::res::Res {
       writer.write_str(&quick_xml::escape::escape(self.base_loc.as_str()))?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.xml_children {
       match child {
         crate::schemas::res::ResContentChoice::ColorSpaces(child) => {
@@ -661,6 +906,13 @@ impl crate::schemas::res::Res {
           child.write_xml_named(writer, false, "CompositeGraphicUnits")?
         }
       }
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -698,13 +950,34 @@ impl crate::schemas::res::Palette {
     if with_xmlns {
       writer.write_str(r#" xmlns:ofd="http://www.ofdspec.org/2016""#)?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.cv {
       writer.write_char('<')?;
       writer.write_str("ofd:CV")?;
       writer.write_char('>')?;
       writer.write_str(&quick_xml::escape::escape(child.as_str()))?;
       writer.write_str("</ofd:CV>")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -757,9 +1030,30 @@ impl crate::schemas::res::CtColorSpace {
       writer.write_str(&quick_xml::escape::escape(profile.as_str()))?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(palette) = &self.palette {
       palette.write_xml_named(writer, false, "Palette")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -832,12 +1126,40 @@ impl crate::schemas::res::CtDrawParam {
       write!(writer, "{}", miter_limit)?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(fill_color) = &self.fill_color {
       fill_color.write_xml_named(writer, false, "FillColor")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(stroke_color) = &self.stroke_color {
       stroke_color.write_xml_named(writer, false, "StrokeColor")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 2usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -910,13 +1232,34 @@ impl crate::schemas::res::CtFont {
       writer.write_str(if *fixed_width { "true" } else { "false" })?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(font_file) = &self.font_file {
       writer.write_char('<')?;
       writer.write_str("ofd:FontFile")?;
       writer.write_char('>')?;
       writer.write_str(&quick_xml::escape::escape(font_file.as_str()))?;
       writer.write_str("</ofd:FontFile>")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -964,13 +1307,34 @@ impl crate::schemas::res::CtMultiMedia {
       writer.write_str(&quick_xml::escape::escape(format.as_str()))?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     {
       writer.write_char('<')?;
       writer.write_str("ofd:MediaFile")?;
       writer.write_char('>')?;
       writer.write_str(&quick_xml::escape::escape(self.media_file.as_str()))?;
       writer.write_str("</ofd:MediaFile>")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -1018,13 +1382,34 @@ impl crate::schemas::res::CtVectorG {
       write!(writer, "{}", self.height)?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(thumbnail) = &self.thumbnail {
       writer.write_char('<')?;
       writer.write_str("ofd:Thumbnail")?;
       writer.write_char('>')?;
       write!(writer, "{}", thumbnail)?;
       writer.write_str("</ofd:Thumbnail>")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     if let Some(substitution) = &self.substitution {
       writer.write_char('<')?;
@@ -1033,7 +1418,21 @@ impl crate::schemas::res::CtVectorG {
       write!(writer, "{}", substitution)?;
       writer.write_str("</ofd:Substitution>")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 2usize)
+    {
+      writer.write_str(child)?;
+    }
     self.content.write_xml_named(writer, false, "Content")?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 3usize)
+    {
+      writer.write_str(child)?;
+    }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
     writer.write_char('>')?;

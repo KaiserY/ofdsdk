@@ -12,11 +12,15 @@ pub struct ColorSpace {
   pub profile: Option<crate::schemas::definitions::StLoc>,
   pub id: crate::schemas::definitions::StId,
   pub palette: Option<Palette>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///包含了一组颜色空间的描述。
 #[derive(Clone, Debug, Default)]
 pub struct ColorSpaces {
   pub color_space: Vec<ColorSpace>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///绘制参数资源描述，在基础类型上扩展定义 ID 属性，类型为 ST_ID。
 #[derive(Clone, Debug, Default)]
@@ -31,11 +35,15 @@ pub struct DrawParam {
   pub id: crate::schemas::definitions::StId,
   pub fill_color: Option<crate::schemas::page::CtColor>,
   pub stroke_color: Option<crate::schemas::page::CtColor>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///包含了一组绘制参数的描述。
 #[derive(Clone, Debug, Default)]
 pub struct DrawParams {
   pub draw_param: Vec<DrawParam>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///字型资源描述，在基础类型上扩展定义 ID 属性，类型为 ST_ID。
 #[derive(Clone, Debug, Default)]
@@ -57,11 +65,15 @@ pub struct Font {
   pub id: crate::schemas::definitions::StId,
   ///指向内嵌字型文件，嵌入字型文件应使用 OpenType 格式。
   pub font_file: Option<crate::schemas::definitions::StLoc>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///包含了一组文档所用字型的描述。
 #[derive(Clone, Debug, Default)]
 pub struct Fonts {
   pub font: Vec<Font>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///多媒体资源描述，在基础类型上扩展定义 ID 属性，类型为 ST_ID。
 #[derive(Clone, Debug, Default)]
@@ -70,11 +82,15 @@ pub struct MultiMedia {
   pub format: Option<String>,
   pub id: crate::schemas::definitions::StId,
   pub media_file: crate::schemas::definitions::StLoc,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///包含了一组文档所用多媒体对象的描述。
 #[derive(Clone, Debug, Default)]
 pub struct MultiMedias {
   pub multi_media: Vec<MultiMedia>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///矢量图像资源描述，在基础类型上扩展定义 ID 属性，类型为 ST_ID。
 #[derive(Clone, Debug, Default)]
@@ -90,11 +106,15 @@ pub struct CompositeGraphicUnit {
   pub substitution: Option<crate::schemas::definitions::StRefId>,
   ///内容的矢量描述。
   pub content: crate::schemas::page::CtPageBlock,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///包含了一组矢量图像（被复合图元对象所引用）的描述。
 #[derive(Clone, Debug, Default)]
 pub struct CompositeGraphicUnits {
   pub composite_graphic_unit: Vec<CompositeGraphicUnit>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug)]
 pub enum ResContentChoice {
@@ -110,12 +130,16 @@ pub struct Res {
   ///定义此资源文件的通用数据存储路径。BaseLoc 属性的意义在于明确资源文件存储的位置，比如 R1.xml 中可以指定 BaseLoc 为“./Res”，表明该资源文件中所有数据文件的默认存储位置在当前路径的 Res 目录下。
   pub base_loc: crate::schemas::definitions::StLoc,
   pub xml_children: Vec<ResContentChoice>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///调色板。
 #[derive(Clone, Debug, Default)]
 pub struct Palette {
   ///调色板中预定义颜色。调色板中颜色的索引编号从 0 开始。
   pub cv: Vec<crate::schemas::definitions::StArray>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///颜色空间属性。
 #[derive(Clone, Debug, Default)]
@@ -128,6 +152,8 @@ pub struct CtColorSpace {
   pub profile: Option<crate::schemas::definitions::StLoc>,
   ///调色板。
   pub palette: Option<Palette>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///绘制参数属性。
 #[derive(Clone, Debug, Default)]
@@ -150,6 +176,8 @@ pub struct CtDrawParam {
   pub fill_color: Option<crate::schemas::page::CtColor>,
   ///勾边颜色，指定路径绘制的颜色以及文字轮廓的颜色，默认值为黑色。颜色的描述见 8.3。
   pub stroke_color: Option<crate::schemas::page::CtColor>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///字型资源描述。
 #[derive(Clone, Debug, Default)]
@@ -162,6 +190,8 @@ pub struct CtFont {
   pub serif: Option<bool>,
   pub fixed_width: Option<bool>,
   pub font_file: Option<crate::schemas::definitions::StLoc>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///多媒体资源属性。
 #[derive(Clone, Debug, Default)]
@@ -172,6 +202,8 @@ pub struct CtMultiMedia {
   pub format: Option<String>,
   ///指向 OFD 包内的多媒体文件的位置。
   pub media_file: crate::schemas::definitions::StLoc,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///矢量图像资源描述。
 #[derive(Clone, Debug, Default)]
@@ -181,6 +213,8 @@ pub struct CtVectorG {
   pub thumbnail: Option<crate::schemas::definitions::StRefId>,
   pub substitution: Option<crate::schemas::definitions::StRefId>,
   pub content: crate::schemas::page::CtPageBlock,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug, Default)]
 pub struct FillColor(pub crate::schemas::page::CtColor);

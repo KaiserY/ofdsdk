@@ -7,6 +7,7 @@
 #[derive(Clone, Debug, Default)]
 pub struct OfdPackage {
   pub inner_path: String,
+  pub other_parts: Vec<crate::common::OtherPart>,
   pub root_element: crate::schemas::ofd::Ofd,
   pub documents: Vec<crate::parts::document::Document>,
 }
@@ -40,6 +41,7 @@ impl OfdPackage {
     )?;
     Ok(Self {
       inner_path: path.to_string(),
+      other_parts: Vec::new(),
       root_element,
       documents,
     })
@@ -60,11 +62,21 @@ impl OfdPackage {
     })?;
     Ok(())
   }
+  pub(crate) fn collect_zip_entries(&self, entry_set: &mut std::collections::HashSet<String>) {
+    entry_set.insert(crate::common::resolve_zip_file_path(&self.inner_path));
+    for child in &self.documents {
+      child.collect_zip_entries(entry_set);
+    }
+  }
 }
 impl OfdPackage {
   pub fn new<R: std::io::Read + std::io::Seek>(reader: R) -> Result<Self, crate::common::SdkError> {
     let mut archive = zip::ZipArchive::new(reader)?;
-    Self::new_from_archive("OFD.xml", &mut archive)
+    let mut package = Self::new_from_archive("OFD.xml", &mut archive)?;
+    let mut entry_set = std::collections::HashSet::new();
+    package.collect_zip_entries(&mut entry_set);
+    package.other_parts = crate::common::read_other_zip_parts(&mut archive, &entry_set)?;
+    Ok(package)
   }
   pub fn new_from_file<P: AsRef<std::path::Path>>(
     path: P,
@@ -78,6 +90,7 @@ impl OfdPackage {
     let mut entry_set = std::collections::HashSet::new();
     let mut zip = zip::ZipWriter::new(writer);
     self.save_zip(&mut zip, &mut entry_set)?;
+    crate::common::save_other_zip_parts(&self.other_parts, &mut zip, &mut entry_set)?;
     zip.finish()?;
     Ok(())
   }

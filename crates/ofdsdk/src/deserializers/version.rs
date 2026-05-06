@@ -31,6 +31,9 @@ impl crate::schemas::version::File {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut id = None;
     let mut xml_value_raw = None;
     let mut xml_value_seen = false;
@@ -41,7 +44,9 @@ impl crate::schemas::version::File {
         b"ID" => {
           id = Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -78,10 +83,11 @@ impl crate::schemas::version::File {
           quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("File"))?,
           _ => {}
         }
-        if let Some(e) = e_opt
-          && !e_empty
-        {
-          xml_reader.read_to_end(e.to_end().name())?;
+        if let Some(e) = e_opt {
+          xml_other_children.push((
+            __xml_child_slot,
+            crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+          ));
         }
       }
     }
@@ -91,7 +97,12 @@ impl crate::schemas::version::File {
       Err(crate::common::missing_field("File", "xml_value"))?
     };
     let id = id.ok_or_else(|| crate::common::missing_field("File", "id"))?;
-    Ok(Self { id, xml_value })
+    Ok(Self {
+      id,
+      xml_value,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
     xml_reader: &mut quick_xml::Reader<R>,
@@ -109,6 +120,9 @@ impl crate::schemas::version::File {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut id = None;
     let mut xml_value_raw = None;
     let mut xml_value_seen = false;
@@ -119,7 +133,9 @@ impl crate::schemas::version::File {
         b"ID" => {
           id = Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -157,10 +173,11 @@ impl crate::schemas::version::File {
           quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("File"))?,
           _ => {}
         }
-        if let Some(e) = e_opt
-          && !e_empty
-        {
-          xml_reader.read_to_end_into(e.to_end().name(), buf)?;
+        if let Some(e) = e_opt {
+          xml_other_children.push((
+            __xml_child_slot,
+            crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+          ));
         }
       }
     }
@@ -170,7 +187,12 @@ impl crate::schemas::version::File {
       Err(crate::common::missing_field("File", "xml_value"))?
     };
     let id = id.ok_or_else(|| crate::common::missing_field("File", "id"))?;
-    Ok(Self { id, xml_value })
+    Ok(Self {
+      id,
+      xml_value,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
 }
 impl std::str::FromStr for crate::schemas::version::FileList {
@@ -198,7 +220,7 @@ impl crate::schemas::version::FileList {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "FileList",
@@ -206,7 +228,14 @@ impl crate::schemas::version::FileList {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut file = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
@@ -237,17 +266,23 @@ impl crate::schemas::version::FileList {
                 b"ofd:File",
                 b"File",
               )?);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { file })
+    Ok(Self {
+      file,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
     xml_reader: &mut quick_xml::Reader<R>,
@@ -256,7 +291,7 @@ impl crate::schemas::version::FileList {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
       xml_reader,
       buf,
       xml_event,
@@ -265,7 +300,14 @@ impl crate::schemas::version::FileList {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut file = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
@@ -300,17 +342,23 @@ impl crate::schemas::version::FileList {
                   b"File",
                 )?,
               );
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { file })
+    Ok(Self {
+      file,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
 }
 impl std::str::FromStr for crate::schemas::version::DocVersion {
@@ -346,6 +394,9 @@ impl crate::schemas::version::DocVersion {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut id = None;
     let mut version = None;
     let mut name = None;
@@ -370,7 +421,9 @@ impl crate::schemas::version::DocVersion {
           creation_date =
             Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -403,6 +456,7 @@ impl crate::schemas::version::DocVersion {
                 b"ofd:FileList",
                 b"FileList",
               )?);
+              __xml_child_slot = 1usize;
             }
             b"ofd:DocRoot" | b"DocRoot" => {
               let parsed_value = {
@@ -438,11 +492,13 @@ impl crate::schemas::version::DocVersion {
                 }
               };
               doc_root = Some(parsed_value);
+              __xml_child_slot = 2usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
@@ -460,6 +516,8 @@ impl crate::schemas::version::DocVersion {
       creation_date,
       file_list,
       doc_root,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -478,6 +536,9 @@ impl crate::schemas::version::DocVersion {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut id = None;
     let mut version = None;
     let mut name = None;
@@ -502,7 +563,9 @@ impl crate::schemas::version::DocVersion {
           creation_date =
             Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -539,6 +602,7 @@ impl crate::schemas::version::DocVersion {
                   b"FileList",
                 )?,
               );
+              __xml_child_slot = 1usize;
             }
             b"ofd:DocRoot" | b"DocRoot" => {
               let parsed_value = {
@@ -558,11 +622,13 @@ impl crate::schemas::version::DocVersion {
                 }
               };
               doc_root = Some(parsed_value);
+              __xml_child_slot = 2usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
@@ -580,6 +646,8 @@ impl crate::schemas::version::DocVersion {
       creation_date,
       file_list,
       doc_root,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }

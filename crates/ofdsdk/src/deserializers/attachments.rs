@@ -29,7 +29,7 @@ impl crate::schemas::attachments::Attachments {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "Attachments",
@@ -37,7 +37,14 @@ impl crate::schemas::attachments::Attachments {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut attachment = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
@@ -70,17 +77,23 @@ impl crate::schemas::attachments::Attachments {
                   b"Attachment",
                 )?,
               );
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { attachment })
+    Ok(Self {
+      attachment,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
     xml_reader: &mut quick_xml::Reader<R>,
@@ -89,7 +102,7 @@ impl crate::schemas::attachments::Attachments {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
       xml_reader,
       buf,
       xml_event,
@@ -98,7 +111,14 @@ impl crate::schemas::attachments::Attachments {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut attachment = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
@@ -133,17 +153,23 @@ impl crate::schemas::attachments::Attachments {
                   b"Attachment",
                 )?,
               );
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { attachment })
+    Ok(Self {
+      attachment,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
 }
 impl std::str::FromStr for crate::schemas::attachments::CtAttachment {
@@ -184,6 +210,9 @@ impl crate::schemas::attachments::CtAttachment {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut id = None;
     let mut name = None;
     let mut format = None;
@@ -234,7 +263,9 @@ impl crate::schemas::attachments::CtAttachment {
         b"Usage" => {
           usage = Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -294,11 +325,13 @@ impl crate::schemas::attachments::CtAttachment {
                 }
               };
               file_loc = Some(parsed_value);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
@@ -318,6 +351,8 @@ impl crate::schemas::attachments::CtAttachment {
       visible,
       usage,
       file_loc,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -336,6 +371,9 @@ impl crate::schemas::attachments::CtAttachment {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut id = None;
     let mut name = None;
     let mut format = None;
@@ -386,7 +424,9 @@ impl crate::schemas::attachments::CtAttachment {
         b"Usage" => {
           usage = Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -431,11 +471,13 @@ impl crate::schemas::attachments::CtAttachment {
                 }
               };
               file_loc = Some(parsed_value);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
@@ -455,6 +497,8 @@ impl crate::schemas::attachments::CtAttachment {
       visible,
       usage,
       file_loc,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }

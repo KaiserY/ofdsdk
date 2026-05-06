@@ -51,6 +51,9 @@ impl crate::schemas::ofd::Version {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut id = None;
     let mut index = None;
     let mut current = None;
@@ -82,7 +85,9 @@ impl crate::schemas::ofd::Version {
           base_loc =
             Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -106,10 +111,11 @@ impl crate::schemas::ofd::Version {
           quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("Version"))?,
           _ => {}
         }
-        if let Some(e) = e_opt
-          && !e_empty
-        {
-          xml_reader.read_to_end(e.to_end().name())?;
+        if let Some(e) = e_opt {
+          xml_other_children.push((
+            __xml_child_slot,
+            crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+          ));
         }
       }
     }
@@ -121,6 +127,8 @@ impl crate::schemas::ofd::Version {
       index,
       current,
       base_loc,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -139,6 +147,9 @@ impl crate::schemas::ofd::Version {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut id = None;
     let mut index = None;
     let mut current = None;
@@ -170,7 +181,9 @@ impl crate::schemas::ofd::Version {
           base_loc =
             Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -195,10 +208,11 @@ impl crate::schemas::ofd::Version {
           quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("Version"))?,
           _ => {}
         }
-        if let Some(e) = e_opt
-          && !e_empty
-        {
-          xml_reader.read_to_end_into(e.to_end().name(), buf)?;
+        if let Some(e) = e_opt {
+          xml_other_children.push((
+            __xml_child_slot,
+            crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+          ));
         }
       }
     }
@@ -210,6 +224,8 @@ impl crate::schemas::ofd::Version {
       index,
       current,
       base_loc,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }
@@ -238,7 +254,7 @@ impl crate::schemas::ofd::Versions {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "Versions",
@@ -246,7 +262,14 @@ impl crate::schemas::ofd::Versions {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut version = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
@@ -277,17 +300,23 @@ impl crate::schemas::ofd::Versions {
                 b"ofd:Version",
                 b"Version",
               )?);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { version })
+    Ok(Self {
+      version,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
     xml_reader: &mut quick_xml::Reader<R>,
@@ -296,7 +325,7 @@ impl crate::schemas::ofd::Versions {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
       xml_reader,
       buf,
       xml_event,
@@ -305,7 +334,14 @@ impl crate::schemas::ofd::Versions {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut version = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
@@ -338,17 +374,23 @@ impl crate::schemas::ofd::Versions {
                 b"ofd:Version",
                 b"Version",
               )?);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { version })
+    Ok(Self {
+      version,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
 }
 impl std::str::FromStr for crate::schemas::ofd::DocBody {
@@ -370,7 +412,7 @@ impl crate::schemas::ofd::DocBody {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "DocBody",
@@ -378,10 +420,17 @@ impl crate::schemas::ofd::DocBody {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut doc_info = None;
     let mut doc_root = None;
     let mut versions = None;
     let mut signatures = None;
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
@@ -412,6 +461,7 @@ impl crate::schemas::ofd::DocBody {
                 b"ofd:DocInfo",
                 b"DocInfo",
               )?);
+              __xml_child_slot = 1usize;
             }
             b"ofd:DocRoot" | b"DocRoot" => {
               let parsed_value = {
@@ -444,6 +494,7 @@ impl crate::schemas::ofd::DocBody {
                 }
               };
               doc_root = Some(parsed_value);
+              __xml_child_slot = 2usize;
             }
             b"ofd:Versions" | b"Versions" => {
               versions = Some(crate::schemas::ofd::Versions::deserialize_inner_named(
@@ -452,6 +503,7 @@ impl crate::schemas::ofd::DocBody {
                 b"ofd:Versions",
                 b"Versions",
               )?);
+              __xml_child_slot = 3usize;
             }
             b"ofd:Signatures" | b"Signatures" => {
               let parsed_value = {
@@ -487,11 +539,13 @@ impl crate::schemas::ofd::DocBody {
                 }
               };
               signatures = Some(parsed_value);
+              __xml_child_slot = 4usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
@@ -504,6 +558,8 @@ impl crate::schemas::ofd::DocBody {
       doc_root,
       versions,
       signatures,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -513,7 +569,7 @@ impl crate::schemas::ofd::DocBody {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
       xml_reader,
       buf,
       xml_event,
@@ -522,10 +578,17 @@ impl crate::schemas::ofd::DocBody {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut doc_info = None;
     let mut doc_root = None;
     let mut versions = None;
     let mut signatures = None;
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
@@ -560,6 +623,7 @@ impl crate::schemas::ofd::DocBody {
                   b"DocInfo",
                 )?,
               );
+              __xml_child_slot = 1usize;
             }
             b"ofd:DocRoot" | b"DocRoot" => {
               let parsed_value = {
@@ -579,6 +643,7 @@ impl crate::schemas::ofd::DocBody {
                 }
               };
               doc_root = Some(parsed_value);
+              __xml_child_slot = 2usize;
             }
             b"ofd:Versions" | b"Versions" => {
               versions = Some(
@@ -590,6 +655,7 @@ impl crate::schemas::ofd::DocBody {
                   b"Versions",
                 )?,
               );
+              __xml_child_slot = 3usize;
             }
             b"ofd:Signatures" | b"Signatures" => {
               let parsed_value = {
@@ -609,11 +675,13 @@ impl crate::schemas::ofd::DocBody {
                 }
               };
               signatures = Some(parsed_value);
+              __xml_child_slot = 4usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
@@ -626,6 +694,8 @@ impl crate::schemas::ofd::DocBody {
       doc_root,
       versions,
       signatures,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }
@@ -656,6 +726,9 @@ impl crate::schemas::ofd::Ofd {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut version = None;
     let mut doc_type = None;
     let mut doc_body = vec![];
@@ -675,7 +748,9 @@ impl crate::schemas::ofd::Ofd {
               .parse::<crate::schemas::ofd::OfdDocType>()?
           });
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -708,11 +783,13 @@ impl crate::schemas::ofd::Ofd {
                 b"ofd:DocBody",
                 b"DocBody",
               )?);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
@@ -724,6 +801,8 @@ impl crate::schemas::ofd::Ofd {
       version,
       doc_type,
       doc_body,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -742,6 +821,9 @@ impl crate::schemas::ofd::Ofd {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut version = None;
     let mut doc_type = None;
     let mut doc_body = vec![];
@@ -761,7 +843,9 @@ impl crate::schemas::ofd::Ofd {
               .parse::<crate::schemas::ofd::OfdDocType>()?
           });
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -796,11 +880,13 @@ impl crate::schemas::ofd::Ofd {
                 b"ofd:DocBody",
                 b"DocBody",
               )?);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
@@ -812,6 +898,8 @@ impl crate::schemas::ofd::Ofd {
       version,
       doc_type,
       doc_body,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }
@@ -840,7 +928,7 @@ impl crate::schemas::ofd::Keywords {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "Keywords",
@@ -848,7 +936,14 @@ impl crate::schemas::ofd::Keywords {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut keyword = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
@@ -903,17 +998,23 @@ impl crate::schemas::ofd::Keywords {
                 }
               };
               keyword.push(parsed_value);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { keyword })
+    Ok(Self {
+      keyword,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
     xml_reader: &mut quick_xml::Reader<R>,
@@ -922,7 +1023,7 @@ impl crate::schemas::ofd::Keywords {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
       xml_reader,
       buf,
       xml_event,
@@ -931,7 +1032,14 @@ impl crate::schemas::ofd::Keywords {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut keyword = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
@@ -974,17 +1082,23 @@ impl crate::schemas::ofd::Keywords {
                 }
               };
               keyword.push(parsed_value);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { keyword })
+    Ok(Self {
+      keyword,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
 }
 impl std::str::FromStr for crate::schemas::ofd::CustomData {
@@ -1020,6 +1134,9 @@ impl crate::schemas::ofd::CustomData {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut name = None;
     let mut xml_value_raw = None;
     let mut xml_value_seen = false;
@@ -1030,7 +1147,9 @@ impl crate::schemas::ofd::CustomData {
         b"Name" => {
           name = Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -1072,10 +1191,11 @@ impl crate::schemas::ofd::CustomData {
           quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("CustomData"))?,
           _ => {}
         }
-        if let Some(e) = e_opt
-          && !e_empty
-        {
-          xml_reader.read_to_end(e.to_end().name())?;
+        if let Some(e) = e_opt {
+          xml_other_children.push((
+            __xml_child_slot,
+            crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+          ));
         }
       }
     }
@@ -1085,7 +1205,12 @@ impl crate::schemas::ofd::CustomData {
       Err(crate::common::missing_field("CustomData", "xml_value"))?
     };
     let name = name.ok_or_else(|| crate::common::missing_field("CustomData", "name"))?;
-    Ok(Self { name, xml_value })
+    Ok(Self {
+      name,
+      xml_value,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
     xml_reader: &mut quick_xml::Reader<R>,
@@ -1103,6 +1228,9 @@ impl crate::schemas::ofd::CustomData {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut name = None;
     let mut xml_value_raw = None;
     let mut xml_value_seen = false;
@@ -1113,7 +1241,9 @@ impl crate::schemas::ofd::CustomData {
         b"Name" => {
           name = Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -1156,10 +1286,11 @@ impl crate::schemas::ofd::CustomData {
           quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("CustomData"))?,
           _ => {}
         }
-        if let Some(e) = e_opt
-          && !e_empty
-        {
-          xml_reader.read_to_end_into(e.to_end().name(), buf)?;
+        if let Some(e) = e_opt {
+          xml_other_children.push((
+            __xml_child_slot,
+            crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+          ));
         }
       }
     }
@@ -1169,7 +1300,12 @@ impl crate::schemas::ofd::CustomData {
       Err(crate::common::missing_field("CustomData", "xml_value"))?
     };
     let name = name.ok_or_else(|| crate::common::missing_field("CustomData", "name"))?;
-    Ok(Self { name, xml_value })
+    Ok(Self {
+      name,
+      xml_value,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
 }
 impl std::str::FromStr for crate::schemas::ofd::CustomDatas {
@@ -1197,7 +1333,7 @@ impl crate::schemas::ofd::CustomDatas {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "CustomDatas",
@@ -1205,7 +1341,14 @@ impl crate::schemas::ofd::CustomDatas {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut custom_data = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
@@ -1236,17 +1379,23 @@ impl crate::schemas::ofd::CustomDatas {
                 b"ofd:CustomData",
                 b"CustomData",
               )?);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { custom_data })
+    Ok(Self {
+      custom_data,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
     xml_reader: &mut quick_xml::Reader<R>,
@@ -1255,7 +1404,7 @@ impl crate::schemas::ofd::CustomDatas {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
       xml_reader,
       buf,
       xml_event,
@@ -1264,7 +1413,14 @@ impl crate::schemas::ofd::CustomDatas {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut custom_data = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
@@ -1299,17 +1455,23 @@ impl crate::schemas::ofd::CustomDatas {
                   b"CustomData",
                 )?,
               );
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { custom_data })
+    Ok(Self {
+      custom_data,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
 }
 impl std::str::FromStr for crate::schemas::ofd::CtDocInfo {
@@ -1337,7 +1499,7 @@ impl crate::schemas::ofd::CtDocInfo {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "CtDocInfo",
@@ -1345,6 +1507,9 @@ impl crate::schemas::ofd::CtDocInfo {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut doc_id = None;
     let mut title = None;
     let mut author = None;
@@ -1358,6 +1523,10 @@ impl crate::schemas::ofd::CtDocInfo {
     let mut creator = None;
     let mut creator_version = None;
     let mut custom_datas = None;
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
@@ -1415,6 +1584,7 @@ impl crate::schemas::ofd::CtDocInfo {
                 }
               };
               doc_id = Some(parsed_value);
+              __xml_child_slot = 1usize;
             }
             b"ofd:Title" | b"Title" => {
               let parsed_value = {
@@ -1450,6 +1620,7 @@ impl crate::schemas::ofd::CtDocInfo {
                 }
               };
               title = Some(parsed_value);
+              __xml_child_slot = 2usize;
             }
             b"ofd:Author" | b"Author" => {
               let parsed_value = {
@@ -1485,6 +1656,7 @@ impl crate::schemas::ofd::CtDocInfo {
                 }
               };
               author = Some(parsed_value);
+              __xml_child_slot = 3usize;
             }
             b"ofd:Subject" | b"Subject" => {
               let parsed_value = {
@@ -1520,6 +1692,7 @@ impl crate::schemas::ofd::CtDocInfo {
                 }
               };
               subject = Some(parsed_value);
+              __xml_child_slot = 4usize;
             }
             b"ofd:Abstract" | b"Abstract" => {
               let parsed_value = {
@@ -1555,6 +1728,7 @@ impl crate::schemas::ofd::CtDocInfo {
                 }
               };
               r#abstract = Some(parsed_value);
+              __xml_child_slot = 5usize;
             }
             b"ofd:CreationDate" | b"CreationDate" => {
               let parsed_value = {
@@ -1590,6 +1764,7 @@ impl crate::schemas::ofd::CtDocInfo {
                 }
               };
               creation_date = Some(parsed_value);
+              __xml_child_slot = 6usize;
             }
             b"ofd:ModDate" | b"ModDate" => {
               let parsed_value = {
@@ -1625,6 +1800,7 @@ impl crate::schemas::ofd::CtDocInfo {
                 }
               };
               mod_date = Some(parsed_value);
+              __xml_child_slot = 7usize;
             }
             b"ofd:DocUsage" | b"DocUsage" => {
               let parsed_value = {
@@ -1660,6 +1836,7 @@ impl crate::schemas::ofd::CtDocInfo {
                 }
               };
               doc_usage = Some(parsed_value);
+              __xml_child_slot = 8usize;
             }
             b"ofd:Cover" | b"Cover" => {
               let parsed_value = {
@@ -1695,6 +1872,7 @@ impl crate::schemas::ofd::CtDocInfo {
                 }
               };
               cover = Some(parsed_value);
+              __xml_child_slot = 9usize;
             }
             b"ofd:Keywords" | b"Keywords" => {
               keywords = Some(crate::schemas::ofd::Keywords::deserialize_inner_named(
@@ -1703,6 +1881,7 @@ impl crate::schemas::ofd::CtDocInfo {
                 b"ofd:Keywords",
                 b"Keywords",
               )?);
+              __xml_child_slot = 10usize;
             }
             b"ofd:Creator" | b"Creator" => {
               let parsed_value = {
@@ -1738,6 +1917,7 @@ impl crate::schemas::ofd::CtDocInfo {
                 }
               };
               creator = Some(parsed_value);
+              __xml_child_slot = 11usize;
             }
             b"ofd:CreatorVersion" | b"CreatorVersion" => {
               let parsed_value = {
@@ -1773,6 +1953,7 @@ impl crate::schemas::ofd::CtDocInfo {
                 }
               };
               creator_version = Some(parsed_value);
+              __xml_child_slot = 12usize;
             }
             b"ofd:CustomDatas" | b"CustomDatas" => {
               custom_datas = Some(crate::schemas::ofd::CustomDatas::deserialize_inner_named(
@@ -1781,11 +1962,13 @@ impl crate::schemas::ofd::CtDocInfo {
                 b"ofd:CustomDatas",
                 b"CustomDatas",
               )?);
+              __xml_child_slot = 13usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
@@ -1806,6 +1989,8 @@ impl crate::schemas::ofd::CtDocInfo {
       creator,
       creator_version,
       custom_datas,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -1815,7 +2000,7 @@ impl crate::schemas::ofd::CtDocInfo {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
       xml_reader,
       buf,
       xml_event,
@@ -1824,6 +2009,9 @@ impl crate::schemas::ofd::CtDocInfo {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut doc_id = None;
     let mut title = None;
     let mut author = None;
@@ -1837,6 +2025,10 @@ impl crate::schemas::ofd::CtDocInfo {
     let mut creator = None;
     let mut creator_version = None;
     let mut custom_datas = None;
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
@@ -1879,6 +2071,7 @@ impl crate::schemas::ofd::CtDocInfo {
                 }
               };
               doc_id = Some(parsed_value);
+              __xml_child_slot = 1usize;
             }
             b"ofd:Title" | b"Title" => {
               let parsed_value = {
@@ -1898,6 +2091,7 @@ impl crate::schemas::ofd::CtDocInfo {
                 }
               };
               title = Some(parsed_value);
+              __xml_child_slot = 2usize;
             }
             b"ofd:Author" | b"Author" => {
               let parsed_value = {
@@ -1917,6 +2111,7 @@ impl crate::schemas::ofd::CtDocInfo {
                 }
               };
               author = Some(parsed_value);
+              __xml_child_slot = 3usize;
             }
             b"ofd:Subject" | b"Subject" => {
               let parsed_value = {
@@ -1936,6 +2131,7 @@ impl crate::schemas::ofd::CtDocInfo {
                 }
               };
               subject = Some(parsed_value);
+              __xml_child_slot = 4usize;
             }
             b"ofd:Abstract" | b"Abstract" => {
               let parsed_value = {
@@ -1955,6 +2151,7 @@ impl crate::schemas::ofd::CtDocInfo {
                 }
               };
               r#abstract = Some(parsed_value);
+              __xml_child_slot = 5usize;
             }
             b"ofd:CreationDate" | b"CreationDate" => {
               let parsed_value = {
@@ -1974,6 +2171,7 @@ impl crate::schemas::ofd::CtDocInfo {
                 }
               };
               creation_date = Some(parsed_value);
+              __xml_child_slot = 6usize;
             }
             b"ofd:ModDate" | b"ModDate" => {
               let parsed_value = {
@@ -1993,6 +2191,7 @@ impl crate::schemas::ofd::CtDocInfo {
                 }
               };
               mod_date = Some(parsed_value);
+              __xml_child_slot = 7usize;
             }
             b"ofd:DocUsage" | b"DocUsage" => {
               let parsed_value = {
@@ -2012,6 +2211,7 @@ impl crate::schemas::ofd::CtDocInfo {
                 }
               };
               doc_usage = Some(parsed_value);
+              __xml_child_slot = 8usize;
             }
             b"ofd:Cover" | b"Cover" => {
               let parsed_value = {
@@ -2031,6 +2231,7 @@ impl crate::schemas::ofd::CtDocInfo {
                 }
               };
               cover = Some(parsed_value);
+              __xml_child_slot = 9usize;
             }
             b"ofd:Keywords" | b"Keywords" => {
               keywords = Some(
@@ -2042,6 +2243,7 @@ impl crate::schemas::ofd::CtDocInfo {
                   b"Keywords",
                 )?,
               );
+              __xml_child_slot = 10usize;
             }
             b"ofd:Creator" | b"Creator" => {
               let parsed_value = {
@@ -2061,6 +2263,7 @@ impl crate::schemas::ofd::CtDocInfo {
                 }
               };
               creator = Some(parsed_value);
+              __xml_child_slot = 11usize;
             }
             b"ofd:CreatorVersion" | b"CreatorVersion" => {
               let parsed_value = {
@@ -2080,6 +2283,7 @@ impl crate::schemas::ofd::CtDocInfo {
                 }
               };
               creator_version = Some(parsed_value);
+              __xml_child_slot = 12usize;
             }
             b"ofd:CustomDatas" | b"CustomDatas" => {
               custom_datas = Some(
@@ -2091,11 +2295,13 @@ impl crate::schemas::ofd::CtDocInfo {
                   b"CustomDatas",
                 )?,
               );
+              __xml_child_slot = 13usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
@@ -2116,6 +2322,8 @@ impl crate::schemas::ofd::CtDocInfo {
       creator,
       creator_version,
       custom_datas,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }

@@ -29,12 +29,26 @@ impl crate::schemas::custom_tags::CustomTag {
     if with_xmlns {
       writer.write_str(r#" xmlns:ofd="http://www.ofdspec.org/2016""#)?;
     }
-    {
+    if let Some(name_space) = &self.name_space {
       writer.write_str(" NameSpace=\"")?;
-      writer.write_str(&quick_xml::escape::escape(self.name_space.as_str()))?;
+      writer.write_str(&quick_xml::escape::escape(name_space.as_str()))?;
+      writer.write_char('"')?;
+    }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
       writer.write_char('"')?;
     }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(schema_loc) = &self.schema_loc {
       writer.write_char('<')?;
       writer.write_str("ofd:SchemaLoc")?;
@@ -42,12 +56,26 @@ impl crate::schemas::custom_tags::CustomTag {
       writer.write_str(&quick_xml::escape::escape(schema_loc.as_str()))?;
       writer.write_str("</ofd:SchemaLoc>")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
+    }
     {
       writer.write_char('<')?;
       writer.write_str("ofd:FileLoc")?;
       writer.write_char('>')?;
       writer.write_str(&quick_xml::escape::escape(self.file_loc.as_str()))?;
       writer.write_str("</ofd:FileLoc>")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 2usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -85,9 +113,30 @@ impl crate::schemas::custom_tags::CustomTags {
     if with_xmlns {
       writer.write_str(r#" xmlns:ofd="http://www.ofdspec.org/2016""#)?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.custom_tag {
       child.write_xml_named(writer, false, "CustomTag")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;

@@ -1,6 +1,13 @@
 #[cfg(feature = "parts")]
 use super::SdkError;
 
+#[cfg(feature = "parts")]
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct OtherPart {
+  pub inner_path: Box<str>,
+  pub part_content: Box<[u8]>,
+}
+
 pub fn resolve_zip_file_path(path: &str) -> String {
   let mut stack = Vec::new();
 
@@ -69,6 +76,37 @@ pub fn read_zip_data<R: std::io::Read + std::io::Seek>(
 }
 
 #[cfg(feature = "parts")]
+pub fn read_other_zip_parts<R: std::io::Read + std::io::Seek>(
+  archive: &mut zip::ZipArchive<R>,
+  entry_set: &std::collections::HashSet<String>,
+) -> Result<Vec<OtherPart>, SdkError> {
+  use std::io::Read;
+
+  let mut parts = Vec::new();
+
+  for index in 0..archive.len() {
+    let mut zip_entry = archive.by_index(index)?;
+    if zip_entry.is_dir() {
+      continue;
+    }
+
+    let inner_path = resolve_zip_file_path(zip_entry.name());
+    if entry_set.contains(&inner_path) {
+      continue;
+    }
+
+    let mut part_content = Vec::with_capacity(zip_entry.size() as usize);
+    zip_entry.read_to_end(&mut part_content)?;
+    parts.push(OtherPart {
+      inner_path: inner_path.into_boxed_str(),
+      part_content: part_content.into_boxed_slice(),
+    });
+  }
+
+  Ok(parts)
+}
+
+#[cfg(feature = "parts")]
 pub fn load_zip_parts<R, T, F>(
   _current_dir: &str,
   child_paths: Vec<String>,
@@ -110,7 +148,7 @@ where
 
   let mut parts = Vec::with_capacity(child_paths.len());
 
-  for (child_path, child_context) in child_paths.into_iter().zip(child_contexts.into_iter()) {
+  for (child_path, child_context) in child_paths.into_iter().zip(child_contexts) {
     parts.push(load(&child_path, child_context, archive)?);
   }
 
@@ -238,6 +276,19 @@ pub fn save_zip_data<W: std::io::Write + std::io::Seek>(
     zip.start_file(inner_path, options)?;
     zip.write_all(data)?;
     entry_set.insert(inner_path.to_string());
+  }
+
+  Ok(())
+}
+
+#[cfg(feature = "parts")]
+pub fn save_other_zip_parts<W: std::io::Write + std::io::Seek>(
+  parts: &[OtherPart],
+  zip: &mut zip::ZipWriter<W>,
+  entry_set: &mut std::collections::HashSet<String>,
+) -> Result<(), SdkError> {
+  for part in parts {
+    save_zip_data(&part.inner_path, &part.part_content, zip, entry_set)?;
   }
 
   Ok(())

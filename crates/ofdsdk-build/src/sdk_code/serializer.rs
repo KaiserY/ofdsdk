@@ -169,6 +169,8 @@ fn gen_struct_serializer(
     )?);
   }
 
+  let mut xml_child_slot = 0usize;
+
   for child in &s.sequences {
     if child.ident == "xml_value" {
       xml_value_stmt = Some(gen_xml_value_stmt(
@@ -179,7 +181,9 @@ fn gen_struct_serializer(
       continue;
     }
 
+    child_stmts.push(gen_xml_other_children_slot_stmt(xml_child_slot)?);
     child_stmts.push(gen_sequence_stmt(sdk_data_schema, sdk_data_schemas, child)?);
+    xml_child_slot += 1;
   }
 
   for child in &s.children {
@@ -187,6 +191,7 @@ fn gen_struct_serializer(
   }
 
   if !s.children.is_empty() {
+    child_stmts.push(gen_xml_other_children_slot_stmt(xml_child_slot)?);
     xml_children_stmt = Some(parse2(quote! {
       for child in &self.xml_children {
         match child {
@@ -194,7 +199,25 @@ fn gen_struct_serializer(
         }
       }
     })?);
+    xml_child_slot += 1;
   }
+
+  let xml_other_attrs_stmt: Stmt = parse2(quote! {
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
+  })?;
+
+  let xml_other_children_trailing_stmt = gen_xml_other_children_slot_stmt(xml_child_slot)?;
+  let xml_other_children_empty_content_stmt: Stmt = parse2(quote! {
+    for (_, child) in &self.xml_other_children {
+      writer.write_str(child)?;
+    }
+  })?;
 
   let to_xml_fn: ItemFn = parse2(quote! {
     pub fn to_xml(&self) -> Result<String, std::fmt::Error> {
@@ -233,6 +256,7 @@ fn gen_struct_serializer(
         }
 
         #( #attr_stmts )*
+        #xml_other_attrs_stmt
 
         writer.write_char('>')?;
 
@@ -241,6 +265,7 @@ fn gen_struct_serializer(
         #( #child_stmts )*
 
         #xml_children_stmt
+        #xml_other_children_trailing_stmt
 
         writer.write_str("</ofd:")?;
         writer.write_str(tag_name)?;
@@ -266,8 +291,18 @@ fn gen_struct_serializer(
         }
 
         #( #attr_stmts )*
+        #xml_other_attrs_stmt
 
-        writer.write_str("/>")?;
+        if self.xml_other_children.is_empty() {
+          writer.write_str("/>")?;
+          return Ok(());
+        }
+
+        writer.write_char('>')?;
+        #xml_other_children_empty_content_stmt
+        writer.write_str("</ofd:")?;
+        writer.write_str(tag_name)?;
+        writer.write_char('>')?;
 
         Ok(())
       }
@@ -379,6 +414,18 @@ fn gen_xml_value_stmt(
       #write_value
     })?)
   }
+}
+
+fn gen_xml_other_children_slot_stmt(slot: usize) -> anyhow::Result<Stmt> {
+  Ok(parse2(quote! {
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == #slot)
+    {
+      writer.write_str(child)?;
+    }
+  })?)
 }
 
 fn gen_sequence_stmt(

@@ -18,8 +18,8 @@ fn page_annot_round_trip() {
     annot.r#type,
     ofdsdk::schemas::annotation::AnnotType::Stamp
   ));
-  assert_eq!(annot.creator, "Signature1");
-  assert_eq!(annot.last_mod_date, "2019-05-27 15:37:52");
+  assert_eq!(annot.creator.as_deref(), Some("Signature1"));
+  assert_eq!(annot.last_mod_date.as_deref(), Some("2019-05-27 15:37:52"));
   assert_eq!(annot.read_only, Some(false));
   assert_eq!(annot.subtype.as_deref(), Some("PDFWidgetSign"));
 
@@ -30,13 +30,14 @@ fn page_annot_round_trip() {
   assert_eq!(parameters.parameter[1].name, "PDFWidgetObjNum");
   assert_eq!(parameters.parameter[1].xml_value, "34");
 
+  let appearance = annot.appearance.as_ref().unwrap();
   assert_eq!(
-    annot.appearance.boundary.as_deref(),
+    appearance.boundary.as_deref(),
     Some("166.8639 106.1897 42.6861 29.2806")
   );
-  assert_eq!(annot.appearance.xml_children.len(), 1);
+  assert_eq!(appearance.xml_children.len(), 1);
 
-  match &annot.appearance.xml_children[0] {
+  match &appearance.xml_children[0] {
     ofdsdk::schemas::annotation::AppearanceContentChoice::CompositeObject(object) => {
       assert_eq!(object.id, 66);
       assert_eq!(object.resource_id, 67);
@@ -64,6 +65,22 @@ fn page_annot_round_trip() {
 }
 
 #[test]
+fn page_annot_missing_appearance_round_trip() {
+  let page_annot = r#"<ofd:PageAnnot xmlns:ofd="http://www.ofdspec.org/2016"><ofd:Annot Type="Link" ID="1"/></ofd:PageAnnot>"#
+    .parse::<ofdsdk::schemas::annotation::PageAnnot>()
+    .unwrap();
+
+  assert_eq!(page_annot.annot.len(), 1);
+  assert!(page_annot.annot[0].appearance.is_none());
+
+  let serialized = page_annot.to_xml().unwrap();
+  assert_eq!(
+    serialized,
+    r#"<ofd:PageAnnot xmlns:ofd="http://www.ofdspec.org/2016"><ofd:Annot ID="1" Type="Link"></ofd:Annot></ofd:PageAnnot>"#
+  );
+}
+
+#[test]
 fn page_annot_watermark_grid_round_trip() {
   let page_annot = WATERMARK_XML
     .parse::<ofdsdk::schemas::annotation::PageAnnot>()
@@ -77,12 +94,13 @@ fn page_annot_watermark_grid_round_trip() {
     ofdsdk::schemas::annotation::AnnotType::Watermark
   ));
   assert_eq!(first.id, 5);
-  assert_eq!(first.creator, "OFD R&W");
-  assert_eq!(first.last_mod_date, "2024-09-29");
-  assert_eq!(first.appearance.boundary.as_deref(), Some("0 0 420 297"));
-  assert_eq!(first.appearance.xml_children.len(), 1);
+  assert_eq!(first.creator.as_deref(), Some("OFD R&W"));
+  assert_eq!(first.last_mod_date.as_deref(), Some("2024-09-29"));
+  let first_appearance = first.appearance.as_ref().unwrap();
+  assert_eq!(first_appearance.boundary.as_deref(), Some("0 0 420 297"));
+  assert_eq!(first_appearance.xml_children.len(), 1);
 
-  match &first.appearance.xml_children[0] {
+  match &first_appearance.xml_children[0] {
     ofdsdk::schemas::annotation::AppearanceContentChoice::TextObject(text) => {
       assert_eq!(text.id, 7);
       assert_eq!(text.boundary, "0 0 420 297");
@@ -109,7 +127,7 @@ fn page_annot_watermark_grid_round_trip() {
 
   let last = &page_annot.annot[19];
   assert_eq!(last.id, 45);
-  match &last.appearance.xml_children[0] {
+  match &last.appearance.as_ref().unwrap().xml_children[0] {
     ofdsdk::schemas::annotation::AppearanceContentChoice::TextObject(text) => {
       assert_eq!(text.id, 46);
       assert_eq!(
@@ -127,6 +145,6 @@ fn page_annot_watermark_grid_round_trip() {
     .unwrap();
 
   assert_eq!(reparsed.annot.len(), 20);
-  assert_eq!(reparsed.annot[0].creator, "OFD R&W");
+  assert_eq!(reparsed.annot[0].creator.as_deref(), Some("OFD R&W"));
   assert_eq!(reparsed.annot[19].id, 45);
 }

@@ -9,6 +9,8 @@
 pub struct Extensions {
   ///扩展信息节点。
   pub extension: Vec<CtExtension>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///扩展属性。
 #[derive(Clone, Debug, Default)]
@@ -19,6 +21,8 @@ pub struct Property {
   pub r#type: Option<String>,
   ///扩展属性值。
   pub xml_value: String,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug)]
 pub enum CtExtensionContentChoice {
@@ -40,6 +44,8 @@ pub struct CtExtension {
   ///引用扩展项针对的文档项目的标识。
   pub ref_id: crate::schemas::definitions::StRefId,
   pub xml_children: Vec<CtExtensionContentChoice>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug, Default)]
 pub struct Extension(pub CtExtension);

@@ -117,6 +117,9 @@ impl crate::schemas::res::ColorSpace {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut r#type = None;
     let mut bits_per_component = None;
     let mut profile = None;
@@ -154,7 +157,9 @@ impl crate::schemas::res::ColorSpace {
             "id",
           )?);
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -187,11 +192,13 @@ impl crate::schemas::res::ColorSpace {
                 b"ofd:Palette",
                 b"Palette",
               )?);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
@@ -205,6 +212,8 @@ impl crate::schemas::res::ColorSpace {
       profile,
       id,
       palette,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -223,6 +232,9 @@ impl crate::schemas::res::ColorSpace {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut r#type = None;
     let mut bits_per_component = None;
     let mut profile = None;
@@ -260,7 +272,9 @@ impl crate::schemas::res::ColorSpace {
             "id",
           )?);
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -295,11 +309,13 @@ impl crate::schemas::res::ColorSpace {
                 b"ofd:Palette",
                 b"Palette",
               )?);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
@@ -313,6 +329,8 @@ impl crate::schemas::res::ColorSpace {
       profile,
       id,
       palette,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }
@@ -341,7 +359,7 @@ impl crate::schemas::res::ColorSpaces {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "ColorSpaces",
@@ -349,7 +367,14 @@ impl crate::schemas::res::ColorSpaces {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut color_space = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
@@ -380,17 +405,23 @@ impl crate::schemas::res::ColorSpaces {
                 b"ofd:ColorSpace",
                 b"ColorSpace",
               )?);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { color_space })
+    Ok(Self {
+      color_space,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
     xml_reader: &mut quick_xml::Reader<R>,
@@ -399,7 +430,7 @@ impl crate::schemas::res::ColorSpaces {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
       xml_reader,
       buf,
       xml_event,
@@ -408,7 +439,14 @@ impl crate::schemas::res::ColorSpaces {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut color_space = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
@@ -443,17 +481,23 @@ impl crate::schemas::res::ColorSpaces {
                   b"ColorSpace",
                 )?,
               );
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { color_space })
+    Ok(Self {
+      color_space,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
 }
 impl std::str::FromStr for crate::schemas::res::DrawParam {
@@ -489,6 +533,9 @@ impl crate::schemas::res::DrawParam {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut relative = None;
     let mut line_width = None;
     let mut join = None;
@@ -553,7 +600,9 @@ impl crate::schemas::res::DrawParam {
             "id",
           )?);
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -586,6 +635,7 @@ impl crate::schemas::res::DrawParam {
                 b"ofd:FillColor",
                 b"FillColor",
               )?);
+              __xml_child_slot = 1usize;
             }
             b"ofd:StrokeColor" | b"StrokeColor" => {
               stroke_color = Some(crate::schemas::page::CtColor::deserialize_inner_named(
@@ -594,11 +644,13 @@ impl crate::schemas::res::DrawParam {
                 b"ofd:StrokeColor",
                 b"StrokeColor",
               )?);
+              __xml_child_slot = 2usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
@@ -616,6 +668,8 @@ impl crate::schemas::res::DrawParam {
       id,
       fill_color,
       stroke_color,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -634,6 +688,9 @@ impl crate::schemas::res::DrawParam {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut relative = None;
     let mut line_width = None;
     let mut join = None;
@@ -698,7 +755,9 @@ impl crate::schemas::res::DrawParam {
             "id",
           )?);
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -735,6 +794,7 @@ impl crate::schemas::res::DrawParam {
                   b"FillColor",
                 )?,
               );
+              __xml_child_slot = 1usize;
             }
             b"ofd:StrokeColor" | b"StrokeColor" => {
               stroke_color = Some(
@@ -746,11 +806,13 @@ impl crate::schemas::res::DrawParam {
                   b"StrokeColor",
                 )?,
               );
+              __xml_child_slot = 2usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
@@ -768,6 +830,8 @@ impl crate::schemas::res::DrawParam {
       id,
       fill_color,
       stroke_color,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }
@@ -796,7 +860,7 @@ impl crate::schemas::res::DrawParams {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "DrawParams",
@@ -804,7 +868,14 @@ impl crate::schemas::res::DrawParams {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut draw_param = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
@@ -835,17 +906,23 @@ impl crate::schemas::res::DrawParams {
                 b"ofd:DrawParam",
                 b"DrawParam",
               )?);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { draw_param })
+    Ok(Self {
+      draw_param,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
     xml_reader: &mut quick_xml::Reader<R>,
@@ -854,7 +931,7 @@ impl crate::schemas::res::DrawParams {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
       xml_reader,
       buf,
       xml_event,
@@ -863,7 +940,14 @@ impl crate::schemas::res::DrawParams {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut draw_param = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
@@ -898,17 +982,23 @@ impl crate::schemas::res::DrawParams {
                   b"DrawParam",
                 )?,
               );
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { draw_param })
+    Ok(Self {
+      draw_param,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
 }
 impl std::str::FromStr for crate::schemas::res::Font {
@@ -938,6 +1028,9 @@ impl crate::schemas::res::Font {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut font_name = None;
     let mut family_name = None;
     let mut charset = None;
@@ -1007,7 +1100,9 @@ impl crate::schemas::res::Font {
             "id",
           )?);
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -1060,11 +1155,13 @@ impl crate::schemas::res::Font {
                 }
               };
               font_file = Some(parsed_value);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
@@ -1082,6 +1179,8 @@ impl crate::schemas::res::Font {
       fixed_width,
       id,
       font_file,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -1100,6 +1199,9 @@ impl crate::schemas::res::Font {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut font_name = None;
     let mut family_name = None;
     let mut charset = None;
@@ -1169,7 +1271,9 @@ impl crate::schemas::res::Font {
             "id",
           )?);
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -1214,11 +1318,13 @@ impl crate::schemas::res::Font {
                 }
               };
               font_file = Some(parsed_value);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
@@ -1236,6 +1342,8 @@ impl crate::schemas::res::Font {
       fixed_width,
       id,
       font_file,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }
@@ -1258,7 +1366,7 @@ impl crate::schemas::res::Fonts {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "Fonts",
@@ -1266,7 +1374,14 @@ impl crate::schemas::res::Fonts {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut font = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
@@ -1297,17 +1412,23 @@ impl crate::schemas::res::Fonts {
                 b"ofd:Font",
                 b"Font",
               )?);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { font })
+    Ok(Self {
+      font,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
     xml_reader: &mut quick_xml::Reader<R>,
@@ -1316,7 +1437,7 @@ impl crate::schemas::res::Fonts {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
       xml_reader,
       buf,
       xml_event,
@@ -1325,7 +1446,14 @@ impl crate::schemas::res::Fonts {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut font = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
@@ -1358,17 +1486,23 @@ impl crate::schemas::res::Fonts {
                 b"ofd:Font",
                 b"Font",
               )?);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { font })
+    Ok(Self {
+      font,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
 }
 impl std::str::FromStr for crate::schemas::res::MultiMedia {
@@ -1404,6 +1538,9 @@ impl crate::schemas::res::MultiMedia {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut r#type = None;
     let mut format = None;
     let mut id = None;
@@ -1432,7 +1569,9 @@ impl crate::schemas::res::MultiMedia {
             "id",
           )?);
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -1492,11 +1631,13 @@ impl crate::schemas::res::MultiMedia {
                 }
               };
               media_file = Some(parsed_value);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
@@ -1511,6 +1652,8 @@ impl crate::schemas::res::MultiMedia {
       format,
       id,
       media_file,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -1529,6 +1672,9 @@ impl crate::schemas::res::MultiMedia {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut r#type = None;
     let mut format = None;
     let mut id = None;
@@ -1557,7 +1703,9 @@ impl crate::schemas::res::MultiMedia {
             "id",
           )?);
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -1602,11 +1750,13 @@ impl crate::schemas::res::MultiMedia {
                 }
               };
               media_file = Some(parsed_value);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
@@ -1621,6 +1771,8 @@ impl crate::schemas::res::MultiMedia {
       format,
       id,
       media_file,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }
@@ -1649,7 +1801,7 @@ impl crate::schemas::res::MultiMedias {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "MultiMedias",
@@ -1657,7 +1809,14 @@ impl crate::schemas::res::MultiMedias {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut multi_media = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
@@ -1688,17 +1847,23 @@ impl crate::schemas::res::MultiMedias {
                 b"ofd:MultiMedia",
                 b"MultiMedia",
               )?);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { multi_media })
+    Ok(Self {
+      multi_media,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
     xml_reader: &mut quick_xml::Reader<R>,
@@ -1707,7 +1872,7 @@ impl crate::schemas::res::MultiMedias {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
       xml_reader,
       buf,
       xml_event,
@@ -1716,7 +1881,14 @@ impl crate::schemas::res::MultiMedias {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut multi_media = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
@@ -1751,17 +1923,23 @@ impl crate::schemas::res::MultiMedias {
                   b"MultiMedia",
                 )?,
               );
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { multi_media })
+    Ok(Self {
+      multi_media,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
 }
 impl std::str::FromStr for crate::schemas::res::CompositeGraphicUnit {
@@ -1802,6 +1980,9 @@ impl crate::schemas::res::CompositeGraphicUnit {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut width = None;
     let mut height = None;
     let mut id = None;
@@ -1836,7 +2017,9 @@ impl crate::schemas::res::CompositeGraphicUnit {
             "id",
           )?);
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -1958,6 +2141,7 @@ impl crate::schemas::res::CompositeGraphicUnit {
                 }
               };
               thumbnail = Some(parsed_value);
+              __xml_child_slot = 1usize;
             }
             b"ofd:Substitution" | b"Substitution" => {
               let parsed_value = {
@@ -2053,6 +2237,7 @@ impl crate::schemas::res::CompositeGraphicUnit {
                 }
               };
               substitution = Some(parsed_value);
+              __xml_child_slot = 2usize;
             }
             b"ofd:Content" | b"Content" => {
               content = Some(crate::schemas::page::CtPageBlock::deserialize_inner_named(
@@ -2061,11 +2246,13 @@ impl crate::schemas::res::CompositeGraphicUnit {
                 b"ofd:Content",
                 b"Content",
               )?);
+              __xml_child_slot = 3usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
@@ -2085,6 +2272,8 @@ impl crate::schemas::res::CompositeGraphicUnit {
       thumbnail,
       substitution,
       content,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -2103,6 +2292,9 @@ impl crate::schemas::res::CompositeGraphicUnit {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut width = None;
     let mut height = None;
     let mut id = None;
@@ -2137,7 +2329,9 @@ impl crate::schemas::res::CompositeGraphicUnit {
             "id",
           )?);
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -2217,6 +2411,7 @@ impl crate::schemas::res::CompositeGraphicUnit {
                 }
               };
               thumbnail = Some(parsed_value);
+              __xml_child_slot = 1usize;
             }
             b"ofd:Substitution" | b"Substitution" => {
               let parsed_value = {
@@ -2269,6 +2464,7 @@ impl crate::schemas::res::CompositeGraphicUnit {
                 }
               };
               substitution = Some(parsed_value);
+              __xml_child_slot = 2usize;
             }
             b"ofd:Content" | b"Content" => {
               content = Some(
@@ -2280,11 +2476,13 @@ impl crate::schemas::res::CompositeGraphicUnit {
                   b"Content",
                 )?,
               );
+              __xml_child_slot = 3usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
@@ -2304,6 +2502,8 @@ impl crate::schemas::res::CompositeGraphicUnit {
       thumbnail,
       substitution,
       content,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }
@@ -2337,7 +2537,7 @@ impl crate::schemas::res::CompositeGraphicUnits {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "CompositeGraphicUnits",
@@ -2345,7 +2545,14 @@ impl crate::schemas::res::CompositeGraphicUnits {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut composite_graphic_unit = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
@@ -2380,11 +2587,13 @@ impl crate::schemas::res::CompositeGraphicUnits {
                   b"CompositeGraphicUnit",
                 )?,
               );
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
@@ -2392,6 +2601,8 @@ impl crate::schemas::res::CompositeGraphicUnits {
     }
     Ok(Self {
       composite_graphic_unit,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -2401,7 +2612,7 @@ impl crate::schemas::res::CompositeGraphicUnits {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
       xml_reader,
       buf,
       xml_event,
@@ -2410,7 +2621,14 @@ impl crate::schemas::res::CompositeGraphicUnits {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut composite_graphic_unit = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
@@ -2447,11 +2665,13 @@ impl crate::schemas::res::CompositeGraphicUnits {
                   b"CompositeGraphicUnit",
                 )?,
               );
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
@@ -2459,6 +2679,8 @@ impl crate::schemas::res::CompositeGraphicUnits {
     }
     Ok(Self {
       composite_graphic_unit,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }
@@ -2489,6 +2711,9 @@ impl crate::schemas::res::Res {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut base_loc = None;
     let mut xml_children = vec![];
     for attr in e.attributes().with_checks(false) {
@@ -2499,7 +2724,9 @@ impl crate::schemas::res::Res {
           base_loc =
             Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -2534,6 +2761,7 @@ impl crate::schemas::res::Res {
                   b"ColorSpaces",
                 )?),
               ));
+              __xml_child_slot = 1usize;
             }
             b"ofd:DrawParams" | b"DrawParams" => {
               xml_children.push(crate::schemas::res::ResContentChoice::DrawParams(Box::new(
@@ -2544,6 +2772,7 @@ impl crate::schemas::res::Res {
                   b"DrawParams",
                 )?,
               )));
+              __xml_child_slot = 1usize;
             }
             b"ofd:Fonts" | b"Fonts" => {
               xml_children.push(crate::schemas::res::ResContentChoice::Fonts(Box::new(
@@ -2554,6 +2783,7 @@ impl crate::schemas::res::Res {
                   b"Fonts",
                 )?,
               )));
+              __xml_child_slot = 1usize;
             }
             b"ofd:MultiMedias" | b"MultiMedias" => {
               xml_children.push(crate::schemas::res::ResContentChoice::MultiMedias(
@@ -2564,6 +2794,7 @@ impl crate::schemas::res::Res {
                   b"MultiMedias",
                 )?),
               ));
+              __xml_child_slot = 1usize;
             }
             b"ofd:CompositeGraphicUnits" | b"CompositeGraphicUnits" => {
               xml_children.push(
@@ -2576,11 +2807,13 @@ impl crate::schemas::res::Res {
                   )?,
                 )),
               );
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
@@ -2590,6 +2823,8 @@ impl crate::schemas::res::Res {
     Ok(Self {
       base_loc,
       xml_children,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -2608,6 +2843,9 @@ impl crate::schemas::res::Res {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut base_loc = None;
     let mut xml_children = vec![];
     for attr in e.attributes().with_checks(false) {
@@ -2618,7 +2856,9 @@ impl crate::schemas::res::Res {
           base_loc =
             Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -2657,6 +2897,7 @@ impl crate::schemas::res::Res {
                   )?,
                 ),
               ));
+              __xml_child_slot = 1usize;
             }
             b"ofd:DrawParams" | b"DrawParams" => {
               xml_children.push(crate::schemas::res::ResContentChoice::DrawParams(Box::new(
@@ -2668,6 +2909,7 @@ impl crate::schemas::res::Res {
                   b"DrawParams",
                 )?,
               )));
+              __xml_child_slot = 1usize;
             }
             b"ofd:Fonts" | b"Fonts" => {
               xml_children.push(crate::schemas::res::ResContentChoice::Fonts(Box::new(
@@ -2679,6 +2921,7 @@ impl crate::schemas::res::Res {
                   b"Fonts",
                 )?,
               )));
+              __xml_child_slot = 1usize;
             }
             b"ofd:MultiMedias" | b"MultiMedias" => {
               xml_children.push(crate::schemas::res::ResContentChoice::MultiMedias(
@@ -2692,6 +2935,7 @@ impl crate::schemas::res::Res {
                   )?,
                 ),
               ));
+              __xml_child_slot = 1usize;
             }
             b"ofd:CompositeGraphicUnits" | b"CompositeGraphicUnits" => {
               xml_children.push(
@@ -2705,11 +2949,13 @@ impl crate::schemas::res::Res {
                   )?,
                 )),
               );
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
@@ -2719,6 +2965,8 @@ impl crate::schemas::res::Res {
     Ok(Self {
       base_loc,
       xml_children,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }
@@ -2741,7 +2989,7 @@ impl crate::schemas::res::Palette {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "Palette",
@@ -2749,7 +2997,14 @@ impl crate::schemas::res::Palette {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut cv = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
@@ -2802,17 +3057,23 @@ impl crate::schemas::res::Palette {
                 }
               };
               cv.push(parsed_value);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { cv })
+    Ok(Self {
+      cv,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
     xml_reader: &mut quick_xml::Reader<R>,
@@ -2821,7 +3082,7 @@ impl crate::schemas::res::Palette {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
       xml_reader,
       buf,
       xml_event,
@@ -2830,7 +3091,14 @@ impl crate::schemas::res::Palette {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut cv = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
@@ -2873,17 +3141,23 @@ impl crate::schemas::res::Palette {
                 }
               };
               cv.push(parsed_value);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { cv })
+    Ok(Self {
+      cv,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
 }
 impl std::str::FromStr for crate::schemas::res::CtColorSpace {
@@ -2924,6 +3198,9 @@ impl crate::schemas::res::CtColorSpace {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut r#type = None;
     let mut bits_per_component = None;
     let mut profile = None;
@@ -2952,7 +3229,9 @@ impl crate::schemas::res::CtColorSpace {
           profile =
             Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -2985,11 +3264,13 @@ impl crate::schemas::res::CtColorSpace {
                 b"ofd:Palette",
                 b"Palette",
               )?);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
@@ -3001,6 +3282,8 @@ impl crate::schemas::res::CtColorSpace {
       bits_per_component,
       profile,
       palette,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -3019,6 +3302,9 @@ impl crate::schemas::res::CtColorSpace {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut r#type = None;
     let mut bits_per_component = None;
     let mut profile = None;
@@ -3047,7 +3333,9 @@ impl crate::schemas::res::CtColorSpace {
           profile =
             Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -3082,11 +3370,13 @@ impl crate::schemas::res::CtColorSpace {
                 b"ofd:Palette",
                 b"Palette",
               )?);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
@@ -3098,6 +3388,8 @@ impl crate::schemas::res::CtColorSpace {
       bits_per_component,
       profile,
       palette,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }
@@ -3134,6 +3426,9 @@ impl crate::schemas::res::CtDrawParam {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut relative = None;
     let mut line_width = None;
     let mut join = None;
@@ -3189,7 +3484,9 @@ impl crate::schemas::res::CtDrawParam {
             "miter_limit",
           )?);
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -3222,6 +3519,7 @@ impl crate::schemas::res::CtDrawParam {
                 b"ofd:FillColor",
                 b"FillColor",
               )?);
+              __xml_child_slot = 1usize;
             }
             b"ofd:StrokeColor" | b"StrokeColor" => {
               stroke_color = Some(crate::schemas::page::CtColor::deserialize_inner_named(
@@ -3230,11 +3528,13 @@ impl crate::schemas::res::CtDrawParam {
                 b"ofd:StrokeColor",
                 b"StrokeColor",
               )?);
+              __xml_child_slot = 2usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
@@ -3250,6 +3550,8 @@ impl crate::schemas::res::CtDrawParam {
       miter_limit,
       fill_color,
       stroke_color,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -3268,6 +3570,9 @@ impl crate::schemas::res::CtDrawParam {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut relative = None;
     let mut line_width = None;
     let mut join = None;
@@ -3323,7 +3628,9 @@ impl crate::schemas::res::CtDrawParam {
             "miter_limit",
           )?);
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -3360,6 +3667,7 @@ impl crate::schemas::res::CtDrawParam {
                   b"FillColor",
                 )?,
               );
+              __xml_child_slot = 1usize;
             }
             b"ofd:StrokeColor" | b"StrokeColor" => {
               stroke_color = Some(
@@ -3371,11 +3679,13 @@ impl crate::schemas::res::CtDrawParam {
                   b"StrokeColor",
                 )?,
               );
+              __xml_child_slot = 2usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
@@ -3391,6 +3701,8 @@ impl crate::schemas::res::CtDrawParam {
       miter_limit,
       fill_color,
       stroke_color,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }
@@ -3421,6 +3733,9 @@ impl crate::schemas::res::CtFont {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut font_name = None;
     let mut family_name = None;
     let mut charset = None;
@@ -3481,7 +3796,9 @@ impl crate::schemas::res::CtFont {
             "fixed_width",
           )?);
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -3541,11 +3858,13 @@ impl crate::schemas::res::CtFont {
                 }
               };
               font_file = Some(parsed_value);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
@@ -3561,6 +3880,8 @@ impl crate::schemas::res::CtFont {
       serif,
       fixed_width,
       font_file,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -3579,6 +3900,9 @@ impl crate::schemas::res::CtFont {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut font_name = None;
     let mut family_name = None;
     let mut charset = None;
@@ -3639,7 +3963,9 @@ impl crate::schemas::res::CtFont {
             "fixed_width",
           )?);
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -3684,11 +4010,13 @@ impl crate::schemas::res::CtFont {
                 }
               };
               font_file = Some(parsed_value);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
@@ -3704,6 +4032,8 @@ impl crate::schemas::res::CtFont {
       serif,
       fixed_width,
       font_file,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }
@@ -3745,6 +4075,9 @@ impl crate::schemas::res::CtMultiMedia {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut r#type = None;
     let mut format = None;
     let mut media_file = None;
@@ -3764,7 +4097,9 @@ impl crate::schemas::res::CtMultiMedia {
           format =
             Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -3824,11 +4159,13 @@ impl crate::schemas::res::CtMultiMedia {
                 }
               };
               media_file = Some(parsed_value);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
@@ -3841,6 +4178,8 @@ impl crate::schemas::res::CtMultiMedia {
       r#type,
       format,
       media_file,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -3859,6 +4198,9 @@ impl crate::schemas::res::CtMultiMedia {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut r#type = None;
     let mut format = None;
     let mut media_file = None;
@@ -3878,7 +4220,9 @@ impl crate::schemas::res::CtMultiMedia {
           format =
             Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -3923,11 +4267,13 @@ impl crate::schemas::res::CtMultiMedia {
                 }
               };
               media_file = Some(parsed_value);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
@@ -3940,6 +4286,8 @@ impl crate::schemas::res::CtMultiMedia {
       r#type,
       format,
       media_file,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }
@@ -3976,6 +4324,9 @@ impl crate::schemas::res::CtVectorG {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut width = None;
     let mut height = None;
     let mut thumbnail = None;
@@ -4001,7 +4352,9 @@ impl crate::schemas::res::CtVectorG {
             "height",
           )?);
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -4117,6 +4470,7 @@ impl crate::schemas::res::CtVectorG {
                 }
               };
               thumbnail = Some(parsed_value);
+              __xml_child_slot = 1usize;
             }
             b"ofd:Substitution" | b"Substitution" => {
               let parsed_value = {
@@ -4208,6 +4562,7 @@ impl crate::schemas::res::CtVectorG {
                 }
               };
               substitution = Some(parsed_value);
+              __xml_child_slot = 2usize;
             }
             b"ofd:Content" | b"Content" => {
               content = Some(crate::schemas::page::CtPageBlock::deserialize_inner_named(
@@ -4216,11 +4571,13 @@ impl crate::schemas::res::CtVectorG {
                 b"ofd:Content",
                 b"Content",
               )?);
+              __xml_child_slot = 3usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
@@ -4235,6 +4592,8 @@ impl crate::schemas::res::CtVectorG {
       thumbnail,
       substitution,
       content,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -4253,6 +4612,9 @@ impl crate::schemas::res::CtVectorG {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut width = None;
     let mut height = None;
     let mut thumbnail = None;
@@ -4278,7 +4640,9 @@ impl crate::schemas::res::CtVectorG {
             "height",
           )?);
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -4352,6 +4716,7 @@ impl crate::schemas::res::CtVectorG {
                 }
               };
               thumbnail = Some(parsed_value);
+              __xml_child_slot = 1usize;
             }
             b"ofd:Substitution" | b"Substitution" => {
               let parsed_value = {
@@ -4400,6 +4765,7 @@ impl crate::schemas::res::CtVectorG {
                 }
               };
               substitution = Some(parsed_value);
+              __xml_child_slot = 2usize;
             }
             b"ofd:Content" | b"Content" => {
               content = Some(
@@ -4411,11 +4777,13 @@ impl crate::schemas::res::CtVectorG {
                   b"Content",
                 )?,
               );
+              __xml_child_slot = 3usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
@@ -4430,6 +4798,8 @@ impl crate::schemas::res::CtVectorG {
       thumbnail,
       substitution,
       content,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }

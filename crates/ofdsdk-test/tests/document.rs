@@ -90,6 +90,41 @@ fn document_round_trip() {
 }
 
 #[test]
+fn unknown_children_preserve_known_child_slots() {
+  let document: Document = r#"<ofd:Document xmlns:ofd="http://www.ofdspec.org/2016">
+<ofd:CommonData>
+<ofd:MaxUnitID>10</ofd:MaxUnitID>
+<ofd:VendorBeforePageArea/>
+<ofd:PageArea>
+<ofd:PhysicalBox>0 0 210 140</ofd:PhysicalBox>
+</ofd:PageArea>
+<ofd:VendorBeforePublicRes/>
+<ofd:PublicRes>PublicRes.xml</ofd:PublicRes>
+<ofd:VendorAfterPublicRes/>
+</ofd:CommonData>
+<ofd:Pages>
+<ofd:Page ID="1" BaseLoc="Pages/Page_0/Content.xml"/>
+</ofd:Pages>
+</ofd:Document>"#
+    .parse()
+    .unwrap();
+
+  assert_eq!(document.common_data.xml_other_children.len(), 3);
+  assert_eq!(document.common_data.xml_other_children[0].0, 1);
+  assert_eq!(document.common_data.xml_other_children[1].0, 2);
+  assert_eq!(document.common_data.xml_other_children[2].0, 3);
+
+  let serialized = document.to_xml().unwrap();
+  assert!(
+    serialized
+      .contains("<ofd:MaxUnitID>10</ofd:MaxUnitID><ofd:VendorBeforePageArea/><ofd:PageArea>")
+  );
+  assert!(
+    serialized.contains("</ofd:PageArea><ofd:VendorBeforePublicRes/><ofd:PublicRes>PublicRes.xml</ofd:PublicRes><ofd:VendorAfterPublicRes/>")
+  );
+}
+
+#[test]
 fn document_vpreferences_round_trip() {
   let document: Document = DOCUMENT_VPREFERENCES_XML.parse().unwrap();
 

@@ -59,6 +59,9 @@ impl crate::schemas::signatures::Signature {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut id = None;
     let mut r#type = None;
     let mut base_loc = None;
@@ -81,7 +84,9 @@ impl crate::schemas::signatures::Signature {
           base_loc =
             Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -105,10 +110,11 @@ impl crate::schemas::signatures::Signature {
           quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("Signature"))?,
           _ => {}
         }
-        if let Some(e) = e_opt
-          && !e_empty
-        {
-          xml_reader.read_to_end(e.to_end().name())?;
+        if let Some(e) = e_opt {
+          xml_other_children.push((
+            __xml_child_slot,
+            crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+          ));
         }
       }
     }
@@ -118,6 +124,8 @@ impl crate::schemas::signatures::Signature {
       id,
       r#type,
       base_loc,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -136,6 +144,9 @@ impl crate::schemas::signatures::Signature {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut id = None;
     let mut r#type = None;
     let mut base_loc = None;
@@ -158,7 +169,9 @@ impl crate::schemas::signatures::Signature {
           base_loc =
             Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -183,10 +196,11 @@ impl crate::schemas::signatures::Signature {
           quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("Signature"))?,
           _ => {}
         }
-        if let Some(e) = e_opt
-          && !e_empty
-        {
-          xml_reader.read_to_end_into(e.to_end().name(), buf)?;
+        if let Some(e) = e_opt {
+          xml_other_children.push((
+            __xml_child_slot,
+            crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+          ));
         }
       }
     }
@@ -196,6 +210,8 @@ impl crate::schemas::signatures::Signature {
       id,
       r#type,
       base_loc,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }
@@ -224,7 +240,7 @@ impl crate::schemas::signatures::Signatures {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "Signatures",
@@ -232,8 +248,15 @@ impl crate::schemas::signatures::Signatures {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut max_sign_id = None;
     let mut signature = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
@@ -291,6 +314,7 @@ impl crate::schemas::signatures::Signatures {
                 }
               };
               max_sign_id = Some(parsed_value);
+              __xml_child_slot = 1usize;
             }
             b"ofd:Signature" | b"Signature" => {
               signature.push(
@@ -301,11 +325,13 @@ impl crate::schemas::signatures::Signatures {
                   b"Signature",
                 )?,
               );
+              __xml_child_slot = 2usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
@@ -314,6 +340,8 @@ impl crate::schemas::signatures::Signatures {
     Ok(Self {
       max_sign_id,
       signature,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -323,7 +351,7 @@ impl crate::schemas::signatures::Signatures {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
       xml_reader,
       buf,
       xml_event,
@@ -332,8 +360,15 @@ impl crate::schemas::signatures::Signatures {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut max_sign_id = None;
     let mut signature = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
@@ -376,6 +411,7 @@ impl crate::schemas::signatures::Signatures {
                 }
               };
               max_sign_id = Some(parsed_value);
+              __xml_child_slot = 1usize;
             }
             b"ofd:Signature" | b"Signature" => {
               signature.push(
@@ -387,11 +423,13 @@ impl crate::schemas::signatures::Signatures {
                   b"Signature",
                 )?,
               );
+              __xml_child_slot = 2usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
@@ -400,6 +438,8 @@ impl crate::schemas::signatures::Signatures {
     Ok(Self {
       max_sign_id,
       signature,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }

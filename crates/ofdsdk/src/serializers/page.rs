@@ -251,7 +251,24 @@ impl crate::schemas::page::Template {
       writer.write_str(z_order.as_xml_str())?;
       writer.write_char('"')?;
     }
-    writer.write_str("/>")?;
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
+    if self.xml_other_children.is_empty() {
+      writer.write_str("/>")?;
+      return Ok(());
+    }
+    writer.write_char('>')?;
+    for (_, child) in &self.xml_other_children {
+      writer.write_str(child)?;
+    }
+    writer.write_str("</ofd:")?;
+    writer.write_str(tag_name)?;
+    writer.write_char('>')?;
     Ok(())
   }
 }
@@ -300,7 +317,21 @@ impl crate::schemas::page::Layer {
       write!(writer, "{}", self.id)?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.xml_children {
       match child {
         crate::schemas::page::LayerContentChoice::TextObject(child) => {
@@ -319,6 +350,13 @@ impl crate::schemas::page::Layer {
           child.write_xml_named(writer, false, "PageBlock")?
         }
       }
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -356,9 +394,30 @@ impl crate::schemas::page::Content {
     if with_xmlns {
       writer.write_str(r#" xmlns:ofd="http://www.ofdspec.org/2016""#)?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.layer {
       child.write_xml_named(writer, false, "Layer")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -396,9 +455,30 @@ impl crate::schemas::page::Actions {
     if with_xmlns {
       writer.write_str(r#" xmlns:ofd="http://www.ofdspec.org/2016""#)?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.action {
       child.write_xml_named(writer, false, "Action")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -436,9 +516,30 @@ impl crate::schemas::page::Page {
     if with_xmlns {
       writer.write_str(r#" xmlns:ofd="http://www.ofdspec.org/2016""#)?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.template {
       child.write_xml_named(writer, false, "Template")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     for child in &self.page_res {
       writer.write_char('<')?;
@@ -447,14 +548,42 @@ impl crate::schemas::page::Page {
       writer.write_str(&quick_xml::escape::escape(child.as_str()))?;
       writer.write_str("</ofd:PageRes>")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 2usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(area) = &self.area {
       area.write_xml_named(writer, false, "Area")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 3usize)
+    {
+      writer.write_str(child)?;
     }
     if let Some(content) = &self.content {
       content.write_xml_named(writer, false, "Content")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 4usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(actions) = &self.actions {
       actions.write_xml_named(writer, false, "Actions")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 5usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -502,7 +631,21 @@ impl crate::schemas::page::Area {
       writer.write_str(&quick_xml::escape::escape(ctm.as_str()))?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.xml_children {
       match child {
         crate::schemas::page::AreaContentChoice::Path(child) => {
@@ -512,6 +655,13 @@ impl crate::schemas::page::Area {
           child.write_xml_named(writer, false, "Text")?
         }
       }
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -549,9 +699,30 @@ impl crate::schemas::page::CtClip {
     if with_xmlns {
       writer.write_str(r#" xmlns:ofd="http://www.ofdspec.org/2016""#)?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.area {
       child.write_xml_named(writer, false, "Area")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -699,24 +870,80 @@ impl crate::schemas::page::TextObject {
       write!(writer, "{}", self.id)?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(actions) = &self.actions {
       actions.write_xml_named(writer, false, "Actions")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     if let Some(clips) = &self.clips {
       clips.write_xml_named(writer, false, "Clips")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 2usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(fill_color) = &self.fill_color {
       fill_color.write_xml_named(writer, false, "FillColor")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 3usize)
+    {
+      writer.write_str(child)?;
     }
     if let Some(stroke_color) = &self.stroke_color {
       stroke_color.write_xml_named(writer, false, "StrokeColor")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 4usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.cg_transform {
       child.write_xml_named(writer, false, "CGTransform")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 5usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.text_code {
       child.write_xml_named(writer, false, "TextCode")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 6usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -834,18 +1061,60 @@ impl crate::schemas::page::PathObject {
       write!(writer, "{}", self.id)?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(actions) = &self.actions {
       actions.write_xml_named(writer, false, "Actions")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     if let Some(clips) = &self.clips {
       clips.write_xml_named(writer, false, "Clips")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 2usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(stroke_color) = &self.stroke_color {
       stroke_color.write_xml_named(writer, false, "StrokeColor")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 3usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(fill_color) = &self.fill_color {
       fill_color.write_xml_named(writer, false, "FillColor")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 4usize)
+    {
+      writer.write_str(child)?;
     }
     {
       writer.write_char('<')?;
@@ -853,6 +1122,13 @@ impl crate::schemas::page::PathObject {
       writer.write_char('>')?;
       writer.write_str(&quick_xml::escape::escape(self.abbreviated_data.as_str()))?;
       writer.write_str("</ofd:AbbreviatedData>")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 5usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -970,15 +1246,50 @@ impl crate::schemas::page::ImageObject {
       write!(writer, "{}", self.id)?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(actions) = &self.actions {
       actions.write_xml_named(writer, false, "Actions")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     if let Some(clips) = &self.clips {
       clips.write_xml_named(writer, false, "Clips")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 2usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(border) = &self.border {
       border.write_xml_named(writer, false, "Border")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 3usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -1086,12 +1397,40 @@ impl crate::schemas::page::CompositeObject {
       write!(writer, "{}", self.id)?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(actions) = &self.actions {
       actions.write_xml_named(writer, false, "Actions")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(clips) = &self.clips {
       clips.write_xml_named(writer, false, "Clips")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 2usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -1129,7 +1468,21 @@ impl crate::schemas::page::CtPageBlock {
     if with_xmlns {
       writer.write_str(r#" xmlns:ofd="http://www.ofdspec.org/2016""#)?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.xml_children {
       match child {
         crate::schemas::page::CtPageBlockContentChoice::TextObject(child) => {
@@ -1148,6 +1501,13 @@ impl crate::schemas::page::CtPageBlock {
           child.write_xml_named(writer, false, "PageBlock")?
         }
       }
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -1190,7 +1550,21 @@ impl crate::schemas::page::PageBlock {
       write!(writer, "{}", self.id)?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.xml_children {
       match child {
         crate::schemas::page::PageBlockContentChoice::TextObject(child) => {
@@ -1209,6 +1583,13 @@ impl crate::schemas::page::PageBlock {
           child.write_xml_named(writer, false, "PageBlock")?
         }
       }
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -1256,7 +1637,21 @@ impl crate::schemas::page::CtLayer {
       write!(writer, "{}", draw_param)?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.xml_children {
       match child {
         crate::schemas::page::CtLayerContentChoice::TextObject(child) => {
@@ -1275,6 +1670,13 @@ impl crate::schemas::page::CtLayer {
           child.write_xml_named(writer, false, "PageBlock")?
         }
       }
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -1312,9 +1714,30 @@ impl crate::schemas::page::Clips {
     if with_xmlns {
       writer.write_str(r#" xmlns:ofd="http://www.ofdspec.org/2016""#)?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.clip {
       child.write_xml_named(writer, false, "Clip")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -1412,12 +1835,40 @@ impl crate::schemas::page::CtGraphicUnit {
       write!(writer, "{}", alpha)?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(actions) = &self.actions {
       actions.write_xml_named(writer, false, "Actions")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(clips) = &self.clips {
       clips.write_xml_named(writer, false, "Clips")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 2usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -1475,8 +1926,22 @@ impl crate::schemas::page::TextCode {
       writer.write_str(&quick_xml::escape::escape(delta_y.as_str()))?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
     writer.write_str(&quick_xml::escape::escape(self.xml_value.as_str()))?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
     writer.write_char('>')?;
@@ -1618,24 +2083,80 @@ impl crate::schemas::page::CtText {
       writer.write_str(if *italic { "true" } else { "false" })?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(actions) = &self.actions {
       actions.write_xml_named(writer, false, "Actions")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     if let Some(clips) = &self.clips {
       clips.write_xml_named(writer, false, "Clips")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 2usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(fill_color) = &self.fill_color {
       fill_color.write_xml_named(writer, false, "FillColor")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 3usize)
+    {
+      writer.write_str(child)?;
     }
     if let Some(stroke_color) = &self.stroke_color {
       stroke_color.write_xml_named(writer, false, "StrokeColor")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 4usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.cg_transform {
       child.write_xml_named(writer, false, "CGTransform")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 5usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.text_code {
       child.write_xml_named(writer, false, "TextCode")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 6usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -1688,13 +2209,34 @@ impl crate::schemas::page::CtCgTransform {
       write!(writer, "{}", glyph_count)?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(glyphs) = &self.glyphs {
       writer.write_char('<')?;
       writer.write_str("ofd:Glyphs")?;
       writer.write_char('>')?;
       writer.write_str(&quick_xml::escape::escape(glyphs.as_str()))?;
       writer.write_str("</ofd:Glyphs>")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -1757,9 +2299,30 @@ impl crate::schemas::page::Border {
       writer.write_str(&quick_xml::escape::escape(dash_pattern.as_str()))?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(border_color) = &self.border_color {
       border_color.write_xml_named(writer, false, "BorderColor")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -1872,15 +2435,50 @@ impl crate::schemas::page::CtImage {
       write!(writer, "{}", image_mask)?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(actions) = &self.actions {
       actions.write_xml_named(writer, false, "Actions")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     if let Some(clips) = &self.clips {
       clips.write_xml_named(writer, false, "Clips")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 2usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(border) = &self.border {
       border.write_xml_named(writer, false, "Border")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 3usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -1983,12 +2581,40 @@ impl crate::schemas::page::CtComposite {
       write!(writer, "{}", self.resource_id)?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(actions) = &self.actions {
       actions.write_xml_named(writer, false, "Actions")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(clips) = &self.clips {
       clips.write_xml_named(writer, false, "Clips")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 2usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -2101,18 +2727,60 @@ impl crate::schemas::page::CtPath {
       writer.write_str(rule.as_xml_str())?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(actions) = &self.actions {
       actions.write_xml_named(writer, false, "Actions")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     if let Some(clips) = &self.clips {
       clips.write_xml_named(writer, false, "Clips")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 2usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(stroke_color) = &self.stroke_color {
       stroke_color.write_xml_named(writer, false, "StrokeColor")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 3usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(fill_color) = &self.fill_color {
       fill_color.write_xml_named(writer, false, "FillColor")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 4usize)
+    {
+      writer.write_str(child)?;
     }
     {
       writer.write_char('<')?;
@@ -2120,6 +2788,13 @@ impl crate::schemas::page::CtPath {
       writer.write_char('>')?;
       writer.write_str(&quick_xml::escape::escape(self.abbreviated_data.as_str()))?;
       writer.write_str("</ofd:AbbreviatedData>")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 5usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -2162,7 +2837,21 @@ impl crate::schemas::page::CellContent {
       write!(writer, "{}", thumbnail)?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.xml_children {
       match child {
         crate::schemas::page::CellContentContentChoice::TextObject(child) => {
@@ -2181,6 +2870,13 @@ impl crate::schemas::page::CellContent {
           child.write_xml_named(writer, false, "PageBlock")?
         }
       }
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -2253,10 +2949,31 @@ impl crate::schemas::page::CtPattern {
       writer.write_str(&quick_xml::escape::escape(ctm.as_str()))?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     self
       .cell_content
       .write_xml_named(writer, false, "CellContent")?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
+    }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
     writer.write_char('>')?;
@@ -2298,8 +3015,29 @@ impl crate::schemas::page::Segment {
       write!(writer, "{}", position)?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     self.color.write_xml_named(writer, false, "Color")?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
+    }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
     writer.write_char('>')?;
@@ -2361,9 +3099,30 @@ impl crate::schemas::page::CtAxialShd {
       writer.write_str(&quick_xml::escape::escape(self.end_point.as_str()))?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.segment {
       child.write_xml_named(writer, false, "Segment")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -2446,9 +3205,30 @@ impl crate::schemas::page::CtRadialShd {
       write!(writer, "{}", extend)?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.segment {
       child.write_xml_named(writer, false, "Segment")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -2501,8 +3281,29 @@ impl crate::schemas::page::Point {
       writer.write_str(edge_flag.as_xml_str())?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     self.color.write_xml_named(writer, false, "Color")?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
+    }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
     writer.write_char('>')?;
@@ -2544,12 +3345,40 @@ impl crate::schemas::page::CtGouraudShd {
       write!(writer, "{}", extend)?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.point {
       child.write_xml_named(writer, false, "Point")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(back_color) = &self.back_color {
       back_color.write_xml_named(writer, false, "BackColor")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 2usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -2597,8 +3426,29 @@ impl crate::schemas::page::CtLaGouraudShdPoint {
       write!(writer, "{}", y)?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     self.color.write_xml_named(writer, false, "Color")?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
+    }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
     writer.write_char('>')?;
@@ -2645,12 +3495,40 @@ impl crate::schemas::page::CtLaGouraudShd {
       write!(writer, "{}", extend)?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.point {
       child.write_xml_named(writer, false, "Point")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(back_color) = &self.back_color {
       back_color.write_xml_named(writer, false, "BackColor")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 2usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -2708,7 +3586,21 @@ impl crate::schemas::page::CtColor {
       write!(writer, "{}", alpha)?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.xml_children {
       match child {
         crate::schemas::page::CtColorContentChoice::Pattern(child) => {
@@ -2727,6 +3619,13 @@ impl crate::schemas::page::CtColor {
           child.write_xml_named(writer, false, "LaGourandShd")?
         }
       }
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;

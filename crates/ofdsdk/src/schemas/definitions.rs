@@ -21,6 +21,8 @@ pub struct CtDest {
   pub bottom: Option<f64>,
   ///目标区域页面缩放比例，为 0 或不出现则按照当前缩放比例跳转，可取值范围 [0.1, 64.0]。
   pub zoom: Option<f64>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///页面区域。
 #[derive(Clone, Debug, Default)]
@@ -36,12 +38,16 @@ pub struct CtPageArea {
   ///出血区域，即超出设备性能限制的额外出血区域，位于页面物理区域外。不出现时，默认值为页面物理区域。
   ///[例外处理]如果出血区域不完全位于页面物理区域外，页面物理区域内的部分则被忽略。如果出血区域完全位于页面物理区域内，出血区域无效。
   pub bleed_box: Option<StBox>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///跳转的目标书签。
 #[derive(Clone, Debug, Default)]
 pub struct Bookmark {
   ///目标书签的名称，引用文档书签定义中的名称。
   pub name: String,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug)]
 pub enum GotoContentChoice {
@@ -52,6 +58,8 @@ pub enum GotoContentChoice {
 #[derive(Clone, Debug, Default)]
 pub struct Goto {
   pub xml_children: Vec<GotoContentChoice>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///打开或访问一个 URI 链接。
 #[derive(Clone, Debug, Default)]
@@ -61,6 +69,8 @@ pub struct Uri {
   ///Base URI，用于相对地址。
   pub base: Option<String>,
   pub target: Option<String>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///打开本文档附件。
 #[derive(Clone, Debug, Default)]
@@ -69,6 +79,8 @@ pub struct GotoA {
   pub attach_id: String,
   ///是否在新窗口中打开。
   pub new_window: Option<bool>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///播放一段音频。
 #[derive(Clone, Debug, Default)]
@@ -81,6 +93,8 @@ pub struct Sound {
   pub repeat: Option<bool>,
   ///是否同步播放。true 表示后续动作应等待此音频播放结束后才能开始，false 表示立刻返回并开始下一个动作。默认值为 false。
   pub synchronous: Option<bool>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///播放一段视频。
 #[derive(Clone, Debug, Default)]
@@ -89,6 +103,8 @@ pub struct Movie {
   pub resource_id: StRefId,
   ///放映参数，见表 59。默认值为 Play。
   pub operator: Option<MovieOperator>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug)]
 pub enum CtActionContentChoice {
@@ -106,18 +122,24 @@ pub struct CtAction {
   ///指定多个复杂区域为该链接对象的启动区域，不出现时以所在图元或页面的外接矩形作为启动区域，见 9.3。
   pub region: Option<CtRegion>,
   pub xml_children: Vec<CtActionContentChoice>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///从当前点移动到新的当前点。
 #[derive(Clone, Debug, Default)]
 pub struct Move {
   ///移动后新的当前绘制点。
   pub point1: StPos,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///从当前点连接一条到指定点的线段，并将当前点移动到指定点。
 #[derive(Clone, Debug, Default)]
 pub struct Line {
   ///线段的结束点。
   pub point1: StPos,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///从当前点连接一条到 Point2 的二次贝塞尔曲线，并将当前点移动到 Point2，此贝塞尔曲线使用 Point1 作为其控制点。
 #[derive(Clone, Debug, Default)]
@@ -126,6 +148,8 @@ pub struct QuadraticBezier {
   pub point1: StPos,
   ///二次贝塞尔曲线的结束点，下一路径的起始点。
   pub point2: StPos,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///从当前点连接一条到 Point3 的三次贝塞尔曲线，并将当前点移动到 Point3，使用 Point1 和 Point2 作为控制点。
 #[derive(Clone, Debug, Default)]
@@ -136,6 +160,8 @@ pub struct CubicBezier {
   pub point2: Option<StPos>,
   ///三次贝塞尔曲线的结束点，下一路径的起始点。
   pub point3: StPos,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///从当前点连接一条到 EndPoint 点的圆弧，并将当前点移动到 EndPoint 点。
 #[derive(Clone, Debug, Default)]
@@ -150,10 +176,15 @@ pub struct Arc {
   pub ellipse_size: StArray,
   ///圆弧的结束点，下个路径的起始点，不能与当前的绘制起始点为同一位置。
   pub end_point: StPos,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///自动闭合到当前分路径的起始点，并以该点为当前点。
 #[derive(Clone, Debug, Default)]
-pub struct Close {}
+pub struct Close {
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
+}
 #[derive(Clone, Debug)]
 pub enum AreaContentChoice {
   Move(Box<Move>),
@@ -167,12 +198,16 @@ pub enum AreaContentChoice {
 pub struct Area {
   pub start: StPos,
   pub xml_children: Vec<AreaContentChoice>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///指定多个复杂区域为该链接对象的启动区域，不出现时以所在图元或页面的外接矩形作为启动区域。
 #[derive(Clone, Debug, Default)]
 pub struct CtRegion {
   ///区域集合。
   pub area: Vec<Area>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 pub type StId = u32;
 pub type StRefId = u32;

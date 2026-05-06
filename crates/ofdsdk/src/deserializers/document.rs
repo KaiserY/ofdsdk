@@ -171,6 +171,9 @@ impl crate::schemas::document::TemplatePage {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut id = None;
     let mut name = None;
     let mut z_order = None;
@@ -202,7 +205,9 @@ impl crate::schemas::document::TemplatePage {
           base_loc =
             Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -226,10 +231,11 @@ impl crate::schemas::document::TemplatePage {
           quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("TemplatePage"))?,
           _ => {}
         }
-        if let Some(e) = e_opt
-          && !e_empty
-        {
-          xml_reader.read_to_end(e.to_end().name())?;
+        if let Some(e) = e_opt {
+          xml_other_children.push((
+            __xml_child_slot,
+            crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+          ));
         }
       }
     }
@@ -241,6 +247,8 @@ impl crate::schemas::document::TemplatePage {
       name,
       z_order,
       base_loc,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -259,6 +267,9 @@ impl crate::schemas::document::TemplatePage {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut id = None;
     let mut name = None;
     let mut z_order = None;
@@ -290,7 +301,9 @@ impl crate::schemas::document::TemplatePage {
           base_loc =
             Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -315,10 +328,11 @@ impl crate::schemas::document::TemplatePage {
           quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("TemplatePage"))?,
           _ => {}
         }
-        if let Some(e) = e_opt
-          && !e_empty
-        {
-          xml_reader.read_to_end_into(e.to_end().name(), buf)?;
+        if let Some(e) = e_opt {
+          xml_other_children.push((
+            __xml_child_slot,
+            crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+          ));
         }
       }
     }
@@ -330,6 +344,8 @@ impl crate::schemas::document::TemplatePage {
       name,
       z_order,
       base_loc,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }
@@ -358,7 +374,7 @@ impl crate::schemas::document::CommonData {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "CommonData",
@@ -366,12 +382,19 @@ impl crate::schemas::document::CommonData {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut max_unit_id = None;
     let mut page_area = None;
     let mut public_res = vec![];
     let mut document_res = vec![];
     let mut template_page = vec![];
     let mut default_cs = None;
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
@@ -485,6 +508,7 @@ impl crate::schemas::document::CommonData {
                 }
               };
               max_unit_id = Some(parsed_value);
+              __xml_child_slot = 1usize;
             }
             b"ofd:PageArea" | b"PageArea" => {
               page_area = Some(
@@ -495,6 +519,7 @@ impl crate::schemas::document::CommonData {
                   b"PageArea",
                 )?,
               );
+              __xml_child_slot = 2usize;
             }
             b"ofd:PublicRes" | b"PublicRes" => {
               let parsed_value = {
@@ -530,6 +555,7 @@ impl crate::schemas::document::CommonData {
                 }
               };
               public_res.push(parsed_value);
+              __xml_child_slot = 3usize;
             }
             b"ofd:DocumentRes" | b"DocumentRes" => {
               let parsed_value = {
@@ -565,6 +591,7 @@ impl crate::schemas::document::CommonData {
                 }
               };
               document_res.push(parsed_value);
+              __xml_child_slot = 4usize;
             }
             b"ofd:TemplatePage" | b"TemplatePage" => {
               template_page.push(
@@ -575,6 +602,7 @@ impl crate::schemas::document::CommonData {
                   b"TemplatePage",
                 )?,
               );
+              __xml_child_slot = 5usize;
             }
             b"ofd:DefaultCS" | b"DefaultCS" => {
               let parsed_value = {
@@ -666,11 +694,13 @@ impl crate::schemas::document::CommonData {
                 }
               };
               default_cs = Some(parsed_value);
+              __xml_child_slot = 6usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
@@ -687,6 +717,8 @@ impl crate::schemas::document::CommonData {
       document_res,
       template_page,
       default_cs,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -696,7 +728,7 @@ impl crate::schemas::document::CommonData {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
       xml_reader,
       buf,
       xml_event,
@@ -705,12 +737,19 @@ impl crate::schemas::document::CommonData {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut max_unit_id = None;
     let mut page_area = None;
     let mut public_res = vec![];
     let mut document_res = vec![];
     let mut template_page = vec![];
     let mut default_cs = None;
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
@@ -782,6 +821,7 @@ impl crate::schemas::document::CommonData {
                 }
               };
               max_unit_id = Some(parsed_value);
+              __xml_child_slot = 1usize;
             }
             b"ofd:PageArea" | b"PageArea" => {
               page_area = Some(
@@ -793,6 +833,7 @@ impl crate::schemas::document::CommonData {
                   b"PageArea",
                 )?,
               );
+              __xml_child_slot = 2usize;
             }
             b"ofd:PublicRes" | b"PublicRes" => {
               let parsed_value = {
@@ -812,6 +853,7 @@ impl crate::schemas::document::CommonData {
                 }
               };
               public_res.push(parsed_value);
+              __xml_child_slot = 3usize;
             }
             b"ofd:DocumentRes" | b"DocumentRes" => {
               let parsed_value = {
@@ -831,6 +873,7 @@ impl crate::schemas::document::CommonData {
                 }
               };
               document_res.push(parsed_value);
+              __xml_child_slot = 4usize;
             }
             b"ofd:TemplatePage" | b"TemplatePage" => {
               template_page.push(
@@ -842,6 +885,7 @@ impl crate::schemas::document::CommonData {
                   b"TemplatePage",
                 )?,
               );
+              __xml_child_slot = 5usize;
             }
             b"ofd:DefaultCS" | b"DefaultCS" => {
               let parsed_value = {
@@ -890,11 +934,13 @@ impl crate::schemas::document::CommonData {
                 }
               };
               default_cs = Some(parsed_value);
+              __xml_child_slot = 6usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
@@ -911,6 +957,8 @@ impl crate::schemas::document::CommonData {
       document_res,
       template_page,
       default_cs,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }
@@ -941,6 +989,9 @@ impl crate::schemas::document::Page {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut id = None;
     let mut base_loc = None;
     for attr in e.attributes().with_checks(false) {
@@ -959,7 +1010,9 @@ impl crate::schemas::document::Page {
           base_loc =
             Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -983,16 +1036,22 @@ impl crate::schemas::document::Page {
           quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("Page"))?,
           _ => {}
         }
-        if let Some(e) = e_opt
-          && !e_empty
-        {
-          xml_reader.read_to_end(e.to_end().name())?;
+        if let Some(e) = e_opt {
+          xml_other_children.push((
+            __xml_child_slot,
+            crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+          ));
         }
       }
     }
     let id = id.ok_or_else(|| crate::common::missing_field("Page", "id"))?;
     let base_loc = base_loc.ok_or_else(|| crate::common::missing_field("Page", "base_loc"))?;
-    Ok(Self { id, base_loc })
+    Ok(Self {
+      id,
+      base_loc,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
     xml_reader: &mut quick_xml::Reader<R>,
@@ -1010,6 +1069,9 @@ impl crate::schemas::document::Page {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut id = None;
     let mut base_loc = None;
     for attr in e.attributes().with_checks(false) {
@@ -1028,7 +1090,9 @@ impl crate::schemas::document::Page {
           base_loc =
             Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -1053,16 +1117,22 @@ impl crate::schemas::document::Page {
           quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("Page"))?,
           _ => {}
         }
-        if let Some(e) = e_opt
-          && !e_empty
-        {
-          xml_reader.read_to_end_into(e.to_end().name(), buf)?;
+        if let Some(e) = e_opt {
+          xml_other_children.push((
+            __xml_child_slot,
+            crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+          ));
         }
       }
     }
     let id = id.ok_or_else(|| crate::common::missing_field("Page", "id"))?;
     let base_loc = base_loc.ok_or_else(|| crate::common::missing_field("Page", "base_loc"))?;
-    Ok(Self { id, base_loc })
+    Ok(Self {
+      id,
+      base_loc,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
 }
 impl std::str::FromStr for crate::schemas::document::Pages {
@@ -1084,7 +1154,7 @@ impl crate::schemas::document::Pages {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "Pages",
@@ -1092,7 +1162,14 @@ impl crate::schemas::document::Pages {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut page = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
@@ -1123,17 +1200,23 @@ impl crate::schemas::document::Pages {
                 b"ofd:Page",
                 b"Page",
               )?);
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { page })
+    Ok(Self {
+      page,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
     xml_reader: &mut quick_xml::Reader<R>,
@@ -1142,7 +1225,7 @@ impl crate::schemas::document::Pages {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
       xml_reader,
       buf,
       xml_event,
@@ -1151,7 +1234,14 @@ impl crate::schemas::document::Pages {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut page = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
@@ -1186,17 +1276,23 @@ impl crate::schemas::document::Pages {
                   b"Page",
                 )?,
               );
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { page })
+    Ok(Self {
+      page,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
 }
 impl std::str::FromStr for crate::schemas::document::Outlines {
@@ -1224,7 +1320,7 @@ impl crate::schemas::document::Outlines {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "Outlines",
@@ -1232,7 +1328,14 @@ impl crate::schemas::document::Outlines {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut outline_elem = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
@@ -1265,17 +1368,23 @@ impl crate::schemas::document::Outlines {
                   b"OutlineElem",
                 )?,
               );
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { outline_elem })
+    Ok(Self {
+      outline_elem,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
     xml_reader: &mut quick_xml::Reader<R>,
@@ -1284,7 +1393,7 @@ impl crate::schemas::document::Outlines {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
       xml_reader,
       buf,
       xml_event,
@@ -1293,7 +1402,14 @@ impl crate::schemas::document::Outlines {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut outline_elem = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
@@ -1328,17 +1444,23 @@ impl crate::schemas::document::Outlines {
                   b"OutlineElem",
                 )?,
               );
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { outline_elem })
+    Ok(Self {
+      outline_elem,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
 }
 impl std::str::FromStr for crate::schemas::document::Actions {
@@ -1360,7 +1482,7 @@ impl crate::schemas::document::Actions {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "Actions",
@@ -1368,7 +1490,14 @@ impl crate::schemas::document::Actions {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut action = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
@@ -1401,17 +1530,23 @@ impl crate::schemas::document::Actions {
                   b"Action",
                 )?,
               );
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { action })
+    Ok(Self {
+      action,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
     xml_reader: &mut quick_xml::Reader<R>,
@@ -1420,7 +1555,7 @@ impl crate::schemas::document::Actions {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
       xml_reader,
       buf,
       xml_event,
@@ -1429,7 +1564,14 @@ impl crate::schemas::document::Actions {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut action = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
@@ -1464,17 +1606,23 @@ impl crate::schemas::document::Actions {
                   b"Action",
                 )?,
               );
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { action })
+    Ok(Self {
+      action,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
 }
 impl std::str::FromStr for crate::schemas::document::Bookmarks {
@@ -1502,7 +1650,7 @@ impl crate::schemas::document::Bookmarks {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "Bookmarks",
@@ -1510,7 +1658,14 @@ impl crate::schemas::document::Bookmarks {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut bookmark = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
@@ -1543,17 +1698,23 @@ impl crate::schemas::document::Bookmarks {
                   b"Bookmark",
                 )?,
               );
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { bookmark })
+    Ok(Self {
+      bookmark,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
     xml_reader: &mut quick_xml::Reader<R>,
@@ -1562,7 +1723,7 @@ impl crate::schemas::document::Bookmarks {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
       xml_reader,
       buf,
       xml_event,
@@ -1571,7 +1732,14 @@ impl crate::schemas::document::Bookmarks {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut bookmark = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
@@ -1606,17 +1774,23 @@ impl crate::schemas::document::Bookmarks {
                   b"Bookmark",
                 )?,
               );
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
       }
     }
-    Ok(Self { bookmark })
+    Ok(Self {
+      bookmark,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
 }
 impl std::str::FromStr for crate::schemas::document::Document {
@@ -1644,7 +1818,7 @@ impl crate::schemas::document::Document {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "Document",
@@ -1652,6 +1826,9 @@ impl crate::schemas::document::Document {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut common_data = None;
     let mut pages = None;
     let mut outlines = None;
@@ -1663,6 +1840,10 @@ impl crate::schemas::document::Document {
     let mut custom_tags = None;
     let mut attachments = None;
     let mut extensions = None;
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
@@ -1695,6 +1876,7 @@ impl crate::schemas::document::Document {
                   b"CommonData",
                 )?,
               );
+              __xml_child_slot = 1usize;
             }
             b"ofd:Pages" | b"Pages" => {
               pages = Some(crate::schemas::document::Pages::deserialize_inner_named(
@@ -1703,6 +1885,7 @@ impl crate::schemas::document::Document {
                 b"ofd:Pages",
                 b"Pages",
               )?);
+              __xml_child_slot = 2usize;
             }
             b"ofd:Outlines" | b"Outlines" => {
               outlines = Some(crate::schemas::document::Outlines::deserialize_inner_named(
@@ -1711,6 +1894,7 @@ impl crate::schemas::document::Document {
                 b"ofd:Outlines",
                 b"Outlines",
               )?);
+              __xml_child_slot = 3usize;
             }
             b"ofd:Permissions" | b"Permissions" => {
               permissions = Some(
@@ -1721,6 +1905,7 @@ impl crate::schemas::document::Document {
                   b"Permissions",
                 )?,
               );
+              __xml_child_slot = 4usize;
             }
             b"ofd:Actions" | b"Actions" => {
               actions = Some(crate::schemas::document::Actions::deserialize_inner_named(
@@ -1729,6 +1914,7 @@ impl crate::schemas::document::Document {
                 b"ofd:Actions",
                 b"Actions",
               )?);
+              __xml_child_slot = 5usize;
             }
             b"ofd:VPreferences" | b"VPreferences" => {
               v_preferences = Some(
@@ -1739,6 +1925,7 @@ impl crate::schemas::document::Document {
                   b"VPreferences",
                 )?,
               );
+              __xml_child_slot = 6usize;
             }
             b"ofd:Bookmarks" | b"Bookmarks" => {
               bookmarks = Some(
@@ -1749,6 +1936,7 @@ impl crate::schemas::document::Document {
                   b"Bookmarks",
                 )?,
               );
+              __xml_child_slot = 7usize;
             }
             b"ofd:Annotations" | b"Annotations" => {
               let parsed_value = {
@@ -1784,6 +1972,7 @@ impl crate::schemas::document::Document {
                 }
               };
               annotations = Some(parsed_value);
+              __xml_child_slot = 8usize;
             }
             b"ofd:CustomTags" | b"CustomTags" => {
               let parsed_value = {
@@ -1819,6 +2008,7 @@ impl crate::schemas::document::Document {
                 }
               };
               custom_tags = Some(parsed_value);
+              __xml_child_slot = 9usize;
             }
             b"ofd:Attachments" | b"Attachments" => {
               let parsed_value = {
@@ -1854,6 +2044,7 @@ impl crate::schemas::document::Document {
                 }
               };
               attachments = Some(parsed_value);
+              __xml_child_slot = 10usize;
             }
             b"ofd:Extensions" | b"Extensions" => {
               let parsed_value = {
@@ -1889,11 +2080,13 @@ impl crate::schemas::document::Document {
                 }
               };
               extensions = Some(parsed_value);
+              __xml_child_slot = 11usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
@@ -1914,6 +2107,8 @@ impl crate::schemas::document::Document {
       custom_tags,
       attachments,
       extensions,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -1923,7 +2118,7 @@ impl crate::schemas::document::Document {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
       xml_reader,
       buf,
       xml_event,
@@ -1932,6 +2127,9 @@ impl crate::schemas::document::Document {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut common_data = None;
     let mut pages = None;
     let mut outlines = None;
@@ -1943,6 +2141,10 @@ impl crate::schemas::document::Document {
     let mut custom_tags = None;
     let mut attachments = None;
     let mut extensions = None;
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
@@ -1977,6 +2179,7 @@ impl crate::schemas::document::Document {
                   b"CommonData",
                 )?,
               );
+              __xml_child_slot = 1usize;
             }
             b"ofd:Pages" | b"Pages" => {
               pages = Some(
@@ -1988,6 +2191,7 @@ impl crate::schemas::document::Document {
                   b"Pages",
                 )?,
               );
+              __xml_child_slot = 2usize;
             }
             b"ofd:Outlines" | b"Outlines" => {
               outlines = Some(
@@ -1999,6 +2203,7 @@ impl crate::schemas::document::Document {
                   b"Outlines",
                 )?,
               );
+              __xml_child_slot = 3usize;
             }
             b"ofd:Permissions" | b"Permissions" => {
               permissions = Some(
@@ -2010,6 +2215,7 @@ impl crate::schemas::document::Document {
                   b"Permissions",
                 )?,
               );
+              __xml_child_slot = 4usize;
             }
             b"ofd:Actions" | b"Actions" => {
               actions = Some(
@@ -2021,6 +2227,7 @@ impl crate::schemas::document::Document {
                   b"Actions",
                 )?,
               );
+              __xml_child_slot = 5usize;
             }
             b"ofd:VPreferences" | b"VPreferences" => {
               v_preferences = Some(
@@ -2032,6 +2239,7 @@ impl crate::schemas::document::Document {
                   b"VPreferences",
                 )?,
               );
+              __xml_child_slot = 6usize;
             }
             b"ofd:Bookmarks" | b"Bookmarks" => {
               bookmarks = Some(
@@ -2043,6 +2251,7 @@ impl crate::schemas::document::Document {
                   b"Bookmarks",
                 )?,
               );
+              __xml_child_slot = 7usize;
             }
             b"ofd:Annotations" | b"Annotations" => {
               let parsed_value = {
@@ -2062,6 +2271,7 @@ impl crate::schemas::document::Document {
                 }
               };
               annotations = Some(parsed_value);
+              __xml_child_slot = 8usize;
             }
             b"ofd:CustomTags" | b"CustomTags" => {
               let parsed_value = {
@@ -2081,6 +2291,7 @@ impl crate::schemas::document::Document {
                 }
               };
               custom_tags = Some(parsed_value);
+              __xml_child_slot = 9usize;
             }
             b"ofd:Attachments" | b"Attachments" => {
               let parsed_value = {
@@ -2100,6 +2311,7 @@ impl crate::schemas::document::Document {
                 }
               };
               attachments = Some(parsed_value);
+              __xml_child_slot = 10usize;
             }
             b"ofd:Extensions" | b"Extensions" => {
               let parsed_value = {
@@ -2119,11 +2331,13 @@ impl crate::schemas::document::Document {
                 }
               };
               extensions = Some(parsed_value);
+              __xml_child_slot = 11usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
@@ -2144,6 +2358,8 @@ impl crate::schemas::document::Document {
       custom_tags,
       attachments,
       extensions,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }
@@ -2174,6 +2390,9 @@ impl crate::schemas::document::Print {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut printable = None;
     let mut copies = None;
     for attr in e.attributes().with_checks(false) {
@@ -2196,7 +2415,9 @@ impl crate::schemas::document::Print {
             "copies",
           )?);
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -2220,15 +2441,21 @@ impl crate::schemas::document::Print {
           quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("Print"))?,
           _ => {}
         }
-        if let Some(e) = e_opt
-          && !e_empty
-        {
-          xml_reader.read_to_end(e.to_end().name())?;
+        if let Some(e) = e_opt {
+          xml_other_children.push((
+            __xml_child_slot,
+            crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+          ));
         }
       }
     }
     let printable = printable.ok_or_else(|| crate::common::missing_field("Print", "printable"))?;
-    Ok(Self { printable, copies })
+    Ok(Self {
+      printable,
+      copies,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
     xml_reader: &mut quick_xml::Reader<R>,
@@ -2246,6 +2473,9 @@ impl crate::schemas::document::Print {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut printable = None;
     let mut copies = None;
     for attr in e.attributes().with_checks(false) {
@@ -2268,7 +2498,9 @@ impl crate::schemas::document::Print {
             "copies",
           )?);
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -2293,15 +2525,21 @@ impl crate::schemas::document::Print {
           quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("Print"))?,
           _ => {}
         }
-        if let Some(e) = e_opt
-          && !e_empty
-        {
-          xml_reader.read_to_end_into(e.to_end().name(), buf)?;
+        if let Some(e) = e_opt {
+          xml_other_children.push((
+            __xml_child_slot,
+            crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+          ));
         }
       }
     }
     let printable = printable.ok_or_else(|| crate::common::missing_field("Print", "printable"))?;
-    Ok(Self { printable, copies })
+    Ok(Self {
+      printable,
+      copies,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
 }
 impl std::str::FromStr for crate::schemas::document::ValidPeriod {
@@ -2337,6 +2575,9 @@ impl crate::schemas::document::ValidPeriod {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut start_date = None;
     let mut end_date = None;
     for attr in e.attributes().with_checks(false) {
@@ -2351,7 +2592,9 @@ impl crate::schemas::document::ValidPeriod {
           end_date =
             Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -2375,16 +2618,19 @@ impl crate::schemas::document::ValidPeriod {
           quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("ValidPeriod"))?,
           _ => {}
         }
-        if let Some(e) = e_opt
-          && !e_empty
-        {
-          xml_reader.read_to_end(e.to_end().name())?;
+        if let Some(e) = e_opt {
+          xml_other_children.push((
+            __xml_child_slot,
+            crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+          ));
         }
       }
     }
     Ok(Self {
       start_date,
       end_date,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -2403,6 +2649,9 @@ impl crate::schemas::document::ValidPeriod {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut start_date = None;
     let mut end_date = None;
     for attr in e.attributes().with_checks(false) {
@@ -2417,7 +2666,9 @@ impl crate::schemas::document::ValidPeriod {
           end_date =
             Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -2442,16 +2693,19 @@ impl crate::schemas::document::ValidPeriod {
           quick_xml::events::Event::Eof => Err(crate::common::unexpected_eof("ValidPeriod"))?,
           _ => {}
         }
-        if let Some(e) = e_opt
-          && !e_empty
-        {
-          xml_reader.read_to_end_into(e.to_end().name(), buf)?;
+        if let Some(e) = e_opt {
+          xml_other_children.push((
+            __xml_child_slot,
+            crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+          ));
         }
       }
     }
     Ok(Self {
       start_date,
       end_date,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }
@@ -2485,7 +2739,7 @@ impl crate::schemas::document::CtPermission {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "CtPermission",
@@ -2493,6 +2747,9 @@ impl crate::schemas::document::CtPermission {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut edit = None;
     let mut annot = None;
     let mut export = None;
@@ -2501,6 +2758,10 @@ impl crate::schemas::document::CtPermission {
     let mut print_screen = None;
     let mut print = None;
     let mut valid_period = None;
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
@@ -2615,6 +2876,7 @@ impl crate::schemas::document::CtPermission {
                 }
               };
               edit = Some(parsed_value);
+              __xml_child_slot = 1usize;
             }
             b"ofd:Annot" | b"Annot" => {
               let parsed_value = {
@@ -2707,6 +2969,7 @@ impl crate::schemas::document::CtPermission {
                 }
               };
               annot = Some(parsed_value);
+              __xml_child_slot = 2usize;
             }
             b"ofd:Export" | b"Export" => {
               let parsed_value = {
@@ -2799,6 +3062,7 @@ impl crate::schemas::document::CtPermission {
                 }
               };
               export = Some(parsed_value);
+              __xml_child_slot = 3usize;
             }
             b"ofd:Signature" | b"Signature" => {
               let parsed_value = {
@@ -2891,6 +3155,7 @@ impl crate::schemas::document::CtPermission {
                 }
               };
               signature = Some(parsed_value);
+              __xml_child_slot = 4usize;
             }
             b"ofd:Watermark" | b"Watermark" => {
               let parsed_value = {
@@ -2983,6 +3248,7 @@ impl crate::schemas::document::CtPermission {
                 }
               };
               watermark = Some(parsed_value);
+              __xml_child_slot = 5usize;
             }
             b"ofd:PrintScreen" | b"PrintScreen" => {
               let parsed_value = {
@@ -3079,6 +3345,7 @@ impl crate::schemas::document::CtPermission {
                 }
               };
               print_screen = Some(parsed_value);
+              __xml_child_slot = 6usize;
             }
             b"ofd:Print" | b"Print" => {
               print = Some(crate::schemas::document::Print::deserialize_inner_named(
@@ -3087,6 +3354,7 @@ impl crate::schemas::document::CtPermission {
                 b"ofd:Print",
                 b"Print",
               )?);
+              __xml_child_slot = 7usize;
             }
             b"ofd:ValidPeriod" | b"ValidPeriod" => {
               valid_period = Some(
@@ -3097,11 +3365,13 @@ impl crate::schemas::document::CtPermission {
                   b"ValidPeriod",
                 )?,
               );
+              __xml_child_slot = 8usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
@@ -3116,6 +3386,8 @@ impl crate::schemas::document::CtPermission {
       print_screen,
       print,
       valid_period,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -3125,7 +3397,7 @@ impl crate::schemas::document::CtPermission {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
       xml_reader,
       buf,
       xml_event,
@@ -3134,6 +3406,9 @@ impl crate::schemas::document::CtPermission {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut edit = None;
     let mut annot = None;
     let mut export = None;
@@ -3142,6 +3417,10 @@ impl crate::schemas::document::CtPermission {
     let mut print_screen = None;
     let mut print = None;
     let mut valid_period = None;
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
@@ -3206,6 +3485,7 @@ impl crate::schemas::document::CtPermission {
                 }
               };
               edit = Some(parsed_value);
+              __xml_child_slot = 1usize;
             }
             b"ofd:Annot" | b"Annot" => {
               let parsed_value = {
@@ -3247,6 +3527,7 @@ impl crate::schemas::document::CtPermission {
                 }
               };
               annot = Some(parsed_value);
+              __xml_child_slot = 2usize;
             }
             b"ofd:Export" | b"Export" => {
               let parsed_value = {
@@ -3292,6 +3573,7 @@ impl crate::schemas::document::CtPermission {
                 }
               };
               export = Some(parsed_value);
+              __xml_child_slot = 3usize;
             }
             b"ofd:Signature" | b"Signature" => {
               let parsed_value = {
@@ -3337,6 +3619,7 @@ impl crate::schemas::document::CtPermission {
                 }
               };
               signature = Some(parsed_value);
+              __xml_child_slot = 4usize;
             }
             b"ofd:Watermark" | b"Watermark" => {
               let parsed_value = {
@@ -3382,6 +3665,7 @@ impl crate::schemas::document::CtPermission {
                 }
               };
               watermark = Some(parsed_value);
+              __xml_child_slot = 5usize;
             }
             b"ofd:PrintScreen" | b"PrintScreen" => {
               let parsed_value = {
@@ -3431,6 +3715,7 @@ impl crate::schemas::document::CtPermission {
                 }
               };
               print_screen = Some(parsed_value);
+              __xml_child_slot = 6usize;
             }
             b"ofd:Print" | b"Print" => {
               print = Some(
@@ -3442,6 +3727,7 @@ impl crate::schemas::document::CtPermission {
                   b"Print",
                 )?,
               );
+              __xml_child_slot = 7usize;
             }
             b"ofd:ValidPeriod" | b"ValidPeriod" => {
               valid_period = Some(
@@ -3453,11 +3739,13 @@ impl crate::schemas::document::CtPermission {
                   b"ValidPeriod",
                 )?,
               );
+              __xml_child_slot = 8usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
@@ -3472,6 +3760,8 @@ impl crate::schemas::document::CtPermission {
       print_screen,
       print,
       valid_period,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }
@@ -3505,7 +3795,7 @@ impl crate::schemas::document::CtVPreferences {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_slice!(
+    let (e, empty_tag) = crate::common::expect_event_start_slice!(
       xml_reader,
       xml_event,
       "CtVPreferences",
@@ -3513,6 +3803,9 @@ impl crate::schemas::document::CtVPreferences {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut page_mode = None;
     let mut page_layout = None;
     let mut tab_display = None;
@@ -3520,6 +3813,10 @@ impl crate::schemas::document::CtVPreferences {
     let mut hide_menubar = None;
     let mut hide_window_ui = None;
     let mut xml_children = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'_>> = None;
@@ -3543,161 +3840,6 @@ impl crate::schemas::document::CtVPreferences {
         }
         if let Some(e) = e_opt {
           match e.name().as_ref() {
-            b"ofd:ZoomMode" | b"ZoomMode" => {
-              let parsed_value: crate::schemas::document::ZoomMode = {
-                if e_empty {
-                  <crate::schemas::document::ZoomMode>::from_bytes(b"")?
-                } else {
-                  let mut first_text = None;
-                  let mut value = None;
-                  loop {
-                    match xml_reader.read_event()? {
-                      quick_xml::events::Event::Text(text) => {
-                        if let Some(first) = first_text.take() {
-                          crate::common::push_xml_text(&mut value, first)?;
-                          crate::common::push_xml_text(&mut value, text)?;
-                        } else if value.is_some() {
-                          crate::common::push_xml_text(&mut value, text)?;
-                        } else {
-                          first_text = Some(text);
-                        }
-                      }
-                      quick_xml::events::Event::GeneralRef(text) => {
-                        if let Some(first) = first_text.take() {
-                          crate::common::push_xml_text(&mut value, first)?;
-                        }
-                        crate::common::push_xml_general_ref(
-                          &mut value,
-                          text,
-                          "CtVPreferences",
-                          "ZoomMode",
-                        )?;
-                      }
-                      quick_xml::events::Event::End(end) => match end.name().as_ref() {
-                        name if name == b"ofd:ZoomMode" || name == b"ZoomMode" => {
-                          break if let Some(first) = first_text {
-                            match <crate::schemas::document::ZoomMode>::from_bytes(first.as_ref()) {
-                              Ok(value) => value,
-                              Err(_) => first
-                                .xml10_content()?
-                                .as_ref()
-                                .parse::<crate::schemas::document::ZoomMode>()?,
-                            }
-                          } else {
-                            value
-                              .unwrap_or_default()
-                              .parse::<crate::schemas::document::ZoomMode>()?
-                          };
-                        }
-                        _ => {}
-                      },
-                      quick_xml::events::Event::Eof => {
-                        Err(crate::common::unexpected_eof("CtVPreferences"))?
-                      }
-                      _ => {}
-                    }
-                  }
-                }
-              };
-              xml_children.push(
-                crate::schemas::document::CtVPreferencesContentChoice::ZoomMode(Box::new(
-                  parsed_value,
-                )),
-              );
-            }
-            b"ofd:Zoom" | b"Zoom" => {
-              let parsed_value: f64 = {
-                if e_empty {
-                  let value = String::new();
-                  {
-                    value.parse::<f64>().map_err(|_| {
-                      crate::common::invalid_field_value("CtVPreferences", "Zoom", value.clone())
-                    })?
-                  }
-                } else {
-                  let parse_bytes = |value: &[u8]| {
-                    std::str::from_utf8(value)
-                      .ok()
-                      .and_then(|value| value.parse::<f64>().ok())
-                      .ok_or_else(|| {
-                        crate::common::invalid_field_value(
-                          "CtVPreferences",
-                          "Zoom",
-                          String::from_utf8_lossy(value).into_owned(),
-                        )
-                      })
-                  };
-                  let mut first_text = None;
-                  let mut value = None;
-                  loop {
-                    match xml_reader.read_event()? {
-                      quick_xml::events::Event::Text(text) => {
-                        if let Some(first) = first_text.take() {
-                          crate::common::push_xml_text(&mut value, first)?;
-                          crate::common::push_xml_text(&mut value, text)?;
-                        } else if value.is_some() {
-                          crate::common::push_xml_text(&mut value, text)?;
-                        } else {
-                          first_text = Some(text);
-                        }
-                      }
-                      quick_xml::events::Event::GeneralRef(text) => {
-                        if let Some(first) = first_text.take() {
-                          crate::common::push_xml_text(&mut value, first)?;
-                        }
-                        crate::common::push_xml_general_ref(
-                          &mut value,
-                          text,
-                          "CtVPreferences",
-                          "Zoom",
-                        )?;
-                      }
-                      quick_xml::events::Event::End(end) => match end.name().as_ref() {
-                        name if name == b"ofd:Zoom" || name == b"Zoom" => {
-                          break if let Some(first) = first_text {
-                            match parse_bytes(first.as_ref()) {
-                              Ok(value) => value,
-                              Err(_) => {
-                                let value = first.xml10_content()?.into_owned();
-                                {
-                                  value.parse::<f64>().map_err(|_| {
-                                    crate::common::invalid_field_value(
-                                      "CtVPreferences",
-                                      "Zoom",
-                                      value.clone(),
-                                    )
-                                  })?
-                                }
-                              }
-                            }
-                          } else {
-                            let value = value.unwrap_or_default();
-                            match parse_bytes(value.as_bytes()) {
-                              Ok(value) => value,
-                              Err(_) => value.parse::<f64>().map_err(|_| {
-                                crate::common::invalid_field_value(
-                                  "CtVPreferences",
-                                  "Zoom",
-                                  value.clone(),
-                                )
-                              })?,
-                            }
-                          };
-                        }
-                        _ => {}
-                      },
-                      quick_xml::events::Event::Eof => {
-                        Err(crate::common::unexpected_eof("CtVPreferences"))?
-                      }
-                      _ => {}
-                    }
-                  }
-                }
-              };
-              xml_children.push(crate::schemas::document::CtVPreferencesContentChoice::Zoom(
-                Box::new(parsed_value),
-              ));
-            }
             b"ofd:PageMode" | b"PageMode" => {
               let parsed_value = {
                 if e_empty {
@@ -3755,6 +3897,7 @@ impl crate::schemas::document::CtVPreferences {
                 }
               };
               page_mode = Some(parsed_value);
+              __xml_child_slot = 1usize;
             }
             b"ofd:PageLayout" | b"PageLayout" => {
               let parsed_value = {
@@ -3814,6 +3957,7 @@ impl crate::schemas::document::CtVPreferences {
                 }
               };
               page_layout = Some(parsed_value);
+              __xml_child_slot = 2usize;
             }
             b"ofd:TabDisplay" | b"TabDisplay" => {
               let parsed_value = {
@@ -3873,6 +4017,7 @@ impl crate::schemas::document::CtVPreferences {
                 }
               };
               tab_display = Some(parsed_value);
+              __xml_child_slot = 3usize;
             }
             b"ofd:HideToolbar" | b"HideToolbar" => {
               let parsed_value = {
@@ -3969,6 +4114,7 @@ impl crate::schemas::document::CtVPreferences {
                 }
               };
               hide_toolbar = Some(parsed_value);
+              __xml_child_slot = 4usize;
             }
             b"ofd:HideMenubar" | b"HideMenubar" => {
               let parsed_value = {
@@ -4065,6 +4211,7 @@ impl crate::schemas::document::CtVPreferences {
                 }
               };
               hide_menubar = Some(parsed_value);
+              __xml_child_slot = 5usize;
             }
             b"ofd:HideWindowUI" | b"HideWindowUI" => {
               let parsed_value = {
@@ -4161,11 +4308,170 @@ impl crate::schemas::document::CtVPreferences {
                 }
               };
               hide_window_ui = Some(parsed_value);
+              __xml_child_slot = 6usize;
+            }
+            b"ofd:ZoomMode" | b"ZoomMode" => {
+              let parsed_value: crate::schemas::document::ZoomMode = {
+                if e_empty {
+                  <crate::schemas::document::ZoomMode>::from_bytes(b"")?
+                } else {
+                  let mut first_text = None;
+                  let mut value = None;
+                  loop {
+                    match xml_reader.read_event()? {
+                      quick_xml::events::Event::Text(text) => {
+                        if let Some(first) = first_text.take() {
+                          crate::common::push_xml_text(&mut value, first)?;
+                          crate::common::push_xml_text(&mut value, text)?;
+                        } else if value.is_some() {
+                          crate::common::push_xml_text(&mut value, text)?;
+                        } else {
+                          first_text = Some(text);
+                        }
+                      }
+                      quick_xml::events::Event::GeneralRef(text) => {
+                        if let Some(first) = first_text.take() {
+                          crate::common::push_xml_text(&mut value, first)?;
+                        }
+                        crate::common::push_xml_general_ref(
+                          &mut value,
+                          text,
+                          "CtVPreferences",
+                          "ZoomMode",
+                        )?;
+                      }
+                      quick_xml::events::Event::End(end) => match end.name().as_ref() {
+                        name if name == b"ofd:ZoomMode" || name == b"ZoomMode" => {
+                          break if let Some(first) = first_text {
+                            match <crate::schemas::document::ZoomMode>::from_bytes(first.as_ref()) {
+                              Ok(value) => value,
+                              Err(_) => first
+                                .xml10_content()?
+                                .as_ref()
+                                .parse::<crate::schemas::document::ZoomMode>()?,
+                            }
+                          } else {
+                            value
+                              .unwrap_or_default()
+                              .parse::<crate::schemas::document::ZoomMode>()?
+                          };
+                        }
+                        _ => {}
+                      },
+                      quick_xml::events::Event::Eof => {
+                        Err(crate::common::unexpected_eof("CtVPreferences"))?
+                      }
+                      _ => {}
+                    }
+                  }
+                }
+              };
+              xml_children.push(
+                crate::schemas::document::CtVPreferencesContentChoice::ZoomMode(Box::new(
+                  parsed_value,
+                )),
+              );
+              __xml_child_slot = 7usize;
+            }
+            b"ofd:Zoom" | b"Zoom" => {
+              let parsed_value: f64 = {
+                if e_empty {
+                  let value = String::new();
+                  {
+                    value.parse::<f64>().map_err(|_| {
+                      crate::common::invalid_field_value("CtVPreferences", "Zoom", value.clone())
+                    })?
+                  }
+                } else {
+                  let parse_bytes = |value: &[u8]| {
+                    std::str::from_utf8(value)
+                      .ok()
+                      .and_then(|value| value.parse::<f64>().ok())
+                      .ok_or_else(|| {
+                        crate::common::invalid_field_value(
+                          "CtVPreferences",
+                          "Zoom",
+                          String::from_utf8_lossy(value).into_owned(),
+                        )
+                      })
+                  };
+                  let mut first_text = None;
+                  let mut value = None;
+                  loop {
+                    match xml_reader.read_event()? {
+                      quick_xml::events::Event::Text(text) => {
+                        if let Some(first) = first_text.take() {
+                          crate::common::push_xml_text(&mut value, first)?;
+                          crate::common::push_xml_text(&mut value, text)?;
+                        } else if value.is_some() {
+                          crate::common::push_xml_text(&mut value, text)?;
+                        } else {
+                          first_text = Some(text);
+                        }
+                      }
+                      quick_xml::events::Event::GeneralRef(text) => {
+                        if let Some(first) = first_text.take() {
+                          crate::common::push_xml_text(&mut value, first)?;
+                        }
+                        crate::common::push_xml_general_ref(
+                          &mut value,
+                          text,
+                          "CtVPreferences",
+                          "Zoom",
+                        )?;
+                      }
+                      quick_xml::events::Event::End(end) => match end.name().as_ref() {
+                        name if name == b"ofd:Zoom" || name == b"Zoom" => {
+                          break if let Some(first) = first_text {
+                            match parse_bytes(first.as_ref()) {
+                              Ok(value) => value,
+                              Err(_) => {
+                                let value = first.xml10_content()?.into_owned();
+                                {
+                                  value.parse::<f64>().map_err(|_| {
+                                    crate::common::invalid_field_value(
+                                      "CtVPreferences",
+                                      "Zoom",
+                                      value.clone(),
+                                    )
+                                  })?
+                                }
+                              }
+                            }
+                          } else {
+                            let value = value.unwrap_or_default();
+                            match parse_bytes(value.as_bytes()) {
+                              Ok(value) => value,
+                              Err(_) => value.parse::<f64>().map_err(|_| {
+                                crate::common::invalid_field_value(
+                                  "CtVPreferences",
+                                  "Zoom",
+                                  value.clone(),
+                                )
+                              })?,
+                            }
+                          };
+                        }
+                        _ => {}
+                      },
+                      quick_xml::events::Event::Eof => {
+                        Err(crate::common::unexpected_eof("CtVPreferences"))?
+                      }
+                      _ => {}
+                    }
+                  }
+                }
+              };
+              xml_children.push(crate::schemas::document::CtVPreferencesContentChoice::Zoom(
+                Box::new(parsed_value),
+              ));
+              __xml_child_slot = 7usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
@@ -4179,6 +4485,8 @@ impl crate::schemas::document::CtVPreferences {
       hide_menubar,
       hide_window_ui,
       xml_children,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -4188,7 +4496,7 @@ impl crate::schemas::document::CtVPreferences {
     tag_name_prefix: &[u8],
     tag_name: &[u8],
   ) -> Result<Self, crate::common::SdkError> {
-    let (_e, empty_tag) = crate::common::expect_event_start_io!(
+    let (e, empty_tag) = crate::common::expect_event_start_io!(
       xml_reader,
       buf,
       xml_event,
@@ -4197,6 +4505,9 @@ impl crate::schemas::document::CtVPreferences {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut page_mode = None;
     let mut page_layout = None;
     let mut tab_display = None;
@@ -4204,6 +4515,10 @@ impl crate::schemas::document::CtVPreferences {
     let mut hide_menubar = None;
     let mut hide_window_ui = None;
     let mut xml_children = vec![];
+    for attr in e.attributes().with_checks(false) {
+      let attr = attr?;
+      crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+    }
     if !empty_tag {
       loop {
         let mut e_opt: Option<quick_xml::events::BytesStart<'static>> = None;
@@ -4251,6 +4566,7 @@ impl crate::schemas::document::CtVPreferences {
                   parsed_value,
                 )),
               );
+              __xml_child_slot = 7usize;
             }
             b"ofd:Zoom" | b"Zoom" => {
               let parsed_value: f64 = {
@@ -4301,6 +4617,7 @@ impl crate::schemas::document::CtVPreferences {
               xml_children.push(crate::schemas::document::CtVPreferencesContentChoice::Zoom(
                 Box::new(parsed_value),
               ));
+              __xml_child_slot = 7usize;
             }
             b"ofd:PageMode" | b"PageMode" => {
               let parsed_value = {
@@ -4321,6 +4638,7 @@ impl crate::schemas::document::CtVPreferences {
                 }
               };
               page_mode = Some(parsed_value);
+              __xml_child_slot = 1usize;
             }
             b"ofd:PageLayout" | b"PageLayout" => {
               let parsed_value = {
@@ -4341,6 +4659,7 @@ impl crate::schemas::document::CtVPreferences {
                 }
               };
               page_layout = Some(parsed_value);
+              __xml_child_slot = 2usize;
             }
             b"ofd:TabDisplay" | b"TabDisplay" => {
               let parsed_value = {
@@ -4361,6 +4680,7 @@ impl crate::schemas::document::CtVPreferences {
                 }
               };
               tab_display = Some(parsed_value);
+              __xml_child_slot = 3usize;
             }
             b"ofd:HideToolbar" | b"HideToolbar" => {
               let parsed_value = {
@@ -4410,6 +4730,7 @@ impl crate::schemas::document::CtVPreferences {
                 }
               };
               hide_toolbar = Some(parsed_value);
+              __xml_child_slot = 4usize;
             }
             b"ofd:HideMenubar" | b"HideMenubar" => {
               let parsed_value = {
@@ -4459,6 +4780,7 @@ impl crate::schemas::document::CtVPreferences {
                 }
               };
               hide_menubar = Some(parsed_value);
+              __xml_child_slot = 5usize;
             }
             b"ofd:HideWindowUI" | b"HideWindowUI" => {
               let parsed_value = {
@@ -4508,11 +4830,13 @@ impl crate::schemas::document::CtVPreferences {
                 }
               };
               hide_window_ui = Some(parsed_value);
+              __xml_child_slot = 6usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
@@ -4526,6 +4850,8 @@ impl crate::schemas::document::CtVPreferences {
       hide_menubar,
       hide_window_ui,
       xml_children,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }
@@ -4567,6 +4893,9 @@ impl crate::schemas::document::CtOutlineElem {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut title = None;
     let mut count = None;
     let mut expanded = None;
@@ -4595,7 +4924,9 @@ impl crate::schemas::document::CtOutlineElem {
             "expanded",
           )?);
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -4628,6 +4959,7 @@ impl crate::schemas::document::CtOutlineElem {
                 b"ofd:Actions",
                 b"Actions",
               )?);
+              __xml_child_slot = 1usize;
             }
             b"ofd:OutlineElem" | b"OutlineElem" => {
               outline_elem.push(
@@ -4638,11 +4970,13 @@ impl crate::schemas::document::CtOutlineElem {
                   b"OutlineElem",
                 )?,
               );
+              __xml_child_slot = 2usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
@@ -4655,6 +4989,8 @@ impl crate::schemas::document::CtOutlineElem {
       expanded,
       actions,
       outline_elem,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
@@ -4673,6 +5009,9 @@ impl crate::schemas::document::CtOutlineElem {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut title = None;
     let mut count = None;
     let mut expanded = None;
@@ -4701,7 +5040,9 @@ impl crate::schemas::document::CtOutlineElem {
             "expanded",
           )?);
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -4738,6 +5079,7 @@ impl crate::schemas::document::CtOutlineElem {
                   b"Actions",
                 )?,
               );
+              __xml_child_slot = 1usize;
             }
             b"ofd:OutlineElem" | b"OutlineElem" => {
               outline_elem.push(
@@ -4749,11 +5091,13 @@ impl crate::schemas::document::CtOutlineElem {
                   b"OutlineElem",
                 )?,
               );
+              __xml_child_slot = 2usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
@@ -4766,6 +5110,8 @@ impl crate::schemas::document::CtOutlineElem {
       expanded,
       actions,
       outline_elem,
+      xml_other_attrs,
+      xml_other_children,
     })
   }
 }
@@ -4802,6 +5148,9 @@ impl crate::schemas::document::CtBookmark {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut name = None;
     let mut dest = None;
     for attr in e.attributes().with_checks(false) {
@@ -4811,7 +5160,9 @@ impl crate::schemas::document::CtBookmark {
         b"Name" => {
           name = Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -4846,11 +5197,13 @@ impl crate::schemas::document::CtBookmark {
                   b"Dest",
                 )?,
               );
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end(e.to_end().name())?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+              ));
             }
           }
         }
@@ -4858,7 +5211,12 @@ impl crate::schemas::document::CtBookmark {
     }
     let name = name.ok_or_else(|| crate::common::missing_field("CtBookmark", "name"))?;
     let dest = dest.ok_or_else(|| crate::common::missing_field("CtBookmark", "dest"))?;
-    Ok(Self { name, dest })
+    Ok(Self {
+      name,
+      dest,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
   pub(crate) fn deserialize_from_reader_named<R: std::io::BufRead>(
     xml_reader: &mut quick_xml::Reader<R>,
@@ -4876,6 +5234,9 @@ impl crate::schemas::document::CtBookmark {
       tag_name_prefix,
       tag_name
     );
+    let mut xml_other_attrs = Vec::new();
+    let mut xml_other_children = Vec::new();
+    let mut __xml_child_slot = 0usize;
     let mut name = None;
     let mut dest = None;
     for attr in e.attributes().with_checks(false) {
@@ -4885,7 +5246,9 @@ impl crate::schemas::document::CtBookmark {
         b"Name" => {
           name = Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
-        _ => {}
+        _ => {
+          crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+        }
       }
     }
     if !empty_tag {
@@ -4922,11 +5285,13 @@ impl crate::schemas::document::CtBookmark {
                   b"Dest",
                 )?,
               );
+              __xml_child_slot = 1usize;
             }
             _ => {
-              if !e_empty {
-                xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-              }
+              xml_other_children.push((
+                __xml_child_slot,
+                crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+              ));
             }
           }
         }
@@ -4934,7 +5299,12 @@ impl crate::schemas::document::CtBookmark {
     }
     let name = name.ok_or_else(|| crate::common::missing_field("CtBookmark", "name"))?;
     let dest = dest.ok_or_else(|| crate::common::missing_field("CtBookmark", "dest"))?;
-    Ok(Self { name, dest })
+    Ok(Self {
+      name,
+      dest,
+      xml_other_attrs,
+      xml_other_children,
+    })
   }
 }
 impl std::str::FromStr for crate::schemas::document::PageArea {

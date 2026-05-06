@@ -15,12 +15,16 @@ pub struct Version {
   pub current: Option<bool>,
   ///指向包内的版本描述文件。
   pub base_loc: crate::schemas::definitions::StLoc,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///版本序列。
 #[derive(Clone, Debug, Default)]
 pub struct Versions {
   ///版本描述入口。
   pub version: Vec<Version>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///文件对象入口。
 #[derive(Clone, Debug, Default)]
@@ -33,6 +37,8 @@ pub struct DocBody {
   pub versions: Option<Versions>,
   ///指向该文档中签名和签章结构，见第 18 章。
   pub signatures: Option<crate::schemas::definitions::StLoc>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///OFD 主入口。
 #[derive(Clone, Debug, Default)]
@@ -43,12 +49,16 @@ pub struct Ofd {
   pub doc_type: OfdDocType,
   ///文件对象入口，可以存在多个，以便在一个文档中包含多个版式文档。
   pub doc_body: Vec<DocBody>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///关键词集合。
 #[derive(Clone, Debug, Default)]
 pub struct Keywords {
   ///关键词。
   pub keyword: Vec<String>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///用户自定义元数据。
 #[derive(Clone, Debug, Default)]
@@ -56,12 +66,16 @@ pub struct CustomData {
   ///用户自定义元数据名称。
   pub name: String,
   pub xml_value: String,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///用户自定义元数据集合。
 #[derive(Clone, Debug, Default)]
 pub struct CustomDatas {
   ///用户自定义元数据，可以指定一个名称及其对应的值。
   pub custom_data: Vec<CustomData>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///文档元数据信息描述。
 #[derive(Clone, Debug, Default)]
@@ -97,6 +111,8 @@ pub struct CtDocInfo {
   pub creator_version: Option<String>,
   ///用户自定义元数据集合。其子节点为 CustomData。
   pub custom_datas: Option<CustomDatas>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug, Default)]
 pub struct DocInfo(pub CtDocInfo);

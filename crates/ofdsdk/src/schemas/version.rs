@@ -10,12 +10,16 @@ pub struct File {
   ///文件列表文件标识。
   pub id: String,
   pub xml_value: crate::schemas::definitions::StLoc,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///版本包含的文件列表。
 #[derive(Clone, Debug, Default)]
 pub struct FileList {
   ///版本包含的文件。
   pub file: Vec<File>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///版本属性。
 #[derive(Clone, Debug, Default)]
@@ -32,4 +36,6 @@ pub struct DocVersion {
   pub file_list: FileList,
   ///该版本的入口文件。
   pub doc_root: crate::schemas::definitions::StLoc,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }

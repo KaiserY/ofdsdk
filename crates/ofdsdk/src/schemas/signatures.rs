@@ -13,6 +13,8 @@ pub struct Signature {
   pub r#type: Option<SignatureType>,
   ///指向包内的签名描述文件。
   pub base_loc: crate::schemas::definitions::StLoc,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///签名列表根节点属性。
 #[derive(Clone, Debug, Default)]
@@ -21,6 +23,8 @@ pub struct Signatures {
   pub max_sign_id: Option<String>,
   ///数字签名或安全签章在列表中的注册信息，一次签名或签章对应一个节点。
   pub signature: Vec<Signature>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///签名节点的类型。Seal 表示安全签章，Sign 表示纯数字签名。
 #[derive(Clone, Debug, Default)]

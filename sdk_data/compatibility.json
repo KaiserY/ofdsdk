@@ -5,9 +5,7 @@
       "Type": "Annot",
       "Field": "Creator",
       "Action": {
-        "AllowMissingAttribute": {
-          "DefaultValue": ""
-        }
+        "OptionalAttribute": {}
       }
     },
     {
@@ -15,9 +13,7 @@
       "Type": "Annot",
       "Field": "LastModDate",
       "Action": {
-        "AllowMissingAttribute": {
-          "DefaultValue": ""
-        }
+        "OptionalAttribute": {}
       }
     },
     {
@@ -25,9 +21,15 @@
       "Type": "CustomTag",
       "Field": "NameSpace",
       "Action": {
-        "AllowMissingAttribute": {
-          "DefaultValue": ""
-        }
+        "OptionalAttribute": {}
+      }
+    },
+    {
+      "Schema": "annotation",
+      "Type": "Annot",
+      "Field": "Appearance",
+      "Action": {
+        "OptionalChild": {}
       }
     },
     {

@@ -15,6 +15,8 @@ pub struct TemplatePage {
   pub z_order: Option<TemplatePageZOrder>,
   ///指向模板页内容描述文件。
   pub base_loc: crate::schemas::definitions::StLoc,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///文档公共数据。
 #[derive(Clone, Debug, Default)]
@@ -31,6 +33,8 @@ pub struct CommonData {
   pub template_page: Vec<TemplatePage>,
   ///引用在资源文件中定义的颜色空间标识，有关颜色空间的描述见 8.3.1。如果此项不存在，采用 RGB 作为默认颜色空间。
   pub default_cs: Option<crate::schemas::definitions::StRefId>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///页树节点。一个页树中可以包含一个或多个页节点，页顺序是根据页树进行前序遍历时叶节点的访问顺序。
 #[derive(Clone, Debug, Default)]
@@ -39,28 +43,38 @@ pub struct Page {
   pub id: crate::schemas::definitions::StId,
   ///指向页对象描述文件。
   pub base_loc: crate::schemas::definitions::StLoc,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///页树。
 #[derive(Clone, Debug, Default)]
 pub struct Pages {
   pub page: Vec<Page>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///大纲。
 #[derive(Clone, Debug, Default)]
 pub struct Outlines {
   pub outline_elem: Vec<CtOutlineElem>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///文档关联的动作序列。
 #[derive(Clone, Debug, Default)]
 pub struct Actions {
   ///文档关联的动作，事件类型应为 DO（文档打开，见表 52 事件类型）。
   pub action: Vec<crate::schemas::definitions::CtAction>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///文档的书签集，包含一组书签。
 #[derive(Clone, Debug, Default)]
 pub struct Bookmarks {
   ///文档的书签。
   pub bookmark: Vec<CtBookmark>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///文档根节点。
 #[derive(Clone, Debug, Default)]
@@ -87,6 +101,8 @@ pub struct Document {
   pub attachments: Option<crate::schemas::definitions::StLoc>,
   ///指向扩展列表文件，有关扩展描述见第 17 章。
   pub extensions: Option<crate::schemas::definitions::StLoc>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///打印权限设置。
 #[derive(Clone, Debug, Default)]
@@ -95,6 +111,8 @@ pub struct Print {
   pub printable: bool,
   ///打印份数，在 Printable 为 true 时有效，若 Printable 为 true 并且不设置 Copies 则打印份数不受限，若 Copies 的值为负值时，打印份数不受限，当 Copies 的值为 0 时，不允许打印，当 Copies 的值大于 0 时，则代表实际可打印的份数值。
   pub copies: Option<i32>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///文档访问有效期。
 #[derive(Clone, Debug, Default)]
@@ -103,6 +121,8 @@ pub struct ValidPeriod {
   pub start_date: Option<String>,
   ///有效期结束日期。
   pub end_date: Option<String>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///文档权限声明。
 #[derive(Clone, Debug, Default)]
@@ -123,6 +143,8 @@ pub struct CtPermission {
   pub print: Option<Print>,
   ///有效期，即此文档允许访问的期限，其具体期限取决于开始日期和结束日期，其中开始日期不能晚于结束日期，并且开始日期和结束日期至少出现一个。当不设置开始日期时，代表不限定开始日期，当不设置结束日期时代表不限定结束日期；当此不设置此节点时，表示开始日期和结束日期均不受限。
   pub valid_period: Option<ValidPeriod>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug)]
 pub enum CtVPreferencesContentChoice {
@@ -164,6 +186,8 @@ pub struct CtVPreferences {
   ///是否隐藏主窗口之外的其他窗体组件。默认值为 false。
   pub hide_window_ui: Option<bool>,
   pub xml_children: Vec<CtVPreferencesContentChoice>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///大纲节点。
 #[derive(Clone, Debug, Default)]
@@ -178,11 +202,15 @@ pub struct CtOutlineElem {
   pub actions: Option<Actions>,
   ///该节点的子大纲节点。层层嵌套，形成树状结构。
   pub outline_elem: Vec<CtOutlineElem>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug, Default)]
 pub struct CtBookmark {
   pub name: String,
   pub dest: crate::schemas::definitions::CtDest,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug, Default)]
 pub struct PageArea(pub crate::schemas::definitions::CtPageArea);

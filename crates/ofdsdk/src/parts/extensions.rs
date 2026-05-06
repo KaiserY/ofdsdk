@@ -65,4 +65,10 @@ impl Extensions {
     )?;
     Ok(())
   }
+  pub(crate) fn collect_zip_entries(&self, entry_set: &mut std::collections::HashSet<String>) {
+    entry_set.insert(crate::common::resolve_zip_file_path(&self.inner_path));
+    for child in &self.extension_data_files {
+      child.collect_zip_entries(entry_set);
+    }
+  }
 }

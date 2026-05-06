@@ -116,7 +116,8 @@ pub fn write_parts(
       .filter(|child_part| child_part.name != sdk_data_part.name)
     {
       let child_module_name = child_part.name.to_snake_case();
-      let child_token_stream: TokenStream = gen_part_module(child_part, sdk_data_parts, &index)?;
+      let child_token_stream: TokenStream =
+        gen_part_module(child_part, sdk_data_parts, &index, false)?;
       let child_syntax_tree = parse2(child_token_stream)?;
       let child_formatted = prettyplease::unparse(&child_syntax_tree);
       let child_part_path = out_parts_dir_path.join(format!("{child_module_name}.rs"));

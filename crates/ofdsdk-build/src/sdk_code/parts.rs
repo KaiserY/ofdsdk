@@ -61,6 +61,30 @@ fn save_child_stmt(
   }
 }
 
+fn collect_child_stmt(
+  child_field_ident: &syn::Ident,
+  is_many: bool,
+  is_required: bool,
+) -> TokenStream {
+  if is_many {
+    quote! {
+      for child in &self.#child_field_ident {
+        child.collect_zip_entries(entry_set);
+      }
+    }
+  } else if is_required {
+    quote! {
+      self.#child_field_ident.collect_zip_entries(entry_set);
+    }
+  } else {
+    quote! {
+      if let Some(child) = &self.#child_field_ident {
+        child.collect_zip_entries(entry_set);
+      }
+    }
+  }
+}
+
 struct LoadChildStmt<'a> {
   child_field_ident: &'a syn::Ident,
   path_expr: &'a syn::Ident,
@@ -196,7 +220,7 @@ pub fn gen_package_module(
     _ => bail!("root part {} must use Fixed path", sdk_data_root_part.name),
   };
 
-  let root_part_tokens = gen_part_module(sdk_data_root_part, sdk_data_parts, &index)?;
+  let root_part_tokens = gen_part_module(sdk_data_root_part, sdk_data_parts, &index, true)?;
 
   Ok(quote! {
     #root_part_tokens
@@ -206,7 +230,11 @@ pub fn gen_package_module(
         reader: R,
       ) -> Result<Self, crate::common::SdkError> {
         let mut archive = zip::ZipArchive::new(reader)?;
-        Self::new_from_archive(#root_part_path, &mut archive)
+        let mut package = Self::new_from_archive(#root_part_path, &mut archive)?;
+        let mut entry_set = std::collections::HashSet::new();
+        package.collect_zip_entries(&mut entry_set);
+        package.other_parts = crate::common::read_other_zip_parts(&mut archive, &entry_set)?;
+        Ok(package)
       }
 
       pub fn new_from_file<P: AsRef<std::path::Path>>(
@@ -222,6 +250,7 @@ pub fn gen_package_module(
         let mut entry_set = std::collections::HashSet::new();
         let mut zip = zip::ZipWriter::new(writer);
         self.save_zip(&mut zip, &mut entry_set)?;
+        crate::common::save_other_zip_parts(&self.other_parts, &mut zip, &mut entry_set)?;
         zip.finish()?;
         Ok(())
       }
@@ -240,6 +269,7 @@ pub(crate) fn gen_part_module(
   part: &PartDefinition,
   sdk_data_parts: &[PartDefinition],
   index: &SchemaIndex<'_>,
+  is_root: bool,
 ) -> anyhow::Result<TokenStream> {
   let struct_ident = format_ident!("{}", part.name.to_upper_camel_case());
   let mut fields = vec![quote! {
@@ -248,6 +278,7 @@ pub(crate) fn gen_part_module(
   let mut body_stmts = vec![];
   let mut save_stmts = vec![];
   let mut save_child_stmts = vec![];
+  let mut collect_child_stmts = vec![];
   let mut self_values = vec![quote! {
     inner_path: path.to_string()
   }];
@@ -273,6 +304,15 @@ pub(crate) fn gen_part_module(
     });
     self_values.push(quote! {
       #context_field_ident
+    });
+  }
+
+  if is_root {
+    fields.push(quote! {
+      pub other_parts: Vec<crate::common::OtherPart>,
+    });
+    self_values.push(quote! {
+      other_parts: Vec::new()
     });
   }
 
@@ -344,6 +384,11 @@ pub(crate) fn gen_part_module(
       })
       .transpose()?;
     save_child_stmts.push(save_child_stmt(
+      &child_field_ident,
+      child.is_many(),
+      child.is_required(),
+    ));
+    collect_child_stmts.push(collect_child_stmt(
       &child_field_ident,
       child.is_many(),
       child.is_required(),
@@ -560,6 +605,14 @@ pub(crate) fn gen_part_module(
         #( #save_stmts )*
         #( #save_child_stmts )*
         Ok(())
+      }
+
+      pub(crate) fn collect_zip_entries(
+        &self,
+        entry_set: &mut std::collections::HashSet<String>,
+      ) {
+        entry_set.insert(crate::common::resolve_zip_file_path(&self.inner_path));
+        #( #collect_child_stmts )*
       }
     }
   })

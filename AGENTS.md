@@ -1,42 +1,89 @@
 # Repository Guidelines
 
-## Project Structure & Module Organization
-This repository is a Rust workspace with three crates under `crates/`:
+## Agent Harness
+Start from local evidence. Use `rg`/`rg --files` first, read only the files needed for the task, and keep summaries diff-based rather than conversation-based. Do not paste large generated snippets or broad search output back into the conversation unless the user asks.
 
-- `crates/ofdsdk`: the runtime library exposed to consumers. Its public entry point is `src/lib.rs`. Generated code lives in `src/schemas/`, `src/deserializers/`, and `src/serializers/`.
-  Parts runtime code is generated into `src/parts/` and `src/parts.rs`.
-- `crates/ofdsdk-build`: the code generation crate. It reads XML Schema files from `schemas/` and emits intermediate data into `sdk_data/`, then Rust source into `crates/ofdsdk/src/`.
-- `crates/ofdsdk-test`: the integration-test crate. It depends only on `crates/ofdsdk` and is used for runtime XML round-trip verification.
+Run commands from the repository root. Cargo generation, format, test, clippy, and bench commands must run sequentially in the default `target/` directory; do not set `CARGO_TARGET_DIR`. If Cargo reports a target lock, wait for Cargo rather than probing processes.
 
-Treat `schemas/` as the source of truth. Changes to XSD files usually require regeneration through the build crate tests.
-Only implement or maintain XSD syntax that actually appears under `schemas/`. If a construct does not occur in `schemas/`, do not add handling for it beyond what is required to fail fast or stay out of the active path.
-Treat `sdk_data/parts/*.json` and `sdk_data/compatibility.json` as hand-maintained generator inputs. Do not regenerate them from Rust code.
+This Rust workspace has three crates:
 
-## Build, Test, and Development Commands
-- `cargo build --workspace`: build both crates.
-- `cargo test -p ofdsdk-build test_gen -- --ignored --nocapture`: regenerate `sdk_data/` and generated Rust code in `crates/ofdsdk/src/` from `schemas/`.
-- `cargo test --workspace`: run the non-ignored workspace tests.
-- `cargo test -p ofdsdk-test`: run the runtime integration tests, including OFD package sample coverage under `crates/ofdsdk-test/samples/`.
-- `cargo bench -p ofdsdk-test --bench page`: run the page read, write, and round-trip benchmarks to watch for performance regressions.
-- `cargo bench -p ofdsdk-test --bench document`: run the document read, write, and round-trip benchmarks for `Document` parsing hot paths such as `VPreferences`.
-- `cargo fmt --all`: apply standard Rust formatting across the workspace.
-- `cargo clippy --workspace --all-targets -- -D warnings`: catch lint issues before opening a PR.
+- `crates/ofdsdk`: runtime crate and public API. Its public entry point is `src/lib.rs`. Generated schema/deserializer/serializer/parts output lives under `src/schemas/`, `src/deserializers/`, `src/serializers/`, `src/parts/`, plus `src/schemas.rs`, `src/deserializers.rs`, `src/serializers.rs`, and `src/parts.rs`. Shared runtime helpers live in `src/common.rs` and `src/common/`.
+- `crates/ofdsdk-build`: generator and checked-in input model code. It reads XML Schema files from `schemas/`, emits intermediate data into `sdk_data/`, and generates Rust source into `crates/ofdsdk/src/`.
+- `crates/ofdsdk-test`: integration tests, OFD package samples, fixtures, and performance benches. It depends only on `crates/ofdsdk`.
 
-Run commands from the repository root. Because generated code is committed, always regenerate first and run formatting and linting only after regeneration. Before every commit or pull request, run `cargo test -p ofdsdk-build test_gen -- --ignored --nocapture`, then `cargo fmt --all`, `cargo clippy --workspace --all-targets -- -D warnings`, `cargo test -p ofdsdk-test`, `cargo test --workspace`, `cargo bench -p ofdsdk-test --bench page`, and `cargo bench -p ofdsdk-test --bench document`.
+The runtime feature is `parts`; it enables ZIP/package support. There is no default feature declaration, so use explicit feature checks only when the code or test actually depends on package behavior.
 
-## Coding Style & Naming Conventions
-Follow `.editorconfig`: UTF-8, LF line endings, final newline, and spaces with 2-space indentation by default. Keep Rust code `rustfmt`-clean. Use snake_case for modules and functions, PascalCase for Rust types, and mirror schema-derived filenames in lowercase with underscores, for example `custom_tags.rs`.
+## Generated Data
+Treat `schemas/` as the source of truth for schema modeling. Changes to XSD files usually require regeneration through the build crate tests. Only implement or maintain XSD syntax that actually appears under `schemas/`. If a construct does not occur in `schemas/`, do not add handling for it beyond what is required to fail fast or stay out of the active path.
 
-Prefer small, focused modules. Do not write any code comments. Most runtime code is generated by macros or the build crate, so prioritize macro hygiene and generator-friendly structure over ad hoc hand-written patterns. Keep hand-written logic in `ofdsdk-build`; avoid editing generated files in `crates/ofdsdk/src/schemas/`, `crates/ofdsdk/src/deserializers/`, `crates/ofdsdk/src/serializers/`, or `crates/ofdsdk/src/parts/` unless you are also updating the generator.
+Treat checked-in `sdk_data/schemas/*.json` and `sdk_data/schema_comments/*.json` as generated intermediate schema data. Treat `sdk_data/parts/*.json` and `sdk_data/compatibility.json` as hand-maintained generator inputs; do not regenerate them from Rust code.
+
+Avoid editing generated runtime files directly unless also changing generator/input data and intentionally regenerating output. Generated runtime files include `crates/ofdsdk/src/schemas/`, `crates/ofdsdk/src/deserializers/`, `crates/ofdsdk/src/serializers/`, `crates/ofdsdk/src/parts/`, `crates/ofdsdk/src/schemas.rs`, `crates/ofdsdk/src/deserializers.rs`, `crates/ofdsdk/src/serializers.rs`, and `crates/ofdsdk/src/parts.rs`. After `test_gen`, run `cargo fmt --all` before reviewing diffs; do not revert generated churn before checking the formatted diff.
+
 Keep compatibility behavior in `sdk_data/compatibility.json` and the build crate. Prefer targeted compatibility overrides over weakening XSD-derived models globally.
 
-## Testing Guidelines
-Testing is currently centered on the generator path in `crates/ofdsdk-build/src/lib.rs`. The code generation test `test_gen` is ignored by default, so run `cargo test -p ofdsdk-build test_gen -- --ignored --nocapture` first when schema or generator logic changes. Since generated code is committed, treat `test_gen` as the first verification step and run `cargo fmt --all` and `cargo clippy --workspace --all-targets -- -D warnings` only after regeneration. Add unit tests close to the code they exercise using `#[cfg(test)] mod tests`. Every change should then be validated with `cargo test --workspace`. Run `cargo bench -p ofdsdk-test --bench page` when touching runtime parsing, serialization, or generated page code so performance regressions are caught early. Run `cargo bench -p ofdsdk-test --bench document` when touching `Document` parsing hot paths that are not represented by the page benchmark, such as `VPreferences` text parsing. When changing schema parsing or code generation, also review the generated diff in `sdk_data/`, `crates/ofdsdk/src/schemas/`, `crates/ofdsdk/src/deserializers/`, `crates/ofdsdk/src/serializers/`, and `crates/ofdsdk/src/parts/`.
-After running code generation, also make sure `cargo test -p ofdsdk-test` passes. When changing `sdk_data/parts/*.json`, `sdk_data/compatibility.json`, or the parts generator, verify the sample-based OFD package tests in `crates/ofdsdk-test/tests/parts.rs` and review the generated diff in `crates/ofdsdk/src/parts/`.
+## Commands
+- `cargo build --workspace`: build all crates.
+- `cargo test -p ofdsdk-build test_gen -- --ignored --nocapture`: regenerate `sdk_data/` and runtime generated code from `schemas/` and hand-maintained generator inputs.
+- `cargo test -p ofdsdk-test`: fast integration lane for runtime XML round trips and OFD package samples.
+- `cargo test --workspace`: default full test lane.
+- `cargo fmt --all`: format.
+- `cargo clippy --workspace --all-targets -- -D warnings`: clippy lane.
+- `cargo bench -p ofdsdk-test --bench page`: page read, write, and round-trip benchmarks.
+- `cargo bench -p ofdsdk-test --bench document`: document read, write, and round-trip benchmarks for `Document` parsing hot paths such as `VPreferences`.
 
-## Commit & Pull Request Guidelines
-Recent history uses short subjects like `WIP: 0.1.0`. For new work, keep the first line short, imperative, and scoped, for example `Generate annotation schema modules`. In pull requests, include:
+Validation loop:
+
+- `cargo test -p ofdsdk-build test_gen -- --ignored --nocapture`
+- `cargo fmt --all`
+- `cargo clippy --workspace --all-targets -- -D warnings`
+- `cargo test -p ofdsdk-test`
+- `cargo test --workspace`
+- `cargo fmt --all`
+
+Benchmarks are separate and should be run only when checking performance-sensitive changes:
+
+- `cargo bench -p ofdsdk-test --bench page`
+- `cargo bench -p ofdsdk-test --bench document`
+
+For runtime XML iteration, start with the targeted file under `crates/ofdsdk-test/tests/`, then run `cargo test -p ofdsdk-test`. For package/parts behavior, run `cargo test -p ofdsdk-test parts -- --nocapture` and review OFD samples under `crates/ofdsdk-test/samples/`. Add broader lanes when the change touches generator code, shared runtime behavior, package behavior, compatibility data, or generated output.
+
+## Testing Rules
+Place tests near the behavior they protect:
+
+- Schema/simple XML round trips: the matching file under `crates/ofdsdk-test/tests/`, such as `page.rs`, `document.rs`, `res.rs`, `ofd.rs`, or `simple` schema-specific tests already present.
+- Graphics behavior: `crates/ofdsdk-test/tests/page_graphics.rs`.
+- Package/parts behavior: `crates/ofdsdk-test/tests/parts.rs`, using public APIs and saved package contents.
+- Signature, attachment, annotation, custom tag, extension, and version behavior: the matching schema or package test file under `crates/ofdsdk-test/tests/`.
+- Performance-sensitive page parsing or serialization: `cargo bench -p ofdsdk-test --bench page`.
+- Performance-sensitive document parsing or serialization: `cargo bench -p ofdsdk-test --bench document`.
+
+Testing is centered on the generator path in `crates/ofdsdk-build/src/lib.rs`. The code generation test `test_gen` is ignored by default, so run it first when schema or generator logic changes. Since generated code is committed, treat `test_gen` as the first verification step and run `cargo fmt --all` before inspecting generated diffs. Add unit tests close to the code they exercise using `#[cfg(test)] mod tests`.
+
+When changing schema parsing or code generation, review the generated diff in `sdk_data/schemas/`, `sdk_data/schema_comments/`, `crates/ofdsdk/src/schemas/`, `crates/ofdsdk/src/deserializers/`, `crates/ofdsdk/src/serializers/`, and `crates/ofdsdk/src/parts/`.
+
+When changing `sdk_data/parts/*.json`, `sdk_data/compatibility.json`, or the parts generator, verify the sample-based OFD package tests in `crates/ofdsdk-test/tests/parts.rs` and review the generated diff in `crates/ofdsdk/src/parts/`.
+
+## Code Style
+Follow `.editorconfig`: UTF-8, LF line endings, final newline, and spaces with 2-space indentation by default. Keep Rust `rustfmt`-clean. Use snake_case for modules and functions, PascalCase for Rust types, and mirror schema-derived filenames in lowercase with underscores, for example `custom_tags.rs`.
+
+Prefer small, focused modules. Do not write code comments. Most runtime code is generated by the build crate, so prioritize generator-friendly structure over ad hoc hand-written patterns. Keep hand-written logic in `crates/ofdsdk-build` or small generic runtime helpers. Avoid editing generated runtime files unless you are also updating the generator or generator inputs.
+
+For the `parts` API, keep the public surface aligned with OFD package concepts and established constructors/read/write entry points already present in `crates/ofdsdk/src/parts/`. Do not expose raw storage, relationship sets, generated factories, or internal caches just to satisfy a narrow test.
+
+When benchmarking, evaluate the relevant bench as a whole and compare surrounding trends rather than relying on a single noisy metric.
+
+## Commit Guidelines
+Recent history uses short subjects like `WIP: 0.1.0`. For new work, keep commit subjects short, imperative, and scoped, for example `Generate annotation schema modules` or `Tighten OFD package path decoding`.
+
+When generating a commit message, base it on repository state, not the latest chat turn. Inspect `git status --short`, `git diff --stat`, and relevant `git diff` hunks. If changes are staged, also inspect `git diff --cached --stat` and `git diff --cached`. Do not prefix the copyable commit message with explanatory text such as whether it covers staged or unstaged changes; if that context is useful, place it after the commit message under a separate non-copyable note.
+
+Summarize the coherent change set visible in the diff. Distinguish documentation-only edits from code, metadata, generated output, fixtures, and tests. Mention generated churn only when intended. Do not fold unrelated worktree edits into the message unless the user asks for a message covering all changes.
+
+Generate a commit message when needed, but do not create a commit unless the user explicitly confirms.
+
+In pull requests, include:
 
 - a brief summary of the functional change,
-- confirmation that you ran `cargo test -p ofdsdk-build test_gen -- --ignored --nocapture`, `cargo fmt --all`, `cargo clippy --workspace --all-targets -- -D warnings`, `cargo test -p ofdsdk-test`, `cargo test --workspace`, `cargo bench -p ofdsdk-test --bench page`, and `cargo bench -p ofdsdk-test --bench document`,
+- confirmation that you ran the validation loop and any relevant standalone benchmarks,
 - notes on regenerated files when schema or generator logic changed.

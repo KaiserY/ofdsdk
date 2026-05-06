@@ -43,10 +43,10 @@ fn has_recursive_self_extension(ct: &ComplexType, ct_name: &str) -> bool {
       ComplexTypeContentChoice::Sequence(seq) => {
         for seq_content in &seq.contents {
           match seq_content {
-            SequenceContentChoice::Element(element) => {
-              if element_has_extension_base(element, ct_name) {
-                return true;
-              }
+            SequenceContentChoice::Element(element)
+              if element_has_extension_base(element, ct_name) =>
+            {
+              return true;
             }
             SequenceContentChoice::Choice(choice) => {
               for choice_content in &choice.contents {

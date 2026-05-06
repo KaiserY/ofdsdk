@@ -60,7 +60,24 @@ impl crate::schemas::signatures::Signature {
       writer.write_str(&quick_xml::escape::escape(self.base_loc.as_str()))?;
       writer.write_char('"')?;
     }
-    writer.write_str("/>")?;
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
+    if self.xml_other_children.is_empty() {
+      writer.write_str("/>")?;
+      return Ok(());
+    }
+    writer.write_char('>')?;
+    for (_, child) in &self.xml_other_children {
+      writer.write_str(child)?;
+    }
+    writer.write_str("</ofd:")?;
+    writer.write_str(tag_name)?;
+    writer.write_char('>')?;
     Ok(())
   }
 }
@@ -94,7 +111,21 @@ impl crate::schemas::signatures::Signatures {
     if with_xmlns {
       writer.write_str(r#" xmlns:ofd="http://www.ofdspec.org/2016""#)?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(max_sign_id) = &self.max_sign_id {
       writer.write_char('<')?;
       writer.write_str("ofd:MaxSignId")?;
@@ -102,8 +133,22 @@ impl crate::schemas::signatures::Signatures {
       writer.write_str(&quick_xml::escape::escape(max_sign_id.as_str()))?;
       writer.write_str("</ofd:MaxSignId>")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.signature {
       child.write_xml_named(writer, false, "Signature")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 2usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;

@@ -77,4 +77,11 @@ impl Signature {
     )?;
     Ok(())
   }
+  pub(crate) fn collect_zip_entries(&self, entry_set: &mut std::collections::HashSet<String>) {
+    entry_set.insert(crate::common::resolve_zip_file_path(&self.inner_path));
+    self.signature_value.collect_zip_entries(entry_set);
+    if let Some(child) = &self.seal_file {
+      child.collect_zip_entries(entry_set);
+    }
+  }
 }

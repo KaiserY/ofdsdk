@@ -118,7 +118,24 @@ impl crate::schemas::definitions::CtDest {
       write!(writer, "{}", zoom)?;
       writer.write_char('"')?;
     }
-    writer.write_str("/>")?;
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
+    if self.xml_other_children.is_empty() {
+      writer.write_str("/>")?;
+      return Ok(());
+    }
+    writer.write_char('>')?;
+    for (_, child) in &self.xml_other_children {
+      writer.write_str(child)?;
+    }
+    writer.write_str("</ofd:")?;
+    writer.write_str(tag_name)?;
+    writer.write_char('>')?;
     Ok(())
   }
 }
@@ -152,13 +169,34 @@ impl crate::schemas::definitions::CtPageArea {
     if with_xmlns {
       writer.write_str(r#" xmlns:ofd="http://www.ofdspec.org/2016""#)?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     {
       writer.write_char('<')?;
       writer.write_str("ofd:PhysicalBox")?;
       writer.write_char('>')?;
       writer.write_str(&quick_xml::escape::escape(self.physical_box.as_str()))?;
       writer.write_str("</ofd:PhysicalBox>")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     if let Some(application_box) = &self.application_box {
       writer.write_char('<')?;
@@ -167,6 +205,13 @@ impl crate::schemas::definitions::CtPageArea {
       writer.write_str(&quick_xml::escape::escape(application_box.as_str()))?;
       writer.write_str("</ofd:ApplicationBox>")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 2usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(content_box) = &self.content_box {
       writer.write_char('<')?;
       writer.write_str("ofd:ContentBox")?;
@@ -174,12 +219,26 @@ impl crate::schemas::definitions::CtPageArea {
       writer.write_str(&quick_xml::escape::escape(content_box.as_str()))?;
       writer.write_str("</ofd:ContentBox>")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 3usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(bleed_box) = &self.bleed_box {
       writer.write_char('<')?;
       writer.write_str("ofd:BleedBox")?;
       writer.write_char('>')?;
       writer.write_str(&quick_xml::escape::escape(bleed_box.as_str()))?;
       writer.write_str("</ofd:BleedBox>")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 4usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -222,7 +281,24 @@ impl crate::schemas::definitions::Bookmark {
       writer.write_str(&quick_xml::escape::escape(self.name.as_str()))?;
       writer.write_char('"')?;
     }
-    writer.write_str("/>")?;
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
+    if self.xml_other_children.is_empty() {
+      writer.write_str("/>")?;
+      return Ok(());
+    }
+    writer.write_char('>')?;
+    for (_, child) in &self.xml_other_children {
+      writer.write_str(child)?;
+    }
+    writer.write_str("</ofd:")?;
+    writer.write_str(tag_name)?;
+    writer.write_char('>')?;
     Ok(())
   }
 }
@@ -256,7 +332,21 @@ impl crate::schemas::definitions::Goto {
     if with_xmlns {
       writer.write_str(r#" xmlns:ofd="http://www.ofdspec.org/2016""#)?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.xml_children {
       match child {
         crate::schemas::definitions::GotoContentChoice::Dest(child) => {
@@ -266,6 +356,13 @@ impl crate::schemas::definitions::Goto {
           child.write_xml_named(writer, false, "Bookmark")?
         }
       }
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -318,7 +415,24 @@ impl crate::schemas::definitions::Uri {
       writer.write_str(&quick_xml::escape::escape(target.as_str()))?;
       writer.write_char('"')?;
     }
-    writer.write_str("/>")?;
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
+    if self.xml_other_children.is_empty() {
+      writer.write_str("/>")?;
+      return Ok(());
+    }
+    writer.write_char('>')?;
+    for (_, child) in &self.xml_other_children {
+      writer.write_str(child)?;
+    }
+    writer.write_str("</ofd:")?;
+    writer.write_str(tag_name)?;
+    writer.write_char('>')?;
     Ok(())
   }
 }
@@ -362,7 +476,24 @@ impl crate::schemas::definitions::GotoA {
       writer.write_str(if *new_window { "true" } else { "false" })?;
       writer.write_char('"')?;
     }
-    writer.write_str("/>")?;
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
+    if self.xml_other_children.is_empty() {
+      writer.write_str("/>")?;
+      return Ok(());
+    }
+    writer.write_char('>')?;
+    for (_, child) in &self.xml_other_children {
+      writer.write_str(child)?;
+    }
+    writer.write_str("</ofd:")?;
+    writer.write_str(tag_name)?;
+    writer.write_char('>')?;
     Ok(())
   }
 }
@@ -416,7 +547,24 @@ impl crate::schemas::definitions::Sound {
       writer.write_str(if *synchronous { "true" } else { "false" })?;
       writer.write_char('"')?;
     }
-    writer.write_str("/>")?;
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
+    if self.xml_other_children.is_empty() {
+      writer.write_str("/>")?;
+      return Ok(());
+    }
+    writer.write_char('>')?;
+    for (_, child) in &self.xml_other_children {
+      writer.write_str(child)?;
+    }
+    writer.write_str("</ofd:")?;
+    writer.write_str(tag_name)?;
+    writer.write_char('>')?;
     Ok(())
   }
 }
@@ -460,7 +608,24 @@ impl crate::schemas::definitions::Movie {
       writer.write_str(operator.as_xml_str())?;
       writer.write_char('"')?;
     }
-    writer.write_str("/>")?;
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
+    if self.xml_other_children.is_empty() {
+      writer.write_str("/>")?;
+      return Ok(());
+    }
+    writer.write_char('>')?;
+    for (_, child) in &self.xml_other_children {
+      writer.write_str(child)?;
+    }
+    writer.write_str("</ofd:")?;
+    writer.write_str(tag_name)?;
+    writer.write_char('>')?;
     Ok(())
   }
 }
@@ -499,9 +664,30 @@ impl crate::schemas::definitions::CtAction {
       writer.write_str(self.event.as_xml_str())?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(region) = &self.region {
       region.write_xml_named(writer, false, "Region")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     for child in &self.xml_children {
       match child {
@@ -521,6 +707,13 @@ impl crate::schemas::definitions::CtAction {
           child.write_xml_named(writer, false, "Movie")?
         }
       }
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 2usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -563,7 +756,24 @@ impl crate::schemas::definitions::Move {
       writer.write_str(&quick_xml::escape::escape(self.point1.as_str()))?;
       writer.write_char('"')?;
     }
-    writer.write_str("/>")?;
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
+    if self.xml_other_children.is_empty() {
+      writer.write_str("/>")?;
+      return Ok(());
+    }
+    writer.write_char('>')?;
+    for (_, child) in &self.xml_other_children {
+      writer.write_str(child)?;
+    }
+    writer.write_str("</ofd:")?;
+    writer.write_str(tag_name)?;
+    writer.write_char('>')?;
     Ok(())
   }
 }
@@ -602,7 +812,24 @@ impl crate::schemas::definitions::Line {
       writer.write_str(&quick_xml::escape::escape(self.point1.as_str()))?;
       writer.write_char('"')?;
     }
-    writer.write_str("/>")?;
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
+    if self.xml_other_children.is_empty() {
+      writer.write_str("/>")?;
+      return Ok(());
+    }
+    writer.write_char('>')?;
+    for (_, child) in &self.xml_other_children {
+      writer.write_str(child)?;
+    }
+    writer.write_str("</ofd:")?;
+    writer.write_str(tag_name)?;
+    writer.write_char('>')?;
     Ok(())
   }
 }
@@ -646,7 +873,24 @@ impl crate::schemas::definitions::QuadraticBezier {
       writer.write_str(&quick_xml::escape::escape(self.point2.as_str()))?;
       writer.write_char('"')?;
     }
-    writer.write_str("/>")?;
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
+    if self.xml_other_children.is_empty() {
+      writer.write_str("/>")?;
+      return Ok(());
+    }
+    writer.write_char('>')?;
+    for (_, child) in &self.xml_other_children {
+      writer.write_str(child)?;
+    }
+    writer.write_str("</ofd:")?;
+    writer.write_str(tag_name)?;
+    writer.write_char('>')?;
     Ok(())
   }
 }
@@ -695,7 +939,24 @@ impl crate::schemas::definitions::CubicBezier {
       writer.write_str(&quick_xml::escape::escape(self.point3.as_str()))?;
       writer.write_char('"')?;
     }
-    writer.write_str("/>")?;
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
+    if self.xml_other_children.is_empty() {
+      writer.write_str("/>")?;
+      return Ok(());
+    }
+    writer.write_char('>')?;
+    for (_, child) in &self.xml_other_children {
+      writer.write_str(child)?;
+    }
+    writer.write_str("</ofd:")?;
+    writer.write_str(tag_name)?;
+    writer.write_char('>')?;
     Ok(())
   }
 }
@@ -758,7 +1019,24 @@ impl crate::schemas::definitions::Arc {
       writer.write_str(&quick_xml::escape::escape(self.end_point.as_str()))?;
       writer.write_char('"')?;
     }
-    writer.write_str("/>")?;
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
+    if self.xml_other_children.is_empty() {
+      writer.write_str("/>")?;
+      return Ok(());
+    }
+    writer.write_char('>')?;
+    for (_, child) in &self.xml_other_children {
+      writer.write_str(child)?;
+    }
+    writer.write_str("</ofd:")?;
+    writer.write_str(tag_name)?;
+    writer.write_char('>')?;
     Ok(())
   }
 }
@@ -792,7 +1070,24 @@ impl crate::schemas::definitions::Close {
     if with_xmlns {
       writer.write_str(r#" xmlns:ofd="http://www.ofdspec.org/2016""#)?;
     }
-    writer.write_str("/>")?;
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
+    if self.xml_other_children.is_empty() {
+      writer.write_str("/>")?;
+      return Ok(());
+    }
+    writer.write_char('>')?;
+    for (_, child) in &self.xml_other_children {
+      writer.write_str(child)?;
+    }
+    writer.write_str("</ofd:")?;
+    writer.write_str(tag_name)?;
+    writer.write_char('>')?;
     Ok(())
   }
 }
@@ -831,7 +1126,21 @@ impl crate::schemas::definitions::Area {
       writer.write_str(&quick_xml::escape::escape(self.start.as_str()))?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.xml_children {
       match child {
         crate::schemas::definitions::AreaContentChoice::Move(child) => {
@@ -853,6 +1162,13 @@ impl crate::schemas::definitions::Area {
           child.write_xml_named(writer, false, "Close")?
         }
       }
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -890,9 +1206,30 @@ impl crate::schemas::definitions::CtRegion {
     if with_xmlns {
       writer.write_str(r#" xmlns:ofd="http://www.ofdspec.org/2016""#)?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.area {
       child.write_xml_named(writer, false, "Area")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;

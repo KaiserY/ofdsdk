@@ -252,15 +252,14 @@ pub struct CompatibilityRule {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "PascalCase", rename_all_fields = "PascalCase")]
 pub enum CompatibilityAction {
-  AllowMissingAttribute { default_value: String },
   EnumValueAlias { input: String, canonical: String },
+  OptionalAttribute {},
+  OptionalChild {},
   TreatAsString { default_value: String },
 }
 
 impl Default for CompatibilityAction {
   fn default() -> Self {
-    Self::AllowMissingAttribute {
-      default_value: String::new(),
-    }
+    Self::OptionalAttribute {}
   }
 }

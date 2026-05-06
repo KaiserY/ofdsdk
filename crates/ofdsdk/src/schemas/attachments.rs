@@ -9,6 +9,8 @@
 pub struct Attachments {
   ///附件。
   pub attachment: Vec<CtAttachment>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///附件属性。
 #[derive(Clone, Debug, Default)]
@@ -31,6 +33,8 @@ pub struct CtAttachment {
   pub usage: Option<String>,
   ///附件内容在包内的路径。
   pub file_loc: crate::schemas::definitions::StLoc,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug, Default)]
 pub struct Attachment(pub CtAttachment);

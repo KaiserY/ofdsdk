@@ -60,7 +60,24 @@ impl crate::schemas::signature::Provider {
       writer.write_str(&quick_xml::escape::escape(company.as_str()))?;
       writer.write_char('"')?;
     }
-    writer.write_str("/>")?;
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
+    if self.xml_other_children.is_empty() {
+      writer.write_str("/>")?;
+      return Ok(());
+    }
+    writer.write_char('>')?;
+    for (_, child) in &self.xml_other_children {
+      writer.write_str(child)?;
+    }
+    writer.write_str("</ofd:")?;
+    writer.write_str(tag_name)?;
+    writer.write_char('>')?;
     Ok(())
   }
 }
@@ -99,13 +116,34 @@ impl crate::schemas::signature::Reference {
       writer.write_str(&quick_xml::escape::escape(self.file_ref.as_str()))?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     {
       writer.write_char('<')?;
       writer.write_str("ofd:CheckValue")?;
       writer.write_char('>')?;
       writer.write_str(&quick_xml::escape::escape(self.check_value.as_str()))?;
       writer.write_str("</ofd:CheckValue>")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -148,9 +186,30 @@ impl crate::schemas::signature::References {
       writer.write_str(&quick_xml::escape::escape(self.check_method.as_str()))?;
       writer.write_char('"')?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.reference {
       child.write_xml_named(writer, false, "Reference")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -208,7 +267,24 @@ impl crate::schemas::signature::StampAnnot {
       writer.write_str(&quick_xml::escape::escape(clip.as_str()))?;
       writer.write_char('"')?;
     }
-    writer.write_str("/>")?;
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
+    if self.xml_other_children.is_empty() {
+      writer.write_str("/>")?;
+      return Ok(());
+    }
+    writer.write_char('>')?;
+    for (_, child) in &self.xml_other_children {
+      writer.write_str(child)?;
+    }
+    writer.write_str("</ofd:")?;
+    writer.write_str(tag_name)?;
+    writer.write_char('>')?;
     Ok(())
   }
 }
@@ -242,13 +318,34 @@ impl crate::schemas::signature::Seal {
     if with_xmlns {
       writer.write_str(r#" xmlns:ofd="http://www.ofdspec.org/2016""#)?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     {
       writer.write_char('<')?;
       writer.write_str("ofd:BaseLoc")?;
       writer.write_char('>')?;
       writer.write_str(&quick_xml::escape::escape(self.base_loc.as_str()))?;
       writer.write_str("</ofd:BaseLoc>")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -286,14 +383,42 @@ impl crate::schemas::signature::SignedInfo {
     if with_xmlns {
       writer.write_str(r#" xmlns:ofd="http://www.ofdspec.org/2016""#)?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     self.provider.write_xml_named(writer, false, "Provider")?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(signature_method) = &self.signature_method {
       writer.write_char('<')?;
       writer.write_str("ofd:SignatureMethod")?;
       writer.write_char('>')?;
       writer.write_str(&quick_xml::escape::escape(signature_method.as_str()))?;
       writer.write_str("</ofd:SignatureMethod>")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 2usize)
+    {
+      writer.write_str(child)?;
     }
     if let Some(signature_date_time) = &self.signature_date_time {
       writer.write_char('<')?;
@@ -302,14 +427,42 @@ impl crate::schemas::signature::SignedInfo {
       writer.write_str(&quick_xml::escape::escape(signature_date_time.as_str()))?;
       writer.write_str("</ofd:SignatureDateTime>")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 3usize)
+    {
+      writer.write_str(child)?;
+    }
     self
       .references
       .write_xml_named(writer, false, "References")?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 4usize)
+    {
+      writer.write_str(child)?;
+    }
     for child in &self.stamp_annot {
       child.write_xml_named(writer, false, "StampAnnot")?;
     }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 5usize)
+    {
+      writer.write_str(child)?;
+    }
     if let Some(seal) = &self.seal {
       seal.write_xml_named(writer, false, "Seal")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 6usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;
@@ -347,16 +500,44 @@ impl crate::schemas::signature::Signature {
     if with_xmlns {
       writer.write_str(r#" xmlns:ofd="http://www.ofdspec.org/2016""#)?;
     }
+    for (name, value) in &self.xml_other_attrs {
+      writer.write_char(' ')?;
+      writer.write_str(name)?;
+      writer.write_str("=\"")?;
+      writer.write_str(&quick_xml::escape::escape(value.as_ref()))?;
+      writer.write_char('"')?;
+    }
     writer.write_char('>')?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 0usize)
+    {
+      writer.write_str(child)?;
+    }
     self
       .signed_info
       .write_xml_named(writer, false, "SignedInfo")?;
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 1usize)
+    {
+      writer.write_str(child)?;
+    }
     {
       writer.write_char('<')?;
       writer.write_str("ofd:SignedValue")?;
       writer.write_char('>')?;
       writer.write_str(&quick_xml::escape::escape(self.signed_value.as_str()))?;
       writer.write_str("</ofd:SignedValue>")?;
+    }
+    for (_, child) in self
+      .xml_other_children
+      .iter()
+      .filter(|(child_slot, _)| *child_slot == 2usize)
+    {
+      writer.write_str(child)?;
     }
     writer.write_str("</ofd:")?;
     writer.write_str(tag_name)?;

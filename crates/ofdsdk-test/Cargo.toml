@@ -9,6 +9,7 @@ ofdsdk = { workspace = true, features = ["parts"] }
 
 [dev-dependencies]
 criterion = { workspace = true }
+quick-xml = { workspace = true }
 zip = { workspace = true }
 
 [[bench]]

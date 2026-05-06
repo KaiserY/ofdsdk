@@ -36,4 +36,7 @@ impl Annotation {
     )?;
     Ok(())
   }
+  pub(crate) fn collect_zip_entries(&self, entry_set: &mut std::collections::HashSet<String>) {
+    entry_set.insert(crate::common::resolve_zip_file_path(&self.inner_path));
+  }
 }

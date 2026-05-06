@@ -235,11 +235,7 @@ fn gen_struct_deserializer(
   );
   let struct_name = LitByteStr::new(struct_xml_name.as_bytes(), Span::call_site());
 
-  let expect_event_ident = if s.attributes.is_empty() {
-    parse_str::<Ident>("_e")?
-  } else {
-    parse_str::<Ident>("e")?
-  };
+  let expect_event_ident = parse_str::<Ident>("e")?;
 
   let mut field_declarations: Vec<Stmt> = vec![];
   let mut attr_match_arms: Vec<Arm> = vec![];
@@ -248,6 +244,16 @@ fn gen_struct_deserializer(
   let mut field_idents: Vec<Ident> = vec![];
   let mut event_match_arms: Vec<Arm> = vec![];
   let mut child_match_arms: Vec<Arm> = vec![];
+
+  field_declarations.push(parse2(quote! {
+    let mut xml_other_attrs = Vec::new();
+  })?);
+  field_declarations.push(parse2(quote! {
+    let mut xml_other_children = Vec::new();
+  })?);
+  field_declarations.push(parse2(quote! {
+    let mut __xml_child_slot = 0usize;
+  })?);
 
   for attr in &s.attributes {
     let attr_ident: Ident = parse_str(escape_ident(&attr.ident))?;
@@ -275,8 +281,9 @@ fn gen_struct_deserializer(
       let attr_name_literal = syn::LitStr::new(&attr.ident, Span::call_site());
       if let Some(rule) = missing_attr_rule {
         let default_value = match &rule.action {
-          CompatibilityAction::AllowMissingAttribute { default_value } => default_value,
           CompatibilityAction::TreatAsString { default_value } => default_value,
+          CompatibilityAction::OptionalAttribute {} => unreachable!(),
+          CompatibilityAction::OptionalChild {} => unreachable!(),
           CompatibilityAction::EnumValueAlias { .. } => unreachable!(),
         };
         let default_expr = gen_default_compat_value_expr(
@@ -380,19 +387,11 @@ fn gen_struct_deserializer(
       let mut xml_children = vec![];
     })?);
 
-    for child in &s.children {
-      child_match_arms.push(gen_choice_child_match_arm(
-        &struct_name_literal,
-        sdk_data_schema,
-        sdk_data_schemas,
-        s,
-        child,
-        DeserializeMode::Slice,
-      )?);
-    }
-
     field_idents.push(parse_str("xml_children")?);
   }
+
+  field_idents.push(parse_str("xml_other_attrs")?);
+  field_idents.push(parse_str("xml_other_children")?);
 
   if has_xml_value {
     let xml_value_child = s
@@ -413,42 +412,81 @@ fn gen_struct_deserializer(
     )?);
   }
 
+  let mut child_slot = 0usize;
+  let mut sequence_child_slots = Vec::new();
+
   for child in &s.sequences {
     if child.ident == "xml_value" {
       continue;
     }
 
+    child_slot += 1;
+    sequence_child_slots.push((child, child_slot));
     child_match_arms.push(gen_sequence_child_match_arm(
       &struct_name_literal,
       sdk_data_schema,
       sdk_data_schemas,
       child,
       DeserializeMode::Slice,
+      child_slot,
     )?);
   }
 
-  let attr_loop: Option<Stmt> = if s.attributes.is_empty() {
+  let choice_child_slot = if s.children.is_empty() {
     None
   } else {
-    Some(parse2(quote! {
+    child_slot += 1;
+    Some(child_slot)
+  };
+
+  if !s.children.is_empty() {
+    for child in &s.children {
+      child_match_arms.push(gen_choice_child_match_arm(
+        &struct_name_literal,
+        sdk_data_schema,
+        sdk_data_schemas,
+        s,
+        child,
+        DeserializeMode::Slice,
+        choice_child_slot,
+      )?);
+    }
+  }
+
+  let attr_loop: Stmt = if attr_match_arms.is_empty() {
+    parse2(quote! {
+      for attr in e.attributes().with_checks(false) {
+        let attr = attr?;
+        crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
+      }
+    })?
+  } else {
+    parse2(quote! {
       for attr in e.attributes().with_checks(false) {
         let attr = attr?;
 
         #[allow(clippy::single_match)]
         match attr.key.as_ref() {
           #( #attr_match_arms )*
-          _ => {}
+          _ => {
+            crate::common::push_xml_other_attr(
+              &mut xml_other_attrs,
+              &attr,
+              xml_reader.decoder(),
+            )?;
+          }
         }
       }
-    })?)
+    })?
   };
 
   let child_dispatch_slice: Stmt = if child_match_arms.is_empty() {
     parse2(quote! {
-      if let Some(e) = e_opt
-        && !e_empty
-      {
-        xml_reader.read_to_end(e.to_end().name())?;
+      if let Some(e) = e_opt {
+          xml_other_children.push((
+            __xml_child_slot,
+            crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+          ));
       }
     })?
   } else {
@@ -457,9 +495,10 @@ fn gen_struct_deserializer(
         match e.name().as_ref() {
           #( #child_match_arms )*
           _ => {
-            if !e_empty {
-              xml_reader.read_to_end(e.to_end().name())?;
-            }
+            xml_other_children.push((
+              __xml_child_slot,
+              crate::common::read_xml_other_child_slice(xml_reader, e, e_empty)?,
+            ));
           }
         }
       }
@@ -477,20 +516,20 @@ fn gen_struct_deserializer(
         s,
         child,
         DeserializeMode::Io,
+        choice_child_slot,
       )
     })
     .collect::<anyhow::Result<_>>()?;
-  let sequence_match_arms_io: Vec<Arm> = s
-    .sequences
+  let sequence_match_arms_io: Vec<Arm> = sequence_child_slots
     .iter()
-    .filter(|child| child.ident != "xml_value")
-    .map(|child| {
+    .map(|(child, slot)| {
       gen_sequence_child_match_arm(
         &struct_name_literal,
         sdk_data_schema,
         sdk_data_schemas,
         child,
         DeserializeMode::Io,
+        *slot,
       )
     })
     .collect::<anyhow::Result<_>>()?;
@@ -500,10 +539,11 @@ fn gen_struct_deserializer(
 
   let child_dispatch_io: Stmt = if child_match_arms_io_all.is_empty() {
     parse2(quote! {
-      if let Some(e) = e_opt
-        && !e_empty
-      {
-        xml_reader.read_to_end_into(e.to_end().name(), buf)?;
+      if let Some(e) = e_opt {
+          xml_other_children.push((
+            __xml_child_slot,
+            crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+          ));
       }
     })?
   } else {
@@ -512,9 +552,10 @@ fn gen_struct_deserializer(
         match e.name().as_ref() {
           #( #child_match_arms_io_all )*
           _ => {
-            if !e_empty {
-              xml_reader.read_to_end_into(e.to_end().name(), buf)?;
-            }
+            xml_other_children.push((
+              __xml_child_slot,
+              crate::common::read_xml_other_child_io(xml_reader, buf, e, e_empty)?,
+            ));
           }
         }
       }
@@ -731,6 +772,7 @@ fn gen_sequence_child_match_arm(
   _sdk_data_schemas: &[SdkDataSchema],
   child: &Child,
   mode: DeserializeMode,
+  child_slot: usize,
 ) -> anyhow::Result<Arm> {
   let child_xml_name = child.resolved_xml_name.as_str();
   let child_type_name = child.resolved_type.as_str();
@@ -763,6 +805,7 @@ fn gen_sequence_child_match_arm(
             #child_name_prefix,
             #child_name,
           )?);
+          __xml_child_slot = #child_slot;
         }
       })?)
     } else {
@@ -775,6 +818,7 @@ fn gen_sequence_child_match_arm(
             #child_name_prefix,
             #child_name,
           )?);
+          __xml_child_slot = #child_slot;
         }
       })?)
     }
@@ -794,6 +838,7 @@ fn gen_sequence_child_match_arm(
         #child_name_prefix | #child_name => {
           let parsed_value = #value_block;
           #child_ident.push(parsed_value);
+          __xml_child_slot = #child_slot;
         }
       })?)
     } else {
@@ -801,6 +846,7 @@ fn gen_sequence_child_match_arm(
         #child_name_prefix | #child_name => {
           let parsed_value = #value_block;
           #child_ident = Some(parsed_value);
+          __xml_child_slot = #child_slot;
         }
       })?)
     }
@@ -814,6 +860,7 @@ fn gen_choice_child_match_arm(
   s: &SdkDataStruct,
   child: &Child,
   mode: DeserializeMode,
+  child_slot: Option<usize>,
 ) -> anyhow::Result<Arm> {
   let child_xml_name = child.resolved_xml_name.as_str();
   let child_type_name = child.resolved_type.as_str();
@@ -828,6 +875,9 @@ fn gen_choice_child_match_arm(
     sdk_data_schema.module_name, s.ident
   ))?;
   let child_variant_ident: Ident = parse_str(escape_ident(&child.ident))?;
+  let child_slot_update = child_slot
+    .map(|child_slot| quote! { __xml_child_slot = #child_slot; })
+    .unwrap_or_else(|| quote! {});
 
   if child.is_struct {
     let child_type: Type = parse_str(child_type_name)?;
@@ -851,6 +901,7 @@ fn gen_choice_child_match_arm(
             #child_name,
           )?,
         )));
+        #child_slot_update
       }
     })?)
   } else {
@@ -869,6 +920,7 @@ fn gen_choice_child_match_arm(
       #child_name_prefix | #child_name => {
         let parsed_value: #child_type = #value_block;
         xml_children.push(#child_choice_type::#child_variant_ident(Box::new(parsed_value)));
+        #child_slot_update
       }
     })?)
   }

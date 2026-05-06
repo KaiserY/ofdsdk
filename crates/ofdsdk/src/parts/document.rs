@@ -242,4 +242,37 @@ impl Document {
     })?;
     Ok(())
   }
+  pub(crate) fn collect_zip_entries(&self, entry_set: &mut std::collections::HashSet<String>) {
+    entry_set.insert(crate::common::resolve_zip_file_path(&self.inner_path));
+    for child in &self.pages {
+      child.collect_zip_entries(entry_set);
+    }
+    for child in &self.template_pages {
+      child.collect_zip_entries(entry_set);
+    }
+    if let Some(child) = &self.annotations {
+      child.collect_zip_entries(entry_set);
+    }
+    if let Some(child) = &self.attachments {
+      child.collect_zip_entries(entry_set);
+    }
+    if let Some(child) = &self.custom_tags {
+      child.collect_zip_entries(entry_set);
+    }
+    if let Some(child) = &self.extensions {
+      child.collect_zip_entries(entry_set);
+    }
+    for child in &self.public_res {
+      child.collect_zip_entries(entry_set);
+    }
+    for child in &self.document_res {
+      child.collect_zip_entries(entry_set);
+    }
+    if let Some(child) = &self.signatures {
+      child.collect_zip_entries(entry_set);
+    }
+    for child in &self.versions {
+      child.collect_zip_entries(entry_set);
+    }
+  }
 }

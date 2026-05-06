@@ -32,12 +32,18 @@ fn validate_compatibility(compatibility: &CompatibilityConfig) -> anyhow::Result
     }
 
     match &rule.action {
-      CompatibilityAction::AllowMissingAttribute { .. } => {
+      CompatibilityAction::OptionalAttribute {} | CompatibilityAction::OptionalChild {} => {
         if rule.field.as_deref().unwrap_or_default().is_empty() {
+          let action = match rule.action {
+            CompatibilityAction::OptionalAttribute {} => "OptionalAttribute",
+            CompatibilityAction::OptionalChild {} => "OptionalChild",
+            _ => unreachable!(),
+          };
           bail!(
-            "compatibility rule {}.{} AllowMissingAttribute requires Field",
+            "compatibility rule {}.{} {} requires Field",
             rule.schema,
-            rule.type_name
+            rule.type_name,
+            action
           );
         }
       }
@@ -84,11 +90,7 @@ pub fn find_missing_attribute_rule<'a>(
     rule.schema == schema
       && rule.type_name == type_name
       && matches!(rule.field.as_deref(), Some(field) if field == field_name || field == field_ident)
-      && matches!(
-        rule.action,
-        CompatibilityAction::AllowMissingAttribute { .. }
-          | CompatibilityAction::TreatAsString { .. }
-      )
+      && matches!(rule.action, CompatibilityAction::TreatAsString { .. })
   })
 }
 
@@ -112,26 +114,31 @@ pub fn apply_compatibility(
   compatibility: &CompatibilityConfig,
 ) -> anyhow::Result<()> {
   for rule in &compatibility.rules {
-    if let CompatibilityAction::TreatAsString { .. } = rule.action {
-      apply_treat_as_string_rule(sdk_data_schemas, rule)?;
+    match rule.action {
+      CompatibilityAction::OptionalAttribute {} => {
+        apply_optional_attribute_rule(sdk_data_schemas, rule)?
+      }
+      CompatibilityAction::OptionalChild {} => apply_optional_child_rule(sdk_data_schemas, rule)?,
+      CompatibilityAction::TreatAsString { .. } => {
+        apply_treat_as_string_rule(sdk_data_schemas, rule)?
+      }
+      CompatibilityAction::EnumValueAlias { .. } => {}
     }
   }
 
   Ok(())
 }
 
-fn apply_treat_as_string_rule(
-  sdk_data_schemas: &mut [SdkDataSchema],
+fn find_compat_struct_mut<'a>(
+  sdk_data_schemas: &'a mut [SdkDataSchema],
   rule: &CompatibilityRule,
-) -> anyhow::Result<()> {
-  let field = rule.field.as_deref().unwrap_or_default();
-
+) -> anyhow::Result<&'a mut crate::models::sdk_data::Struct> {
   let schema = sdk_data_schemas
     .iter_mut()
     .find(|schema| schema.module_name == rule.schema)
     .ok_or_else(|| anyhow::anyhow!("compatibility schema {} not found", rule.schema))?;
 
-  let struct_type = schema
+  schema
     .types
     .iter_mut()
     .find(|item| item.ident == rule.type_name || item.name == rule.type_name)
@@ -141,9 +148,16 @@ fn apply_treat_as_string_rule(
         rule.schema,
         rule.type_name
       )
-    })?;
+    })
+}
 
-  let attribute = struct_type
+fn find_compat_attribute_mut<'a>(
+  sdk_data_schemas: &'a mut [SdkDataSchema],
+  rule: &CompatibilityRule,
+) -> anyhow::Result<&'a mut crate::models::sdk_data::Attribute> {
+  let field = rule.field.as_deref().unwrap_or_default();
+
+  find_compat_struct_mut(sdk_data_schemas, rule)?
     .attributes
     .iter_mut()
     .find(|attr| attr.name == field || attr.ident == field)
@@ -154,7 +168,52 @@ fn apply_treat_as_string_rule(
         rule.type_name,
         field
       )
-    })?;
+    })
+}
+
+fn find_compat_child_mut<'a>(
+  sdk_data_schemas: &'a mut [SdkDataSchema],
+  rule: &CompatibilityRule,
+) -> anyhow::Result<&'a mut crate::models::sdk_data::Child> {
+  let field = rule.field.as_deref().unwrap_or_default();
+
+  find_compat_struct_mut(sdk_data_schemas, rule)?
+    .sequences
+    .iter_mut()
+    .find(|child| child.name == field || child.ident == field)
+    .ok_or_else(|| {
+      anyhow::anyhow!(
+        "compatibility child {}.{}.{} not found",
+        rule.schema,
+        rule.type_name,
+        field
+      )
+    })
+}
+
+fn apply_optional_attribute_rule(
+  sdk_data_schemas: &mut [SdkDataSchema],
+  rule: &CompatibilityRule,
+) -> anyhow::Result<()> {
+  find_compat_attribute_mut(sdk_data_schemas, rule)?.is_option = true;
+
+  Ok(())
+}
+
+fn apply_optional_child_rule(
+  sdk_data_schemas: &mut [SdkDataSchema],
+  rule: &CompatibilityRule,
+) -> anyhow::Result<()> {
+  find_compat_child_mut(sdk_data_schemas, rule)?.is_option = true;
+
+  Ok(())
+}
+
+fn apply_treat_as_string_rule(
+  sdk_data_schemas: &mut [SdkDataSchema],
+  rule: &CompatibilityRule,
+) -> anyhow::Result<()> {
+  let attribute = find_compat_attribute_mut(sdk_data_schemas, rule)?;
 
   attribute.r#type = "String".to_string();
   attribute.resolved_type = "String".to_string();

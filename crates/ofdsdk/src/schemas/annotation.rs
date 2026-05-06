@@ -10,12 +10,16 @@ pub struct Parameter {
   ///注释参数名称。
   pub name: String,
   pub xml_value: String,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///一组注释参数。
 #[derive(Clone, Debug, Default)]
 pub struct Parameters {
   ///注释参数(键值对)。
   pub parameter: Vec<Parameter>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 #[derive(Clone, Debug)]
 pub enum AppearanceContentChoice {
@@ -30,6 +34,8 @@ pub enum AppearanceContentChoice {
 pub struct Appearance {
   pub boundary: Option<crate::schemas::definitions::StBox>,
   pub xml_children: Vec<AppearanceContentChoice>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///注释信息属性。
 #[derive(Clone, Debug, Default)]
@@ -39,9 +45,9 @@ pub struct Annot {
   ///注释类型，具体取值请见表 62。
   pub r#type: AnnotType,
   ///注释创建者。
-  pub creator: String,
+  pub creator: Option<String>,
   ///最近一次修改的时间。
-  pub last_mod_date: String,
+  pub last_mod_date: Option<String>,
   ///表示该注释对象是否显示。默认值为 true。
   pub visible: Option<bool>,
   ///注释子类型。
@@ -59,13 +65,17 @@ pub struct Annot {
   ///一组注释参数。
   pub parameters: Option<Parameters>,
   ///注释的静态呈现效果，使用页面块定义来描述。
-  pub appearance: Appearance,
+  pub appearance: Option<Appearance>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///注释信息集合。
 #[derive(Clone, Debug, Default)]
 pub struct PageAnnot {
   ///注释信息。
   pub annot: Vec<Annot>,
+  pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
+  pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,
 }
 ///注释类型取值。
 #[derive(Clone, Debug, Default)]
