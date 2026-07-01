@@ -3309,12 +3309,7 @@ impl crate::schemas::page::ImageObject {
           )?);
         }
         b"ID" => {
-          id = Some(crate::common::parse_u32_attr(
-            &attr,
-            xml_reader.decoder(),
-            "ImageObject",
-            "id",
-          )?);
+          id = Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
         _ => {
           crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;
@@ -3555,12 +3550,7 @@ impl crate::schemas::page::ImageObject {
           )?);
         }
         b"ID" => {
-          id = Some(crate::common::parse_u32_attr(
-            &attr,
-            xml_reader.decoder(),
-            "ImageObject",
-            "id",
-          )?);
+          id = Some(crate::common::decode_attr_value(&attr, xml_reader.decoder())?.into_owned());
         }
         _ => {
           crate::common::push_xml_other_attr(&mut xml_other_attrs, &attr, xml_reader.decoder())?;

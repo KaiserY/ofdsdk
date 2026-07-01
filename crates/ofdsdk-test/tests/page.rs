@@ -23,7 +23,7 @@ fn page_round_trip() {
 
   match &layer.xml_children[0] {
     ofdsdk::schemas::page::LayerContentChoice::ImageObject(image) => {
-      assert_eq!(image.id, 68);
+      assert_eq!(image.id, "68");
       assert_eq!(image.resource_id, 6);
       assert_eq!(image.boundary, "8.5 3.5 20 20");
       assert_eq!(image.ctm.as_deref(), Some("20 0 0 20 0 0"));
@@ -61,6 +61,34 @@ fn page_round_trip() {
       .len(),
     23
   );
+}
+
+#[test]
+fn page_image_object_accepts_alphanumeric_id() {
+  let xml = r#"<ofd:Page xmlns:ofd="http://www.ofdspec.org/2016"><ofd:Content><ofd:Layer ID="1"><ofd:ImageObject ID="999ewm" CTM="2.56 0 0 2.56 0 0" Boundary="154.72 24.72 2.56 2.56" ResourceID="55001"/></ofd:Layer></ofd:Content></ofd:Page>"#;
+
+  let page = xml.parse::<ofdsdk::schemas::page::Page>().unwrap();
+  let layer = &page.content.as_ref().unwrap().layer[0];
+
+  match &layer.xml_children[0] {
+    ofdsdk::schemas::page::LayerContentChoice::ImageObject(image) => {
+      assert_eq!(image.id, "999ewm");
+      assert_eq!(image.resource_id, 55001);
+      assert_eq!(image.boundary, "154.72 24.72 2.56 2.56");
+    }
+    other => panic!("unexpected layer child: {other:?}"),
+  }
+
+  let serialized = page.to_xml().unwrap();
+  assert!(serialized.contains(r#"ID="999ewm""#));
+}
+
+#[test]
+fn page_image_object_still_requires_id() {
+  let xml = r#"<ofd:Page xmlns:ofd="http://www.ofdspec.org/2016"><ofd:Content><ofd:Layer ID="1"><ofd:ImageObject Boundary="154.72 24.72 2.56 2.56" ResourceID="55001"/></ofd:Layer></ofd:Content></ofd:Page>"#;
+
+  let error = xml.parse::<ofdsdk::schemas::page::Page>().unwrap_err();
+  assert!(error.to_string().contains("missing field `id`"));
 }
 
 #[test]

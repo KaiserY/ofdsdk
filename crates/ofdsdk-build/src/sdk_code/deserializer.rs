@@ -281,7 +281,9 @@ fn gen_struct_deserializer(
       let attr_name_literal = syn::LitStr::new(&attr.ident, Span::call_site());
       if let Some(rule) = missing_attr_rule {
         let default_value = match &rule.action {
-          CompatibilityAction::TreatAsString { default_value } => default_value,
+          CompatibilityAction::TreatAsString { default_value } => {
+            default_value.as_deref().unwrap_or_default()
+          }
           CompatibilityAction::OptionalAttribute {} => unreachable!(),
           CompatibilityAction::OptionalChild {} => unreachable!(),
           CompatibilityAction::EnumValueAlias { .. } => unreachable!(),

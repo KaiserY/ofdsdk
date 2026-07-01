@@ -184,7 +184,7 @@ pub struct ImageObject {
   pub substitution: Option<crate::schemas::definitions::StRefId>,
   ///图像蒙版，引用资源文件中定义的多媒体的标识，用作蒙版的图像应是与 ResourceID 指向的图像相同大小的二值图。
   pub image_mask: Option<crate::schemas::definitions::StRefId>,
-  pub id: crate::schemas::definitions::StId,
+  pub id: String,
   pub actions: Option<Actions>,
   pub clips: Option<Clips>,
   ///图像边框设置。

@@ -252,10 +252,16 @@ pub struct CompatibilityRule {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "PascalCase", rename_all_fields = "PascalCase")]
 pub enum CompatibilityAction {
-  EnumValueAlias { input: String, canonical: String },
+  EnumValueAlias {
+    input: String,
+    canonical: String,
+  },
   OptionalAttribute {},
   OptionalChild {},
-  TreatAsString { default_value: String },
+  TreatAsString {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    default_value: Option<String>,
+  },
 }
 
 impl Default for CompatibilityAction {

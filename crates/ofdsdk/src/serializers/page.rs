@@ -1243,7 +1243,7 @@ impl crate::schemas::page::ImageObject {
     }
     {
       writer.write_str(" ID=\"")?;
-      write!(writer, "{}", self.id)?;
+      writer.write_str(&quick_xml::escape::escape(self.id.as_str()))?;
       writer.write_char('"')?;
     }
     for (name, value) in &self.xml_other_attrs {

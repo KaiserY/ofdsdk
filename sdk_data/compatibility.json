@@ -41,6 +41,14 @@
           "DefaultValue": "MD5"
         }
       }
+    },
+    {
+      "Schema": "page",
+      "Type": "ImageObject",
+      "Field": "ID",
+      "Action": {
+        "TreatAsString": {}
+      }
     }
   ]
 }

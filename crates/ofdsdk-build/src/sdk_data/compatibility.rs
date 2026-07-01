@@ -90,7 +90,12 @@ pub fn find_missing_attribute_rule<'a>(
     rule.schema == schema
       && rule.type_name == type_name
       && matches!(rule.field.as_deref(), Some(field) if field == field_name || field == field_ident)
-      && matches!(rule.action, CompatibilityAction::TreatAsString { .. })
+      && matches!(
+        rule.action,
+        CompatibilityAction::TreatAsString {
+          default_value: Some(_)
+        }
+      )
   })
 }
 

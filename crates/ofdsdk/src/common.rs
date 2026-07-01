@@ -71,17 +71,12 @@ pub(crate) fn parse_i32_attr(
   ty: &'static str,
   field: &'static str,
 ) -> Result<i32, SdkError> {
-  if let Some(value) = attr_raw_value(attr)
-    && let Ok(value) = std::str::from_utf8(value)
-    && let Ok(value) = value.parse::<i32>()
-  {
-    return Ok(value);
+  if let Some(value) = attr_raw_value(attr) {
+    return parse_i32_bytes(value, ty, field);
   }
 
   let value = decode_attr_value(attr, decoder)?;
-  value
-    .parse::<i32>()
-    .map_err(|_| invalid_field_value(ty, field, value.to_string()))
+  parse_i32_bytes(value.as_bytes(), ty, field)
 }
 
 #[inline(always)]
@@ -91,17 +86,74 @@ pub(crate) fn parse_u32_attr(
   ty: &'static str,
   field: &'static str,
 ) -> Result<u32, SdkError> {
-  if let Some(value) = attr_raw_value(attr)
-    && let Ok(value) = std::str::from_utf8(value)
-    && let Ok(value) = value.parse::<u32>()
-  {
-    return Ok(value);
+  if let Some(value) = attr_raw_value(attr) {
+    return parse_u32_bytes(value, ty, field);
   }
 
   let value = decode_attr_value(attr, decoder)?;
-  value
-    .parse::<u32>()
-    .map_err(|_| invalid_field_value(ty, field, value.to_string()))
+  parse_u32_bytes(value.as_bytes(), ty, field)
+}
+
+#[inline(always)]
+fn parse_u32_bytes(value: &[u8], ty: &'static str, field: &'static str) -> Result<u32, SdkError> {
+  let digits = match value {
+    [b'+', rest @ ..] => rest,
+    _ => value,
+  };
+  if digits.is_empty() {
+    return Err(invalid_field_value_bytes(ty, field, value));
+  }
+
+  let mut parsed = 0u32;
+  for &digit in digits {
+    if !digit.is_ascii_digit() {
+      return Err(invalid_field_value_bytes(ty, field, value));
+    }
+
+    parsed = parsed
+      .checked_mul(10)
+      .and_then(|current| current.checked_add((digit - b'0') as u32))
+      .ok_or_else(|| invalid_field_value_bytes(ty, field, value))?;
+  }
+
+  Ok(parsed)
+}
+
+#[inline(always)]
+fn parse_i32_bytes(value: &[u8], ty: &'static str, field: &'static str) -> Result<i32, SdkError> {
+  let (negative, digits) = match value {
+    [b'-', rest @ ..] => (true, rest),
+    [b'+', rest @ ..] => (false, rest),
+    _ => (false, value),
+  };
+  if digits.is_empty() {
+    return Err(invalid_field_value_bytes(ty, field, value));
+  }
+
+  let mut parsed = 0i32;
+  for &digit in digits {
+    if !digit.is_ascii_digit() {
+      return Err(invalid_field_value_bytes(ty, field, value));
+    }
+
+    parsed = parsed
+      .checked_mul(10)
+      .and_then(|current| {
+        if negative {
+          current.checked_sub((digit - b'0') as i32)
+        } else {
+          current.checked_add((digit - b'0') as i32)
+        }
+      })
+      .ok_or_else(|| invalid_field_value_bytes(ty, field, value))?;
+  }
+
+  Ok(parsed)
+}
+
+#[inline(always)]
+fn invalid_field_value_bytes(ty: &'static str, field: &'static str, value: &[u8]) -> SdkError {
+  invalid_field_value(ty, field, String::from_utf8_lossy(value).into_owned())
 }
 
 #[inline(always)]
@@ -430,3 +482,61 @@ macro_rules! expect_event_start_io {
 
 pub(crate) use expect_event_start_io;
 pub(crate) use expect_event_start_slice;
+
+#[cfg(test)]
+mod tests {
+  use quick_xml::{Reader, events::Event};
+
+  use super::{parse_i32_attr, parse_u32_attr};
+
+  fn parse_u32_attr_xml(xml: &str) -> Result<u32, super::SdkError> {
+    let mut reader = Reader::from_str(xml);
+    let Event::Empty(event) = reader.read_event().expect("empty event") else {
+      panic!("expected empty event");
+    };
+    let attr = event
+      .attributes()
+      .with_checks(false)
+      .next()
+      .expect("attribute")
+      .expect("valid attribute");
+
+    parse_u32_attr(&attr, reader.decoder(), "Test", "value")
+  }
+
+  fn parse_i32_attr_xml(xml: &str) -> Result<i32, super::SdkError> {
+    let mut reader = Reader::from_str(xml);
+    let Event::Empty(event) = reader.read_event().expect("empty event") else {
+      panic!("expected empty event");
+    };
+    let attr = event
+      .attributes()
+      .with_checks(false)
+      .next()
+      .expect("attribute")
+      .expect("valid attribute");
+
+    parse_i32_attr(&attr, reader.decoder(), "Test", "value")
+  }
+
+  #[test]
+  fn integer_attrs_parse_raw_and_escaped_values() {
+    assert_eq!(parse_u32_attr_xml(r#"<x a="42"/>"#).unwrap(), 42);
+    assert_eq!(parse_u32_attr_xml(r#"<x a="+42"/>"#).unwrap(), 42);
+    assert_eq!(parse_u32_attr_xml(r#"<x a="4&#50;"/>"#).unwrap(), 42);
+    assert_eq!(parse_i32_attr_xml(r#"<x a="-42"/>"#).unwrap(), -42);
+    assert_eq!(
+      parse_i32_attr_xml(r#"<x a="-2147483648"/>"#).unwrap(),
+      i32::MIN
+    );
+  }
+
+  #[test]
+  fn integer_attrs_reject_invalid_values() {
+    assert!(parse_u32_attr_xml(r#"<x a="-1"/>"#).is_err());
+    assert!(parse_u32_attr_xml(r#"<x a="4294967296"/>"#).is_err());
+    assert!(parse_i32_attr_xml(r#"<x a="2147483648"/>"#).is_err());
+    assert!(parse_i32_attr_xml(r#"<x a="+"/>"#).is_err());
+    assert!(parse_i32_attr_xml(r#"<x a="1.0"/>"#).is_err());
+  }
+}
