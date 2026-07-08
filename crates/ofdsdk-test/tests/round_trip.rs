@@ -2,8 +2,8 @@ use std::collections::BTreeMap;
 use std::io::{Cursor, Read};
 use std::path::Path;
 
-use quick_xml::Reader;
 use quick_xml::events::{BytesStart, Event};
+use quick_xml::{Reader, XmlVersion};
 use zip::ZipArchive;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -293,7 +293,7 @@ fn attrs_from_start(reader: &Reader<Cursor<&[u8]>>, e: &BytesStart<'_>) -> Vec<(
       }
       let name = local_name(attr.key.as_ref());
       let value = attr
-        .decode_and_unescape_value(reader.decoder())
+        .decoded_and_normalized_value(XmlVersion::Implicit1_0, reader.decoder())
         .unwrap_or_else(|err| panic!("failed to decode XML attribute {name}: {err}"))
         .into_owned();
       Some((name, value))

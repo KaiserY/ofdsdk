@@ -655,7 +655,6 @@ impl crate::schemas::page::Layer {
         }
       }
     }
-    let id = id.ok_or_else(|| crate::common::missing_field("Layer", "id"))?;
     Ok(Self {
       r#type,
       draw_param,
@@ -825,7 +824,6 @@ impl crate::schemas::page::Layer {
         }
       }
     }
-    let id = id.ok_or_else(|| crate::common::missing_field("Layer", "id"))?;
     Ok(Self {
       r#type,
       draw_param,

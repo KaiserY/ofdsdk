@@ -2,7 +2,7 @@ use std::borrow::Cow;
 use std::io::BufRead;
 
 use quick_xml::events::attributes::Attribute;
-use quick_xml::{Decoder, Reader};
+use quick_xml::{Decoder, Reader, XmlVersion};
 
 use super::SdkError;
 
@@ -28,7 +28,7 @@ pub(crate) fn decode_attr_value<'a>(
   decoder: Decoder,
 ) -> Result<Cow<'a, str>, SdkError> {
   if attr.value.as_ref().contains(&b'&') {
-    Ok(attr.decode_and_unescape_value(decoder)?)
+    Ok(attr.decoded_and_normalized_value(XmlVersion::Implicit1_0, decoder)?)
   } else {
     Ok(decoder.decode(attr.value.as_ref())?)
   }

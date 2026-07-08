@@ -18,7 +18,7 @@ fn page_round_trip() {
   assert_eq!(content.layer.len(), 1);
 
   let layer = &content.layer[0];
-  assert_eq!(layer.id, 67);
+  assert_eq!(layer.id, Some(67));
   assert_eq!(layer.xml_children.len(), 23);
 
   match &layer.xml_children[0] {
@@ -92,6 +92,32 @@ fn page_image_object_still_requires_id() {
 }
 
 #[test]
+fn page_layer_accepts_missing_id() {
+  let xml = r#"<ofd:Page xmlns:ofd="http://www.ofdspec.org/2016"><ofd:Content><ofd:Layer Type="Body"><ofd:ImageObject ID="issue-qrcode" CTM="2.56 0 0 2.56 0 0" Boundary="154.72 24.72 2.56 2.56" ResourceID="55001"/></ofd:Layer></ofd:Content></ofd:Page>"#;
+
+  let page = xml.parse::<ofdsdk::schemas::page::Page>().unwrap();
+  let layer = &page.content.as_ref().unwrap().layer[0];
+
+  assert_eq!(layer.id, None);
+  assert!(matches!(
+    layer.r#type,
+    Some(ofdsdk::schemas::page::CtLayerType::Body)
+  ));
+
+  match &layer.xml_children[0] {
+    ofdsdk::schemas::page::LayerContentChoice::ImageObject(image) => {
+      assert_eq!(image.id, "issue-qrcode");
+      assert_eq!(image.resource_id, 55001);
+    }
+    other => panic!("unexpected layer child: {other:?}"),
+  }
+
+  let serialized = page.to_xml().unwrap();
+  assert!(serialized.contains(r#"<ofd:Layer Type="Body">"#));
+  assert!(!serialized.contains(r#"<ofd:Layer Type="Body" ID=""#));
+}
+
+#[test]
 fn page_simple_text_round_trip() {
   let page = PAGE_SIMPLE_TEXT_XML
     .parse::<ofdsdk::schemas::page::Page>()
@@ -101,7 +127,7 @@ fn page_simple_text_round_trip() {
   assert_eq!(content.layer.len(), 1);
 
   let layer = &content.layer[0];
-  assert_eq!(layer.id, 2);
+  assert_eq!(layer.id, Some(2));
   assert_eq!(layer.xml_children.len(), 1);
 
   match &layer.xml_children[0] {
@@ -130,7 +156,7 @@ fn page_simple_text_round_trip() {
   );
 
   let reparsed = serialized.parse::<ofdsdk::schemas::page::Page>().unwrap();
-  assert_eq!(reparsed.content.as_ref().unwrap().layer[0].id, 2);
+  assert_eq!(reparsed.content.as_ref().unwrap().layer[0].id, Some(2));
   match &reparsed.content.as_ref().unwrap().layer[0].xml_children[0] {
     ofdsdk::schemas::page::LayerContentChoice::TextObject(text) => {
       assert_eq!(text.text_code[0].xml_value, "你好呀，OFD Reader&Writer！");

@@ -1,4 +1,4 @@
-use std::io::Read;
+use std::io::{Cursor, Read, Write};
 use std::path::Path;
 use std::time::{SystemTime, UNIX_EPOCH};
 
@@ -29,6 +29,43 @@ const MINIMAL_OFD_XML: &str = r#"<?xml version="1.0" encoding="UTF-8"?>
     <ofd:DocRoot>Doc_0/Document.xml</ofd:DocRoot>
   </ofd:DocBody>
 </ofd:OFD>"#;
+
+const MINIMAL_DOCUMENT_XML: &str = r#"<ofd:Document xmlns:ofd="http://www.ofdspec.org/2016">
+<ofd:CommonData>
+<ofd:MaxUnitID>10</ofd:MaxUnitID>
+<ofd:PageArea>
+<ofd:PhysicalBox>0 0 210 140</ofd:PhysicalBox>
+</ofd:PageArea>
+</ofd:CommonData>
+<ofd:Pages>
+<ofd:Page ID="1" BaseLoc="Pages/Page_0/Content.xml"/>
+</ofd:Pages>
+</ofd:Document>"#;
+
+const PAGE_LAYER_WITHOUT_ID_XML: &str = r#"<?xml version="1.0" encoding="UTF-8"?>
+<ofd:Page xmlns:ofd="http://www.ofdspec.org/2016">
+  <ofd:Content>
+    <ofd:Layer Type="Body">
+      <ofd:ImageObject ID="issue-qrcode" CTM="2.56 0 0 2.56 0 0" Boundary="154.72 24.72 2.56 2.56" ResourceID="55001"/>
+    </ofd:Layer>
+  </ofd:Content>
+</ofd:Page>"#;
+
+fn package_bytes_with_page(page_xml: &str) -> Vec<u8> {
+  let mut zip = zip::ZipWriter::new(Cursor::new(Vec::new()));
+  let options = zip::write::SimpleFileOptions::default();
+
+  for (path, content) in [
+    ("OFD.xml", MINIMAL_OFD_XML),
+    ("Doc_0/Document.xml", MINIMAL_DOCUMENT_XML),
+    ("Doc_0/Pages/Page_0/Content.xml", page_xml),
+  ] {
+    zip.start_file(path, options).unwrap();
+    zip.write_all(content.as_bytes()).unwrap();
+  }
+
+  zip.finish().unwrap().into_inner()
+}
 
 #[test]
 fn ofd_package_from_transparency_sample_file() {
@@ -133,6 +170,31 @@ fn ofd_package_save_minimal_constructed_package() {
   }
 
   std::fs::remove_file(save_path).unwrap();
+}
+
+#[test]
+fn ofd_package_accepts_page_layer_without_id() {
+  let package = ofdsdk::parts::ofd_package::OfdPackage::new(Cursor::new(package_bytes_with_page(
+    PAGE_LAYER_WITHOUT_ID_XML,
+  )))
+  .unwrap();
+
+  assert_eq!(package.documents.len(), 1);
+
+  let document = &package.documents[0];
+  assert_eq!(document.pages.len(), 1);
+
+  let page = &document.pages[0].root_element;
+  let layer = &page.content.as_ref().unwrap().layer[0];
+  assert_eq!(layer.id, None);
+
+  match &layer.xml_children[0] {
+    ofdsdk::schemas::page::LayerContentChoice::ImageObject(image) => {
+      assert_eq!(image.id, "issue-qrcode");
+      assert_eq!(image.resource_id, 55001);
+    }
+    other => panic!("unexpected layer child: {other:?}"),
+  }
 }
 
 #[test]

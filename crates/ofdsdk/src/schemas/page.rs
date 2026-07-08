@@ -29,7 +29,7 @@ pub struct Layer {
   pub r#type: Option<CtLayerType>,
   ///图层的绘制参数，引用资源文件中定义的绘制参数标识。
   pub draw_param: Option<crate::schemas::definitions::StRefId>,
-  pub id: crate::schemas::definitions::StId,
+  pub id: Option<crate::schemas::definitions::StId>,
   pub xml_children: Vec<LayerContentChoice>,
   pub xml_other_attrs: Vec<(std::boxed::Box<str>, std::boxed::Box<str>)>,
   pub xml_other_children: Vec<(usize, std::boxed::Box<str>)>,

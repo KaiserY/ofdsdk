@@ -312,9 +312,9 @@ impl crate::schemas::page::Layer {
       write!(writer, "{}", draw_param)?;
       writer.write_char('"')?;
     }
-    {
+    if let Some(id) = &self.id {
       writer.write_str(" ID=\"")?;
-      write!(writer, "{}", self.id)?;
+      write!(writer, "{}", id)?;
       writer.write_char('"')?;
     }
     for (name, value) in &self.xml_other_attrs {

@@ -49,6 +49,14 @@
       "Action": {
         "TreatAsString": {}
       }
+    },
+    {
+      "Schema": "page",
+      "Type": "Layer",
+      "Field": "ID",
+      "Action": {
+        "OptionalAttribute": {}
+      }
     }
   ]
 }
