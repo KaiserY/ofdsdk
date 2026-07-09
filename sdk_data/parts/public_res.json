@@ -17,7 +17,8 @@
         ],
         "IsVec": true
       },
-      "MaxOccursGreatThanOne": true
+      "MaxOccursGreatThanOne": true,
+      "MissingPolicy": "Skip"
     },
     {
       "ApiName": "PublicResMediaFiles",
@@ -31,7 +32,8 @@
         ],
         "IsVec": true
       },
-      "MaxOccursGreatThanOne": true
+      "MaxOccursGreatThanOne": true,
+      "MissingPolicy": "Skip"
     }
   ]
 }

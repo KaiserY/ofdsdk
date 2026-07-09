@@ -31,19 +31,23 @@ impl PageRes {
         }
       }
     }
-    let page_res_font_files = crate::common::load_zip_parts(
-      &current_dir,
-      page_res_font_files_paths,
-      archive,
-      |child_path, archive| {
+    let mut page_res_font_files = Vec::with_capacity(page_res_font_files_paths.len());
+    for child_path in page_res_font_files_paths {
+      let loaded = {
+        let child_path = child_path.as_str();
         let resolved_path = {
           let base_path = root_element.base_loc.clone();
           let base_dir = crate::common::resolve_zip_child_path(&current_dir, &base_path);
           crate::common::resolve_zip_child_path(&format!("{base_dir}/"), child_path)
         };
         crate::parts::page_res_font_file::PageResFontFile::new_from_archive(&resolved_path, archive)
-      },
-    )?;
+      };
+      match loaded {
+        Ok(child) => page_res_font_files.push(child),
+        Err(crate::common::SdkError::ZipError(zip::result::ZipError::FileNotFound)) => {}
+        Err(err) => return Err(err),
+      }
+    }
     let mut page_res_media_files_paths: Vec<String> = vec![];
     for choice in &root_element.xml_children {
       if let crate::schemas::res::ResContentChoice::MultiMedias(value) = choice {
@@ -53,11 +57,10 @@ impl PageRes {
         }
       }
     }
-    let page_res_media_files = crate::common::load_zip_parts(
-      &current_dir,
-      page_res_media_files_paths,
-      archive,
-      |child_path, archive| {
+    let mut page_res_media_files = Vec::with_capacity(page_res_media_files_paths.len());
+    for child_path in page_res_media_files_paths {
+      let loaded = {
+        let child_path = child_path.as_str();
         let resolved_path = {
           let base_path = root_element.base_loc.clone();
           let base_dir = crate::common::resolve_zip_child_path(&current_dir, &base_path);
@@ -67,8 +70,13 @@ impl PageRes {
           &resolved_path,
           archive,
         )
-      },
-    )?;
+      };
+      match loaded {
+        Ok(child) => page_res_media_files.push(child),
+        Err(crate::common::SdkError::ZipError(zip::result::ZipError::FileNotFound)) => {}
+        Err(err) => return Err(err),
+      }
+    }
     Ok(Self {
       inner_path: path.to_string(),
       root_element,

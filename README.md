@@ -14,7 +14,7 @@ Chinese version: [README_cn.md](README_cn.md)
 - Provide OFD package reading and saving when the `parts` feature is enabled.
 - Keep real-world compatibility differences in generated data, not scattered runtime special cases.
 
-Current version: `0.2.2`.
+Current version: `0.2.3`.
 
 ## Capabilities
 
@@ -37,14 +37,14 @@ If you only need XML schema types:
 
 ```toml
 [dependencies]
-ofdsdk = "0.2.2"
+ofdsdk = "0.2.3"
 ```
 
 If you also need to read `.ofd` archives:
 
 ```toml
 [dependencies]
-ofdsdk = { version = "0.2.2", features = ["parts"] }
+ofdsdk = { version = "0.2.3", features = ["parts"] }
 ```
 
 The current minimum supported Rust version is `1.88`.
@@ -144,7 +144,7 @@ It describes:
 
 ## Current Status
 
-`0.2.2` is suitable for:
+`0.2.3` is suitable for:
 
 - OFD schema mapping
 - XML round-trip testing
@@ -152,8 +152,9 @@ It describes:
 - package save paths that should retain unmodeled XML and ZIP content
 - real-world page content that uses alphanumeric `ImageObject.ID` values
 - real-world page content where `Layer.ID` is omitted
+- real-world resource tables that declare font or media files not present in the package
 
-It is still best treated as a low-level, engineering-focused SDK. Package loading remains strict about referenced files: XML compatibility rules do not silently ignore missing resource files.
+It is still best treated as a low-level, engineering-focused SDK. Missing font and media resource blobs are skipped, while structural parts such as documents, pages, signatures, attachments, and their XML indexes remain strict.
 
 ## Development
 

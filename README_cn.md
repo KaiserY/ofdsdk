@@ -14,7 +14,7 @@
 - 在启用 `parts` 特性后，提供 OFD 包级别的读取与保存能力
 - 将现实世界中的兼容性差异收敛到生成数据，而不是在运行时散落特判
 
-当前版本为 `0.2.2`。
+当前版本为 `0.2.3`。
 
 ## 当前能力
 
@@ -37,14 +37,14 @@
 
 ```toml
 [dependencies]
-ofdsdk = "0.2.2"
+ofdsdk = "0.2.3"
 ```
 
 如果还需要读取 `.ofd` 压缩包：
 
 ```toml
 [dependencies]
-ofdsdk = { version = "0.2.2", features = ["parts"] }
+ofdsdk = { version = "0.2.3", features = ["parts"] }
 ```
 
 当前最低 Rust 版本为 `1.88`。
@@ -144,7 +144,7 @@ fn main() -> Result<(), ofdsdk::common::SdkError> {
 
 ## 当前状态
 
-`0.2.2` 已经可以用于：
+`0.2.3` 已经可以用于：
 
 - OFD schema 结构映射
 - XML round-trip
@@ -152,8 +152,9 @@ fn main() -> Result<(), ofdsdk::common::SdkError> {
 - 需要保留未建模 XML 和 ZIP 内容的包级保存流程
 - 使用字母数字 `ImageObject.ID` 的真实页面内容
 - 省略 `Layer.ID` 的真实页面内容
+- 资源表声明了未随包携带的字体或媒体文件的真实文档
 
-但它仍然更适合作为一个偏底层、偏工程化的 SDK。包级读取仍会严格校验被引用文件是否存在；XML 兼容规则不会静默忽略缺失资源文件。
+但它仍然更适合作为一个偏底层、偏工程化的 SDK。缺失的字体和媒体资源 blob 会被跳过；文档、页面、签名、附件及其 XML 索引等结构性 part 仍保持严格校验。
 
 ## 开发
 

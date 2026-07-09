@@ -42,6 +42,26 @@ const MINIMAL_DOCUMENT_XML: &str = r#"<ofd:Document xmlns:ofd="http://www.ofdspe
 </ofd:Pages>
 </ofd:Document>"#;
 
+const MINIMAL_DOCUMENT_WITH_RES_XML: &str = r#"<ofd:Document xmlns:ofd="http://www.ofdspec.org/2016">
+<ofd:CommonData>
+<ofd:MaxUnitID>10</ofd:MaxUnitID>
+<ofd:PageArea>
+<ofd:PhysicalBox>0 0 210 140</ofd:PhysicalBox>
+</ofd:PageArea>
+<ofd:DocumentRes>DocumentRes.xml</ofd:DocumentRes>
+</ofd:CommonData>
+<ofd:Pages>
+<ofd:Page ID="1" BaseLoc="Pages/Page_0/Content.xml"/>
+</ofd:Pages>
+</ofd:Document>"#;
+
+const DOCUMENT_RES_WITH_MISSING_MEDIA_XML: &str = r#"<ofd:Res xmlns:ofd="http://www.ofdspec.org/2016" BaseLoc="Res">
+<ofd:MultiMedias>
+<ofd:MultiMedia ID="10" Type="Image" Format="PNG"><ofd:MediaFile>present.png</ofd:MediaFile></ofd:MultiMedia>
+<ofd:MultiMedia ID="11" Type="Image" Format="PNG"><ofd:MediaFile>missing.png</ofd:MediaFile></ofd:MultiMedia>
+</ofd:MultiMedias>
+</ofd:Res>"#;
+
 const PAGE_LAYER_WITHOUT_ID_XML: &str = r#"<?xml version="1.0" encoding="UTF-8"?>
 <ofd:Page xmlns:ofd="http://www.ofdspec.org/2016">
   <ofd:Content>
@@ -51,20 +71,24 @@ const PAGE_LAYER_WITHOUT_ID_XML: &str = r#"<?xml version="1.0" encoding="UTF-8"?
   </ofd:Content>
 </ofd:Page>"#;
 
-fn package_bytes_with_page(page_xml: &str) -> Vec<u8> {
+fn package_bytes(entries: &[(&str, &[u8])]) -> Vec<u8> {
   let mut zip = zip::ZipWriter::new(Cursor::new(Vec::new()));
   let options = zip::write::SimpleFileOptions::default();
 
-  for (path, content) in [
-    ("OFD.xml", MINIMAL_OFD_XML),
-    ("Doc_0/Document.xml", MINIMAL_DOCUMENT_XML),
-    ("Doc_0/Pages/Page_0/Content.xml", page_xml),
-  ] {
+  for (path, content) in entries {
     zip.start_file(path, options).unwrap();
-    zip.write_all(content.as_bytes()).unwrap();
+    zip.write_all(content).unwrap();
   }
 
   zip.finish().unwrap().into_inner()
+}
+
+fn package_bytes_with_page(page_xml: &str) -> Vec<u8> {
+  package_bytes(&[
+    ("OFD.xml", MINIMAL_OFD_XML.as_bytes()),
+    ("Doc_0/Document.xml", MINIMAL_DOCUMENT_XML.as_bytes()),
+    ("Doc_0/Pages/Page_0/Content.xml", page_xml.as_bytes()),
+  ])
 }
 
 #[test]
@@ -195,6 +219,74 @@ fn ofd_package_accepts_page_layer_without_id() {
     }
     other => panic!("unexpected layer child: {other:?}"),
   }
+}
+
+#[test]
+fn ofd_package_skips_missing_resource_blob_parts() {
+  let package_bytes = package_bytes(&[
+    ("OFD.xml", MINIMAL_OFD_XML.as_bytes()),
+    (
+      "Doc_0/Document.xml",
+      MINIMAL_DOCUMENT_WITH_RES_XML.as_bytes(),
+    ),
+    (
+      "Doc_0/Pages/Page_0/Content.xml",
+      PAGE_SIMPLE_TEXT_XML.as_bytes(),
+    ),
+    (
+      "Doc_0/DocumentRes.xml",
+      DOCUMENT_RES_WITH_MISSING_MEDIA_XML.as_bytes(),
+    ),
+    ("Doc_0/Res/present.png", b"present image bytes"),
+  ]);
+
+  let package = ofdsdk::parts::ofd_package::OfdPackage::new(Cursor::new(package_bytes)).unwrap();
+  let document_res = &package.documents[0].document_res[0];
+
+  let multi_medias = match &document_res.root_element.xml_children[0] {
+    ofdsdk::schemas::res::ResContentChoice::MultiMedias(value) => value,
+    other => panic!("unexpected document res child: {other:?}"),
+  };
+
+  assert_eq!(multi_medias.multi_media.len(), 2);
+  assert_eq!(document_res.document_res_media_files.len(), 1);
+  assert_eq!(
+    document_res.document_res_media_files[0].inner_path,
+    "Doc_0/Res/present.png"
+  );
+
+  let mut saved = Cursor::new(Vec::new());
+  package.save(&mut saved).unwrap();
+  let saved_bytes = saved.into_inner();
+  let saved_package =
+    ofdsdk::parts::ofd_package::OfdPackage::new(Cursor::new(saved_bytes.clone())).unwrap();
+
+  assert_eq!(saved_package.documents[0].document_res.len(), 1);
+  assert_eq!(
+    saved_package.documents[0].document_res[0]
+      .document_res_media_files
+      .len(),
+    1
+  );
+
+  let mut saved_archive = zip::ZipArchive::new(Cursor::new(saved_bytes)).unwrap();
+  assert!(saved_archive.by_name("Doc_0/Res/present.png").is_ok());
+  assert!(saved_archive.by_name("Doc_0/Res/missing.png").is_err());
+}
+
+#[test]
+fn ofd_package_still_requires_structural_page_part() {
+  let package_bytes = package_bytes(&[
+    ("OFD.xml", MINIMAL_OFD_XML.as_bytes()),
+    ("Doc_0/Document.xml", MINIMAL_DOCUMENT_XML.as_bytes()),
+  ]);
+
+  let error = ofdsdk::parts::ofd_package::OfdPackage::new(Cursor::new(package_bytes)).unwrap_err();
+
+  assert!(matches!(
+    error,
+    ofdsdk::common::SdkError::ZipError(zip::result::ZipError::FileNotFound)
+  ));
 }
 
 #[test]

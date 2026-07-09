@@ -31,11 +31,10 @@ impl DocumentRes {
         }
       }
     }
-    let document_res_font_files = crate::common::load_zip_parts(
-      &current_dir,
-      document_res_font_files_paths,
-      archive,
-      |child_path, archive| {
+    let mut document_res_font_files = Vec::with_capacity(document_res_font_files_paths.len());
+    for child_path in document_res_font_files_paths {
+      let loaded = {
+        let child_path = child_path.as_str();
         let resolved_path = {
           let base_path = root_element.base_loc.clone();
           let base_dir = crate::common::resolve_zip_child_path(&current_dir, &base_path);
@@ -45,8 +44,13 @@ impl DocumentRes {
           &resolved_path,
           archive,
         )
-      },
-    )?;
+      };
+      match loaded {
+        Ok(child) => document_res_font_files.push(child),
+        Err(crate::common::SdkError::ZipError(zip::result::ZipError::FileNotFound)) => {}
+        Err(err) => return Err(err),
+      }
+    }
     let mut document_res_media_files_paths: Vec<String> = vec![];
     for choice in &root_element.xml_children {
       if let crate::schemas::res::ResContentChoice::MultiMedias(value) = choice {
@@ -56,11 +60,10 @@ impl DocumentRes {
         }
       }
     }
-    let document_res_media_files = crate::common::load_zip_parts(
-      &current_dir,
-      document_res_media_files_paths,
-      archive,
-      |child_path, archive| {
+    let mut document_res_media_files = Vec::with_capacity(document_res_media_files_paths.len());
+    for child_path in document_res_media_files_paths {
+      let loaded = {
+        let child_path = child_path.as_str();
         let resolved_path = {
           let base_path = root_element.base_loc.clone();
           let base_dir = crate::common::resolve_zip_child_path(&current_dir, &base_path);
@@ -70,8 +73,13 @@ impl DocumentRes {
           &resolved_path,
           archive,
         )
-      },
-    )?;
+      };
+      match loaded {
+        Ok(child) => document_res_media_files.push(child),
+        Err(crate::common::SdkError::ZipError(zip::result::ZipError::FileNotFound)) => {}
+        Err(err) => return Err(err),
+      }
+    }
     Ok(Self {
       inner_path: path.to_string(),
       root_element,

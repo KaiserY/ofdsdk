@@ -5,7 +5,8 @@ use quote::{format_ident, quote};
 use std::collections::HashMap;
 
 use crate::models::sdk_data::{
-  Attribute, Child, CodegenTypeKind, PartContent, PartDefinition, PartPath, Schema, Struct,
+  Attribute, Child, CodegenTypeKind, PartContent, PartDefinition, PartMissingPolicy, PartPath,
+  Schema, Struct,
 };
 
 mod helpers;
@@ -95,6 +96,7 @@ struct LoadChildStmt<'a> {
   child_struct_ident: &'a syn::Ident,
   is_many: bool,
   is_required: bool,
+  skip_missing: bool,
 }
 
 fn load_child_stmt(spec: LoadChildStmt<'_>) -> TokenStream {
@@ -108,10 +110,57 @@ fn load_child_stmt(spec: LoadChildStmt<'_>) -> TokenStream {
     child_struct_ident,
     is_many,
     is_required,
+    skip_missing,
   } = spec;
 
-  match (is_many, is_required, contexts_expr) {
-    (true, _, Some(contexts_ident)) => quote! {
+  match (is_many, is_required, contexts_expr, skip_missing) {
+    (true, _, Some(contexts_ident), true) => quote! {
+      if #path_expr.len() != #contexts_ident.len() {
+        return Err(crate::common::SdkError::CommonError(format!(
+          "mismatched child contexts for {}",
+          #child_api_name
+        )));
+      }
+
+      let mut #child_field_ident = Vec::with_capacity(#path_expr.len());
+      for (child_path, child_context) in #path_expr.into_iter().zip(#contexts_ident) {
+        let loaded = {
+          let child_path = child_path.as_str();
+          let resolved_path = #path_resolve;
+          crate::parts::#child_module_ident::#child_struct_ident::new_from_archive(
+            &resolved_path,
+            child_context,
+            archive,
+          )
+        };
+
+        match loaded {
+          Ok(child) => #child_field_ident.push(child),
+          Err(crate::common::SdkError::ZipError(zip::result::ZipError::FileNotFound)) => {}
+          Err(err) => return Err(err),
+        }
+      }
+    },
+    (true, _, None, true) => quote! {
+      let mut #child_field_ident = Vec::with_capacity(#path_expr.len());
+      for child_path in #path_expr {
+        let loaded = {
+          let child_path = child_path.as_str();
+          let resolved_path = #path_resolve;
+          crate::parts::#child_module_ident::#child_struct_ident::new_from_archive(
+            &resolved_path,
+            archive,
+          )
+        };
+
+        match loaded {
+          Ok(child) => #child_field_ident.push(child),
+          Err(crate::common::SdkError::ZipError(zip::result::ZipError::FileNotFound)) => {}
+          Err(err) => return Err(err),
+        }
+      }
+    },
+    (true, _, Some(contexts_ident), false) => quote! {
       let #child_field_ident = crate::common::load_zip_parts_with_context(
         &current_dir,
         #path_expr,
@@ -128,7 +177,7 @@ fn load_child_stmt(spec: LoadChildStmt<'_>) -> TokenStream {
         },
       )?;
     },
-    (true, _, None) => quote! {
+    (true, _, None, false) => quote! {
       let #child_field_ident = crate::common::load_zip_parts(
         &current_dir,
         #path_expr,
@@ -142,7 +191,7 @@ fn load_child_stmt(spec: LoadChildStmt<'_>) -> TokenStream {
         },
       )?;
     },
-    (false, true, Some(contexts_ident)) => quote! {
+    (false, true, Some(contexts_ident), _) => quote! {
       let #child_field_ident = crate::common::load_required_zip_part_with_context(
         &current_dir,
         #path_expr,
@@ -159,7 +208,7 @@ fn load_child_stmt(spec: LoadChildStmt<'_>) -> TokenStream {
         },
       )?;
     },
-    (false, true, None) => quote! {
+    (false, true, None, _) => quote! {
       let #child_field_ident = crate::common::load_required_zip_part(
         &current_dir,
         #path_expr,
@@ -174,7 +223,7 @@ fn load_child_stmt(spec: LoadChildStmt<'_>) -> TokenStream {
         },
       )?;
     },
-    (false, false, Some(contexts_ident)) => quote! {
+    (false, false, Some(contexts_ident), _) => quote! {
       let #child_field_ident = crate::common::load_optional_zip_part_with_context(
         &current_dir,
         #path_expr,
@@ -191,7 +240,7 @@ fn load_child_stmt(spec: LoadChildStmt<'_>) -> TokenStream {
         },
       )?;
     },
-    (false, false, None) => quote! {
+    (false, false, None, _) => quote! {
       let #child_field_ident = crate::common::load_optional_zip_part(
         &current_dir,
         #path_expr,
@@ -375,6 +424,7 @@ pub(crate) fn gen_part_module(
     let child_struct_ident = format_ident!("{}", child.part_name().to_upper_camel_case());
     let child_type = quote! { crate::parts::#child_module_ident::#child_struct_ident };
     let paths_ident = format_ident!("{}_paths", child.api_name().to_snake_case());
+    let skip_missing = child.skip_missing();
     let single_child_path_expr =
       gen_first_path_expr_from_source(part, sdk_data_parts, child.source, index)?;
     let context_value_model = child
@@ -439,6 +489,7 @@ pub(crate) fn gen_part_module(
           child_struct_ident: &child_struct_ident,
           is_many: true,
           is_required: child.is_required(),
+          skip_missing,
         }));
       } else {
         body_stmts.push(load_child_stmt(LoadChildStmt {
@@ -451,6 +502,7 @@ pub(crate) fn gen_part_module(
           child_struct_ident: &child_struct_ident,
           is_many: true,
           is_required: child.is_required(),
+          skip_missing,
         }));
       }
       self_values.push(quote! {
@@ -504,6 +556,7 @@ pub(crate) fn gen_part_module(
             child_struct_ident: &child_struct_ident,
             is_many: false,
             is_required: child.is_required(),
+            skip_missing,
           }));
         } else {
           body_stmts.push(load_child_stmt(LoadChildStmt {
@@ -516,6 +569,7 @@ pub(crate) fn gen_part_module(
             child_struct_ident: &child_struct_ident,
             is_many: false,
             is_required: child.is_required(),
+            skip_missing,
           }));
         }
       } else {
@@ -555,6 +609,7 @@ pub(crate) fn gen_part_module(
             child_struct_ident: &child_struct_ident,
             is_many: false,
             is_required: child.is_required(),
+            skip_missing,
           }));
         } else {
           body_stmts.push(load_child_stmt(LoadChildStmt {
@@ -567,6 +622,7 @@ pub(crate) fn gen_part_module(
             child_struct_ident: &child_struct_ident,
             is_many: false,
             is_required: child.is_required(),
+            skip_missing,
           }));
         }
       }

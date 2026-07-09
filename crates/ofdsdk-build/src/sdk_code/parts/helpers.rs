@@ -70,6 +70,10 @@ impl<'a> ResolvedPartChild<'a> {
   pub(super) fn is_required(&self) -> bool {
     self.spec.min_occurs_is_non_zero
   }
+
+  pub(super) fn skip_missing(&self) -> bool {
+    self.spec.missing_policy == PartMissingPolicy::Skip
+  }
 }
 
 pub(super) fn gen_first_path_expr_from_source(

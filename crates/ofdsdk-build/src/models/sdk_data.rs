@@ -162,6 +162,14 @@ pub enum PartContent {
 }
 
 #[derive(Clone, Debug, Default, Deserialize, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "PascalCase")]
+pub enum PartMissingPolicy {
+  #[default]
+  Error,
+  Skip,
+}
+
+#[derive(Clone, Debug, Default, Deserialize, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "PascalCase", rename_all_fields = "PascalCase")]
 pub enum PartPath {
   #[default]
@@ -192,6 +200,7 @@ pub struct PartChild {
   pub context_from: Option<PartSource>,
   pub min_occurs_is_non_zero: bool,
   pub max_occurs_great_than_one: bool,
+  pub missing_policy: PartMissingPolicy,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, PartialEq, Eq, Serialize)]

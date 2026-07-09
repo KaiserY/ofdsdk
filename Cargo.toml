@@ -3,7 +3,7 @@ resolver = "3"
 members = ["crates/ofdsdk", "crates/ofdsdk-build", "crates/ofdsdk-test"]
 
 [workspace.package]
-version = "0.2.2"
+version = "0.2.3"
 edition = "2024"
 rust-version = "1.88"
 authors = ["KaiserY"]
@@ -16,9 +16,9 @@ categories = ["parser-implementations"]
 readme = "README.md"
 
 [workspace.dependencies]
-ofdsdk = { version = "0.2.2", path = "crates/ofdsdk" }
-ofdsdk-build = { version = "0.2.2", path = "crates/ofdsdk-build" }
-ofdsdk-test = { version = "0.2.2", path = "crates/ofdsdk-test" }
+ofdsdk = { version = "0.2.3", path = "crates/ofdsdk" }
+ofdsdk-build = { version = "0.2.3", path = "crates/ofdsdk-build" }
+ofdsdk-test = { version = "0.2.3", path = "crates/ofdsdk-test" }
 quick-xml = { version = "0.41.0", features = ["serialize"] }
 serde = { version = "1.0.228", features = ["derive"] }
 serde_derive = "1.0.228"
